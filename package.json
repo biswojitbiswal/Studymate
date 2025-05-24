@@ -8,9 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "prepare": "husky",
-     "test": "echo \"No tests specified\" && exit 0"
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "next": "15.1.8",
