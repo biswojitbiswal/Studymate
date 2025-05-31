@@ -36,10 +36,16 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
+        select: false, // Don't return password in queries
         required: function() {
             return !this.googleId && !this.facebookId; // Only required if no social login
         },
         minlength: 8
+    },
+    role: {
+        type: String,
+        enum: ['User', 'Admin', 'Owner'],
+        default: 'User'
     },
     otp: {
         type: String,
