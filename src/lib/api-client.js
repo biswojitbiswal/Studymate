@@ -71,7 +71,7 @@ api.interceptors.response.use(
       try {
         // call refresh endpoint (no body; cookie contains refresh token)
         const refreshRes = await axios.post(
-          `${BACKEND_URL}/api/v1/auth/refresh`,
+          `${BACKEND_URL}/auth/refresh`,
           {},
           { withCredentials: true, headers: { "Content-Type": "application/json" } }
         );
