@@ -20,14 +20,14 @@ export function storeLogout() {
   try {
     const s = useAuthStore.getState();
     if (s?.logout) s.logout();
-  } catch (e) {}
+  } catch (e) { }
 }
 
 /* IMPORTANT: helper to let api-client update token after refresh */
 export function setAuthToken(token) {
   try {
     useAuthStore.setState({ token });
-  } catch (e) {}
+  } catch (e) { }
 }
 
 /**
@@ -135,8 +135,24 @@ export const useAuthStore = create(
           return _refreshPromise;
         },
 
-        logout: () => {
-          set({ user: null, token: null });
+        logout: async () => {
+          try {
+            await fetch(API.AUTH_SIGNOUT, {
+              method: "POST",
+              credentials: "include", // IMPORTANT for cookies
+            });
+          } catch (err) {
+            console.error("Logout failed", err);
+          } finally {
+            // Clear client state
+            set({ user: null, token: null });
+
+            // Remove token if stored
+            localStorage.removeItem("token");
+
+            // Redirect
+            window.location.href = "/signin";
+          }
         },
       };
     },

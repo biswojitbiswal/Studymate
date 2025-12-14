@@ -8,5 +8,16 @@ export const API = {
   PROFILE: `${BACKEND_URL}/auth/profile`, // optional if you have profile route
   // example resource:
   CLASSES: `${BACKEND_URL}/classes`,
-  USERS: `${BACKEND_URL}/api/v1/users`,
+  USERS: `${BACKEND_URL}/users`,
+
+
+  ADMIN: {
+    BOARD: {
+      CREATE: `${BACKEND_URL}/board`,
+      GET: `${BACKEND_URL}/board`,
+      GET_BY_ID: `${BACKEND_URL}/board`,
+      DELETE: `${BACKEND_URL}/board`,
+      UPDATE: `${BACKEND_URL}/board`
+    }
+  }
 };

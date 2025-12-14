@@ -1,13 +1,13 @@
 // src/lib/api-client.js
 import axios from "axios";
-import { BACKEND_URL } from "./endpoints";
+import { BACKEND_URL } from "@/lib/endpoint";
 import { getAuthToken, storeLogout, setAuthToken } from "@/store/auth";
 
 const api = axios.create({
   baseURL: BACKEND_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  // headers: {
+  //   "Content-Type": "application/json",
+  // },
   // IMPORTANT: allow cookies to be sent/received (refresh cookie)
   withCredentials: true,
 });
