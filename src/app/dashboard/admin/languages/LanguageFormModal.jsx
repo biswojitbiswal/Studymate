@@ -16,10 +16,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
-import { useCreateBoard, useUpdateBoard } from "@/hooks/admin/useBoard";
+import { useCreateLanguage, useUpdateLanguage } from "@/hooks/admin/useLanguage";
 import { toast } from "sonner";
 
-export default function BoardFormModal({ open, setOpen, board }) {
+export default function LanguageFormModal({ open, setOpen, language }) {
   const [form, setForm] = useState({
     name: "",
     priority: "",
@@ -29,19 +29,19 @@ export default function BoardFormModal({ open, setOpen, board }) {
 
   const [preview, setPreview] = useState(null); // 👈 NEW
 
-  const createBoard = useCreateBoard();
-  const updateBoard = useUpdateBoard();
+  const createLanguage = useCreateLanguage();
+  const updateLanguage = useUpdateLanguage();
 
   /* Populate form when editing */
   useEffect(() => {
-    if (board) {
+    if (language) {
       setForm({
-        name: board.name || "",
-        priority: board.priority || "",
-        status: board.status || "ACTIVE",
+        name: language.name || "",
+        priority: language.priority || "",
+        status: language.status || "ACTIVE",
         icon: null,
       });
-      setPreview(board.icon || null); // 👈 show existing icon
+      setPreview(language.icon || null); // 👈 show existing icon
     } else {
       setForm({
         name: "",
@@ -51,7 +51,7 @@ export default function BoardFormModal({ open, setOpen, board }) {
       });
       setPreview(null);
     }
-  }, [board, open]);
+  }, [language, open]);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -71,7 +71,7 @@ export default function BoardFormModal({ open, setOpen, board }) {
 
   function handleSubmit() {
     if (!form.name.trim()) {
-      toast.error("Board name is required");
+      toast.error("Language name is required");
       return;
     }
 
@@ -89,29 +89,29 @@ export default function BoardFormModal({ open, setOpen, board }) {
       formData.append("icon", form.icon);
     }
 
-    const mutation = board
-      ? updateBoard.mutate(
-        { id: board.id, formData },
+    const mutation = language
+      ? updateLanguage.mutate(
+        { id: language.id, formData },
         {
           onSuccess: () => {
-            toast.success("Board updated successfully");
+            toast.success("Language updated successfully");
             setOpen(false);
           },
           onError: (err) => {
             toast.error(
-              err.response?.data?.message || "Failed to update board"
+              err.response?.data?.message || "Failed to update language"
             );
           },
         }
       )
-      : createBoard.mutate(formData, {
+      : createLanguage.mutate(formData, {
         onSuccess: () => {
-          toast.success("Board created successfully");
+          toast.success("Language created successfully");
           setOpen(false);
         },
         onError: (err) => {
           toast.error(
-            err.response?.data?.message || "Failed to create board"
+            err.response?.data?.message || "Failed to create language"
           );
         },
       });
@@ -122,18 +122,18 @@ export default function BoardFormModal({ open, setOpen, board }) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {board ? "Edit Board" : "Create Board"}
+            {language ? "Edit Language" : "Create Language"}
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
           <label className="text-sm font-medium">
-            Board Name <span className="text-red-500">*</span>
+            Language Name <span className="text-red-500">*</span>
           </label>
 
           <Input
             name="name"
-            placeholder="Board name"
+            placeholder="Language name"
             value={form.name}
             onChange={handleChange}
             required
@@ -199,13 +199,13 @@ export default function BoardFormModal({ open, setOpen, board }) {
             <Button
               className="bg-blue-600 hover:bg-blue-700"
               onClick={handleSubmit}
-              disabled={createBoard.isPending || updateBoard.isPending}
+              disabled={createLanguage.isPending || updateLanguage.isPending}
             >
-              {board
-                ? updateBoard.isPending
+              {language
+                ? updateLanguage.isPending
                   ? "Updating..."
                   : "Update"
-                : createBoard.isPending
+                : createLanguage.isPending
                   ? "Creating..."
                   : "Create"}
             </Button>

@@ -90,11 +90,9 @@ export const useAuthStore = create(
 
         // deduped tryRefresh
         tryRefresh: async () => {
-          // if user already exists, short-circuit
           const current = get().user;
           if (current) return { user: current };
 
-          // if refresh already running, return same promise
           if (_refreshPromise) return _refreshPromise;
 
           _refreshPromise = (async () => {
@@ -106,15 +104,13 @@ export const useAuthStore = create(
               });
 
               if (!res.ok) {
-                // cannot refresh -> mark as known "no user"
                 set({ user: null, token: null });
                 return null;
               }
 
               const data = await res.json();
-              // support both shapes: { accessToken, user } or nested data
-              const token = data?.accessToken ?? data?.token ?? data?.data?.accessToken;
-              const user = data?.user ?? data?.data?.user ?? null;
+              const token = data?.accessToken ?? data?.data?.accessToken;
+              const user = data?.user ?? data?.data?.user;
 
               if (!token || !user) {
                 set({ user: null, token: null });
@@ -123,17 +119,14 @@ export const useAuthStore = create(
 
               set({ user, token });
               return { user, token };
-            } catch (e) {
-              set({ user: null, token: null });
-              return null;
             } finally {
-              // clear so next attempt can run later
               _refreshPromise = null;
             }
           })();
 
           return _refreshPromise;
         },
+
 
         logout: async () => {
           try {

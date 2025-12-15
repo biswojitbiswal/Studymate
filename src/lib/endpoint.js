@@ -18,6 +18,30 @@ export const API = {
       GET_BY_ID: `${BACKEND_URL}/board`,
       DELETE: `${BACKEND_URL}/board`,
       UPDATE: `${BACKEND_URL}/board`
+    },
+
+    LEVEL: {
+      CREATE: `${BACKEND_URL}/level`,
+      GET: `${BACKEND_URL}/level`,
+      GET_BY_ID: `${BACKEND_URL}/level`,
+      DELETE: `${BACKEND_URL}/level`,
+      UPDATE: `${BACKEND_URL}/level`
+    },
+
+    LANGUAGE: {
+      CREATE: `${BACKEND_URL}/language`,
+      GET: `${BACKEND_URL}/language`,
+      GET_BY_ID: `${BACKEND_URL}/language`,
+      DELETE: `${BACKEND_URL}/language`,
+      UPDATE: `${BACKEND_URL}/language`
+    },
+
+    SUBJECT: {
+      CREATE: `${BACKEND_URL}/subject`,
+      GET: `${BACKEND_URL}/subject`,
+      GET_BY_ID: `${BACKEND_URL}/subject`,
+      DELETE: `${BACKEND_URL}/subject`,
+      UPDATE: `${BACKEND_URL}/subject`
     }
   }
 };

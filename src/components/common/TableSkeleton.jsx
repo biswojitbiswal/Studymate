@@ -1,4 +1,4 @@
-export function TableSkeleton({ rows = 5 }) {
+export function TableSkeleton({ rows = 10 }) {
   return (
     <div className="space-y-3">
       {Array.from({ length: rows }).map((_, i) => (

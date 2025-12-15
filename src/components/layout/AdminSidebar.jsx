@@ -70,7 +70,7 @@ export default function AdminSidebar() {
                                             <Link
                                                 key={child.label}
                                                 href={child.href}
-                                                className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm transition ${active ? "bg-white text-blue-600" : "text-white/80 hover:bg-white/10"}`}
+                                                className={`flex items-center gap-3 font-semibold px-4 py-2 rounded-md text-sm transition ${active ? "bg-white text-blue-600" : "text-white/80 hover:bg-white/10"}`}
                                             >
                                                 <ChildIcon size={16} />
                                                 {child.label}

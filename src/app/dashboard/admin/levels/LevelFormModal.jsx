@@ -16,10 +16,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
-import { useCreateBoard, useUpdateBoard } from "@/hooks/admin/useBoard";
+import { useCreateLevel, useUpdateLevel } from "@/hooks/admin/useLevel";
 import { toast } from "sonner";
 
-export default function BoardFormModal({ open, setOpen, board }) {
+export default function LevelFormModal({ open, setOpen, level }) {
   const [form, setForm] = useState({
     name: "",
     priority: "",
@@ -29,19 +29,19 @@ export default function BoardFormModal({ open, setOpen, board }) {
 
   const [preview, setPreview] = useState(null); // 👈 NEW
 
-  const createBoard = useCreateBoard();
-  const updateBoard = useUpdateBoard();
+  const createLevel = useCreateLevel();
+  const updateLevel = useUpdateLevel();
 
   /* Populate form when editing */
   useEffect(() => {
-    if (board) {
+    if (level) {
       setForm({
-        name: board.name || "",
-        priority: board.priority || "",
-        status: board.status || "ACTIVE",
+        name: level.name || "",
+        priority: level.priority || "",
+        status: level.status || "ACTIVE",
         icon: null,
       });
-      setPreview(board.icon || null); // 👈 show existing icon
+      setPreview(level.icon || null); // 👈 show existing icon
     } else {
       setForm({
         name: "",
@@ -51,7 +51,7 @@ export default function BoardFormModal({ open, setOpen, board }) {
       });
       setPreview(null);
     }
-  }, [board, open]);
+  }, [level, open]);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -71,7 +71,7 @@ export default function BoardFormModal({ open, setOpen, board }) {
 
   function handleSubmit() {
     if (!form.name.trim()) {
-      toast.error("Board name is required");
+      toast.error("Level name is required");
       return;
     }
 
@@ -89,29 +89,31 @@ export default function BoardFormModal({ open, setOpen, board }) {
       formData.append("icon", form.icon);
     }
 
-    const mutation = board
-      ? updateBoard.mutate(
-        { id: board.id, formData },
+    const mutation = level
+      ? updateLevel.mutate(
+        { id: level.id, formData },
         {
           onSuccess: () => {
-            toast.success("Board updated successfully");
+            toast.success("Level updated successfully");
             setOpen(false);
           },
           onError: (err) => {
             toast.error(
-              err.response?.data?.message || "Failed to update board"
+              err.response?.data?.message || "Failed to update level"
             );
           },
         }
       )
-      : createBoard.mutate(formData, {
+      : createLevel.mutate(formData, {
         onSuccess: () => {
-          toast.success("Board created successfully");
+          toast.success("Level created successfully", {
+            
+          });
           setOpen(false);
         },
         onError: (err) => {
           toast.error(
-            err.response?.data?.message || "Failed to create board"
+            err.response?.data?.message || "Failed to create level"
           );
         },
       });
@@ -122,18 +124,18 @@ export default function BoardFormModal({ open, setOpen, board }) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {board ? "Edit Board" : "Create Board"}
+            {level ? "Edit Level" : "Create Level"}
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
           <label className="text-sm font-medium">
-            Board Name <span className="text-red-500">*</span>
+            Level Name <span className="text-red-500">*</span>
           </label>
 
           <Input
             name="name"
-            placeholder="Board name"
+            placeholder="Level name"
             value={form.name}
             onChange={handleChange}
             required
@@ -199,13 +201,13 @@ export default function BoardFormModal({ open, setOpen, board }) {
             <Button
               className="bg-blue-600 hover:bg-blue-700"
               onClick={handleSubmit}
-              disabled={createBoard.isPending || updateBoard.isPending}
+              disabled={createLevel.isPending || updateLevel.isPending}
             >
-              {board
-                ? updateBoard.isPending
+              {level
+                ? updateLevel.isPending
                   ? "Updating..."
                   : "Update"
-                : createBoard.isPending
+                : createLevel.isPending
                   ? "Creating..."
                   : "Create"}
             </Button>
