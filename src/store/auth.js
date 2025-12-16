@@ -3,7 +3,10 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { API } from "@/lib/endpoint";
 
-/* helpers used by api-client */
+/* =========================================================
+   Helpers (used by api-client)
+   ========================================================= */
+
 export function getAuthToken() {
   try {
     if (typeof window === "undefined") return null;
@@ -11,147 +14,156 @@ export function getAuthToken() {
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     return parsed?.state?.token ?? null;
-  } catch (e) {
+  } catch {
     return null;
   }
+}
+
+export function setAuthToken(token) {
+  try {
+    useAuthStore.setState({ token });
+  } catch { }
 }
 
 export function storeLogout() {
   try {
     const s = useAuthStore.getState();
-    if (s?.logout) s.logout();
-  } catch (e) { }
+    s?.logout?.();
+  } catch { }
 }
 
-/* IMPORTANT: helper to let api-client update token after refresh */
-export function setAuthToken(token) {
-  try {
-    useAuthStore.setState({ token });
-  } catch (e) { }
-}
+/* =========================================================
+   Refresh dedupe (VERY IMPORTANT)
+   ========================================================= */
 
-/**
- * NOTE: we use `user: undefined` as initial value -> means "not loaded yet".
- * When rehydrate finishes, the persisted value will overwrite this. If no
- * persisted user exists, we will set user = null after a failed refresh.
- */
-
-// module-level variable to dedupe in-flight refresh
 let _refreshPromise = null;
+
+/* =========================================================
+   Auth Store
+   ========================================================= */
 
 export const useAuthStore = create(
   persist(
-    (set, get) => {
-      return {
-        user: undefined, // undefined = not checked yet, null = known not logged-in, object = logged in
-        token: null,
+    (set, get) => ({
+      // undefined = not checked yet
+      // null = checked, not logged in
+      // object = logged in
+      user: undefined,
+      token: null,
 
-        login: async (email, password, role) => {
-          const res = await fetch(API.AUTH_SIGNIN, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ email, password, role }),
-          });
+      /* ================= LOGIN ================= */
 
-          const data = await res.json();
-          if (!res.ok) {
-            const message = data?.message || data?.error || "Signin failed";
-            const err = new Error(message);
-            err.status = res.status;
-            throw err;
-          }
+      login: async (email, password, role) => {
+        const res = await fetch(API.AUTH_SIGNIN, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ email, password, role }),
+        });
 
-          const token = data.data?.accessToken ?? data.token;
-          const user = data.data?.user ?? null;
-          if (!token || !user) throw new Error("Invalid signin response");
+        const data = await res.json();
 
-          set({ user, token });
-          return { user, token };
-        },
+        if (!res.ok) {
+          throw new Error(data?.message || "Signin failed");
+        }
 
-        signup: async (payload) => {
-          const res = await fetch(API.AUTH_SIGNUP, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify(payload),
-          });
+        const token = data?.accessToken ?? data?.data?.accessToken;
+        const user = data?.user ?? data?.data?.user;
 
-          const data = await res.json();
-          if (!res.ok) {
-            const message = data?.message || data?.error || "Signup failed";
-            const err = new Error(message);
-            err.status = res.status;
-            throw err;
-          }
-          return data;
-        },
+        if (!token || !user) {
+          throw new Error("Invalid signin response");
+        }
 
-        // deduped tryRefresh
-        tryRefresh: async () => {
-          const current = get().user;
-          if (current) return { user: current };
+        set({ user, token });
+        return { user, token };
+      },
 
-          if (_refreshPromise) return _refreshPromise;
+      /* ================= SIGNUP ================= */
 
-          _refreshPromise = (async () => {
-            try {
-              const res = await fetch(API.AUTH_REFRESH, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-              });
+      signup: async (payload) => {
+        const res = await fetch(API.AUTH_SIGNUP, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(payload),
+        });
 
-              if (!res.ok) {
-                set({ user: null, token: null });
-                return null;
-              }
+        const data = await res.json();
 
-              const data = await res.json();
-              const token = data?.accessToken ?? data?.data?.accessToken;
-              const user = data?.user ?? data?.data?.user;
+        if (!res.ok) {
+          throw new Error(data?.message || "Signup failed");
+        }
 
-              if (!token || !user) {
-                set({ user: null, token: null });
-                return null;
-              }
+        return data;
+      },
 
-              set({ user, token });
-              return { user, token };
-            } finally {
-              _refreshPromise = null;
-            }
-          })();
+      /* ================= REFRESH (FIXED) ================= */
 
-          return _refreshPromise;
-        },
+      tryRefresh: async () => {
+        console.log("🔥 tryRefresh CALLED", new Date().toISOString());
+        // 🔒 DEDUPE: only one refresh at a time
+        if (_refreshPromise) return _refreshPromise;
 
-
-        logout: async () => {
+        _refreshPromise = (async () => {
           try {
-            await fetch(API.AUTH_SIGNOUT, {
+            const res = await fetch(API.AUTH_REFRESH, {
               method: "POST",
-              credentials: "include", // IMPORTANT for cookies
+              credentials: "include",
             });
-          } catch (err) {
-            console.error("Logout failed", err);
-          } finally {
-            // Clear client state
+
+            // if (!res.ok) {
+            //   // refresh failed → user is not authenticated
+            //   set({ user: null, token: null });
+            //   return null;
+            // }
+
+            if (!res.ok) {
+              console.warn("⚠️ Refresh failed, keeping user for now");
+              return null;
+            }
+
+            const data = await res.json();
+            const token = data?.accessToken ?? data?.data?.accessToken;
+            const user = data?.user ?? data?.data?.user;
+
+            if (!token || !user) {
+              set({ user: null, token: null });
+              return null;
+            }
+
+            set({ user, token });
+            return { user, token };
+          } catch {
             set({ user: null, token: null });
-
-            // Remove token if stored
-            localStorage.removeItem("token");
-
-            // Redirect
-            window.location.href = "/signin";
+            return null;
+          } finally {
+            _refreshPromise = null;
           }
-        },
-      };
-    },
+        })();
+
+        return _refreshPromise;
+      },
+
+      /* ================= LOGOUT ================= */
+
+      logout: async () => {
+        try {
+          await fetch(API.AUTH_SIGNOUT, {
+            method: "POST",
+            credentials: "include",
+          });
+        } catch {
+          // ignore network error
+        } finally {
+          set({ user: null, token: null });
+          window.location.href = "/signin";
+        }
+      },
+    }),
     {
       name: "studymate_auth",
-      getStorage: () => (typeof window !== "undefined" ? localStorage : null),
+      getStorage: () =>
+        typeof window !== "undefined" ? localStorage : null,
     }
   )
 );

@@ -2,6 +2,15 @@
 const nextConfig = {
   /* config options here */
   reactCompiler: true,
+
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "http://localhost:4040/api/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;

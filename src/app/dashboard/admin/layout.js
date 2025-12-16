@@ -2,8 +2,8 @@
 
 import RequireAuth from "@/components/auth/RequireAuth";
 import LogoutButton from "@/components/auth/LogoutButton";
-import AdminSidebar from "@/components/layout/AdminSidebar";
-import AdminTopBar from "@/components/layout/AdminTopBar";
+import AdminSidebar from "@/components/layout/admin/AdminSidebar";
+import AdminTopBar from "@/components/layout/admin/AdminTopBar";
 
 export default function AdminLayout({ children }) {
   return (

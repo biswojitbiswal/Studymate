@@ -1,4 +1,7 @@
-export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4040/api/v1";
+// export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4040/api/v1";
+export const BACKEND_URL = "/api/v1";
+
+
 
 export const API = {
   AUTH_SIGNIN: `${BACKEND_URL}/auth/signin`,
