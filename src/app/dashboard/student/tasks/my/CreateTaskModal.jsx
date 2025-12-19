@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -30,25 +31,13 @@ export function CreateTaskModal({ open, onClose, onSubmit }) {
       return;
     }
 
-    onSubmit(
-      {
-        title,
-        description,
-        dueDate: dueDate ? new Date(dueDate) : null,
-      },
-      {
-        onSuccess: () => {
-          toast.success("Task created successfully");
-          setOpen(false); // close modal
-        },
-        onError: (err) => {
-          toast.error(
-            err?.response?.data?.message || "Failed to create task"
-          );
-        },
-      }
-    );
+    onSubmit({
+      title,
+      description,
+      dueDate: dueDate ? new Date(dueDate) : null,
+    });
   };
+
 
 
   return (
@@ -56,6 +45,9 @@ export function CreateTaskModal({ open, onClose, onSubmit }) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Add Task</DialogTitle>
+          <DialogDescription>
+            Create a new personal task and optionally set a due date.
+          </DialogDescription>
         </DialogHeader>
 
         {/* Title */}

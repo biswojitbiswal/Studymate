@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { TaskFilters } from "./TaskFilters";
 import { TaskHeader } from "./TaskHeader";
-import { TaskList } from "./TaskList";
 import { TaskPagination } from "./TaskPagination";
 import { TaskTabs } from "./TaskTabs";
 import { TaskTypeTabs } from "./TaskTypeTab";
@@ -12,6 +11,8 @@ import { CreateTaskModal } from "./CreateTaskModal";
 import { EditTaskModal } from "./EditTaskModal";
 import { DeleteTaskDialog } from "./DeleteTaskDialog";
 import { toast } from "sonner";
+import { TaskDetailsModal } from "./TaskDetails";
+import { TaskList } from "./TaskList";
 
 export default function TasksPage() {
   const [taskType, setTaskType] = useState("PRIVATE"); // PRIVATE | ASSIGNED
@@ -24,9 +25,8 @@ export default function TasksPage() {
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editTask, setEditTask] = useState(false);
-  const [deleteTask, setDeleteTask] = useState(false);
   const [deleteTaskId, setDeleteTaskId] = useState(null);
-
+  const [showDetail, setShowDetail] = useState(null)
 
 
   useEffect(() => {
@@ -37,14 +37,6 @@ export default function TasksPage() {
 
     return () => clearTimeout(timer);
   }, [searchInput]);
-
-
-
-  const handleCreateTask = (data, callbacks) => {
-    createTask.mutate(data, callbacks);
-  };
-
-  // console.log(status, range, date);
 
   const { data, isLoading, isError } = useTasks({
     page,
@@ -61,15 +53,59 @@ export default function TasksPage() {
 
   const completeTask = useCompleteTask();
 
+
+
+  const handleCreateTask = (data) => {
+    createTask.mutate(data, {
+      onSuccess: () => {
+        toast.success("Task created successfully");
+        setCreateOpen(false);
+      },
+      onError: (err) => {
+        toast.error(
+          err?.response?.data?.message || "Failed to create task"
+        );
+      },
+    });
+  };
+
+
+  const handleUpdateTask = (id, formData) => {
+    updateTask.mutate(
+      { id, formData },
+      {
+        onSuccess: () => {
+          toast.success("Task updated successfully");
+          setEditTask(null); // close modal
+        },
+        onError: (err) => {
+          toast.error(
+            err?.response?.data?.message || "Failed to update task"
+          );
+        },
+      }
+    );
+  };
+
+
   const handleComplete = (taskId, status) => {
-    console.log("entry");
+    console.log("Debugging");
 
     if (status === "COMPLETED") return;
 
-    completeTask.mutate({ id: taskId });
-    toast.success("Task Completed")
+    completeTask.mutate(
+      { id: taskId },
+      {
+        onSuccess: () => {
+          toast.success("Task completed");
+        },
+        onError: (err) => {
+          console.log(err);
+          toast.error("Failed to complete task");
+        },
+      }
+    );
   };
-
 
 
   const handleDeleteConfirm = () => {
@@ -91,7 +127,7 @@ export default function TasksPage() {
 
   return (
     <div className="max-w-5xl mx-auto">
-      <TaskTypeTabs value={taskType} onChange={setTaskType} />
+      {/* <TaskTypeTabs value={taskType} onChange={setTaskType} /> */}
 
       <TaskHeader
         taskType={taskType}
@@ -122,6 +158,7 @@ export default function TasksPage() {
         onEdit={(task) => setEditTask(task)}
         onDelete={(id) => setDeleteTaskId(id)} // ✅ store id
         onComplete={handleComplete}
+        onView={(task) => setShowDetail(task)}
       />
 
 
@@ -129,6 +166,12 @@ export default function TasksPage() {
         page={page}
         totalPages={data?.data?.totalPages}
         onPageChange={setPage}
+      />
+
+      <TaskDetailsModal
+        open={!!showDetail}
+        task={showDetail}
+        onClose={() => setShowDetail(null)}
       />
 
       {/* 🔥 Create Task Modal */}
@@ -143,9 +186,7 @@ export default function TasksPage() {
         open={!!editTask}
         task={editTask}
         onClose={() => setEditTask(null)}
-        onSubmit={(id, formData) =>
-          updateTask.mutate({ id, formData })
-        }
+        onSubmit={handleUpdateTask}
       />
 
       <DeleteTaskDialog

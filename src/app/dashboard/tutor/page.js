@@ -12,3 +12,13 @@ export default function TutorDashboardPage() {
     </div>
   );
 }
+
+
+
+// Overview (default)
+// Sessions
+// Assignments
+// Resources
+// Quizzes (future)
+// Students
+// Settings

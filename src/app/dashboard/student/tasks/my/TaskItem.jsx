@@ -1,8 +1,9 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Pencil, Trash2, MoreVertical, Eye } from "lucide-react";
 
-export function TaskItem({ task, onEdit, onDelete, onComplete }) {
+export function TaskItem({ task, onEdit, onDelete, onComplete, onView }) {
   const isCompleted = task.status === "COMPLETED";
+  const isPending = task.status === "COMPLETED";
   return (
     <div
       className={`flex items-center justify-between rounded-lg px-4 py-3 border transition
@@ -16,10 +17,11 @@ export function TaskItem({ task, onEdit, onDelete, onComplete }) {
       <div className="flex items-center gap-3 min-w-0">
         <Checkbox
           checked={isCompleted}
-          disabled={isCompleted}
-          onChange={() => onComplete(task.id, task.status)}
-          className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
+          disabled={isCompleted || isPending}
+          onCheckedChange={() => onComplete(task.id, task.status)}
+          className="cursor-pointer data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
         />
+
 
 
         <div className="min-w-0">
@@ -63,7 +65,7 @@ export function TaskItem({ task, onEdit, onDelete, onComplete }) {
         </span>
 
         {/* Actions */}
-        <button className="text-green-600 p-1 bg-green-200 cursor-pointer rounded-sm transition">
+        <button onClick={() => onView(task)} className="text-green-600 p-1 bg-green-200 cursor-pointer rounded-sm transition">
           <Eye size={16} />
         </button>
 

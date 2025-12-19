@@ -9,6 +9,7 @@ export function TaskList({
   onEdit,
   onDelete,
   onComplete,
+  onView
 }) {
   /* 1️⃣ Loading */
   if (isLoading) {
@@ -45,6 +46,7 @@ export function TaskList({
           onEdit={onEdit}
           onDelete={onDelete}
           onComplete={onComplete}
+          onView={onView}
         />
       ))}
     </div>

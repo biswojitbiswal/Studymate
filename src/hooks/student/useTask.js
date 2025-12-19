@@ -81,20 +81,47 @@ export function useCompleteTask() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id }) => {
-      // console.log("🟡 mutationFn called with id:", id);
-      return taskService.complete(id);
+    mutationFn: ({ id }) => taskService.complete(id),
+
+    onMutate: async ({ id }) => {
+      await qc.cancelQueries({ queryKey: ["tasks"] });
+
+      // Snapshot ALL task queries (pagination, filters, etc.)
+      const prev = qc.getQueriesData({ queryKey: ["tasks"] });
+
+      qc.setQueriesData({ queryKey: ["tasks"] }, (old) => {
+        if (!old) return old;
+
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            data: old.data.data.map((task) =>
+              task.id === id
+                ? { ...task, status: "COMPLETED" }
+                : task
+            ),
+          },
+        };
+      });
+
+      return { prev };
     },
 
-    onSuccess: (data) => {
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.prev) {
+        ctx.prev.forEach(([key, data]) => {
+          qc.setQueryData(key, data);
+        });
+      }
+    },
+
+    onSettled: () => {
       qc.invalidateQueries({ queryKey: ["tasks"] });
-    },
-
-    onError: (err) => {
-      // console.error("🔴 complete error:", err);
     },
   });
 }
+
 
 
 

@@ -6,29 +6,30 @@ import {
  LayoutDashboard,
  ListTodo,
  MessagesSquare,
- School
+ GraduationCap
 } from "lucide-react";
+import { PiStudentFill } from "react-icons/pi";
 
 export const navItems = [
   {
     label: "Dashboard",
-    href: "/dashboard/student",
+    href: "/dashboard/tutor",
     icon: LayoutDashboard,
   },
 
   {
-    label: "My Task",
-    href: "/dashboard/student/tasks/my",
+    label: "My Classes",
+    href: "/dashboard/tutor/classes",
     icon: ListTodo,
   },
   {
     label: "My Chats",
-    href: "/dashboard/student/chats",
+    href: "/dashboard/tutor/chats",
     icon: MessagesSquare,
   },
   {
-    label: "My Classes",
-    href: "/dashboard/student/classes",
-    icon: School,
+    label: "My Students",
+    href: "/dashboard/tutor/students",
+    icon: GraduationCap ,
   }
 ];
