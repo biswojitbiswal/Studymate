@@ -4,7 +4,7 @@ export function TableSkeleton({ rows = 10 }) {
       {Array.from({ length: rows }).map((_, i) => (
         <div
           key={i}
-          className="h-10 w-full rounded-md bg-slate-100 animate-pulse"
+          className="h-10 w-full rounded-md bg-slate-200 animate-pulse"
         />
       ))}
     </div>

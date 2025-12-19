@@ -1,5 +1,5 @@
-// export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4040/api/v1";
-export const BACKEND_URL = "/api/v1";
+export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4040/api/v1";
+// export const BACKEND_URL = "/api/v1";
 
 
 
@@ -45,6 +45,18 @@ export const API = {
       GET_BY_ID: `${BACKEND_URL}/subject`,
       DELETE: `${BACKEND_URL}/subject`,
       UPDATE: `${BACKEND_URL}/subject`
+    }
+  },
+
+
+  STUDENT: {
+    TASK: {
+      CREATE: `${BACKEND_URL}/task`,
+      GET: `${BACKEND_URL}/task`,
+      GET_BY_ID: `${BACKEND_URL}/task`,
+      DELETE: `${BACKEND_URL}/task`,
+      UPDATE: `${BACKEND_URL}/task`,
+      COMPLETE: `${BACKEND_URL}/task/status`
     }
   }
 };
