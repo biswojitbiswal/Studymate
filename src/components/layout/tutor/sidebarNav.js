@@ -6,7 +6,9 @@ import {
  LayoutDashboard,
  ListTodo,
  MessagesSquare,
- GraduationCap
+ GraduationCap,
+ CalendarRange,
+ AlarmClock
 } from "lucide-react";
 import { PiStudentFill } from "react-icons/pi";
 
@@ -20,7 +22,12 @@ export const navItems = [
   {
     label: "My Classes",
     href: "/dashboard/tutor/classes",
-    icon: ListTodo,
+    icon: CalendarRange,
+  },
+  {
+    label: "My Schedule",
+    href: "/dashboard/tutor/Schedule",
+    icon: AlarmClock,
   },
   {
     label: "My Chats",
