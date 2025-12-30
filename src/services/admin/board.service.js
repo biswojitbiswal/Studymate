@@ -5,6 +5,9 @@ export const boardService = {
   getAll: (params) =>
     api.get(API.ADMIN.BOARD.GET, { params }),
 
+  getForPublic: () =>
+    api.get(API.ADMIN.BOARD.GET_FOR_PUBLIC),
+
   getById: (id) =>
     api.get(`${API.ADMIN.BOARD.GET_BY_ID}/${id}`),
 

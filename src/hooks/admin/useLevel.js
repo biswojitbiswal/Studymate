@@ -25,6 +25,19 @@ export function useLevels({ page, limit, search }) {
 }
 
 
+export function usePublicLevels() {
+  // loading state,error state,retry logic,caching logic,refetch logic React Query handles ALL of that.
+  return useQuery({
+    queryKey: ["levels"],
+    queryFn: async () => {
+      const res = await levelService.getForPublic();
+      return res.data.data;
+    },
+    keepPreviousData: true,
+  });
+}
+
+
 /* =========================
    GET BOARDS (BY ID)
 ========================= */

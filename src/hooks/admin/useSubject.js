@@ -25,6 +25,20 @@ export function useSubjects({ page, limit, search }) {
 }
 
 
+
+export function usePublicSubjects() {
+  // loading state,error state,retry logic,caching logic,refetch logic React Query handles ALL of that.
+  return useQuery({
+    queryKey: ["subjects"],
+    queryFn: async () => {
+      const res = await subjectService.getForPublic();
+      return res.data.data;
+    },
+    keepPreviousData: true,
+  });
+}
+
+
 /* =========================
    GET BOARDS (BY ID)
 ========================= */

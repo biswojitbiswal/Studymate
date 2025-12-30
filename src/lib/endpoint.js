@@ -19,6 +19,7 @@ export const API = {
       CREATE: `${BACKEND_URL}/board`,
       GET: `${BACKEND_URL}/board`,
       GET_BY_ID: `${BACKEND_URL}/board`,
+      GET_FOR_PUBLIC: `${BACKEND_URL}/board/public`,
       DELETE: `${BACKEND_URL}/board`,
       UPDATE: `${BACKEND_URL}/board`
     },
@@ -27,6 +28,7 @@ export const API = {
       CREATE: `${BACKEND_URL}/level`,
       GET: `${BACKEND_URL}/level`,
       GET_BY_ID: `${BACKEND_URL}/level`,
+      GET_FOR_PUBLIC: `${BACKEND_URL}/level/public`,
       DELETE: `${BACKEND_URL}/level`,
       UPDATE: `${BACKEND_URL}/level`
     },
@@ -35,6 +37,7 @@ export const API = {
       CREATE: `${BACKEND_URL}/language`,
       GET: `${BACKEND_URL}/language`,
       GET_BY_ID: `${BACKEND_URL}/language`,
+      GET_FOR_PUBLIC: `${BACKEND_URL}/language/public`,
       DELETE: `${BACKEND_URL}/language`,
       UPDATE: `${BACKEND_URL}/language`
     },
@@ -43,6 +46,7 @@ export const API = {
       CREATE: `${BACKEND_URL}/subject`,
       GET: `${BACKEND_URL}/subject`,
       GET_BY_ID: `${BACKEND_URL}/subject`,
+      GET_FOR_PUBLIC: `${BACKEND_URL}/subject/public`,
       DELETE: `${BACKEND_URL}/subject`,
       UPDATE: `${BACKEND_URL}/subject`
     }
@@ -57,6 +61,22 @@ export const API = {
       DELETE: `${BACKEND_URL}/task`,
       UPDATE: `${BACKEND_URL}/task`,
       COMPLETE: `${BACKEND_URL}/task/status`
+    }
+  },
+
+
+
+
+
+  TUTOR: {
+    CLASSES: {
+      CREATE: `${BACKEND_URL}/tutor/classes`,
+      GET: `${BACKEND_URL}/tutor/classes`,
+      GET_BY_ID: `${BACKEND_URL}/tutor/classes`,
+      DELETE: `${BACKEND_URL}/tutor/classes`,
+      UPDATE: `${BACKEND_URL}/tutor/classes`,
+      PUBLISH: `${BACKEND_URL}/tutor/classes`,
+      ARCHIVE: `${BACKEND_URL}/tutor/classes`,
     }
   }
 };

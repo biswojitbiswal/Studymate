@@ -5,6 +5,9 @@ export const languageService = {
   getAll: (params) =>
     api.get(API.ADMIN.LANGUAGE.GET, { params }),
 
+  getForPublic: () =>
+    api.get(API.ADMIN.LANGUAGE.GET_FOR_PUBLIC),
+
   getById: (id) =>
     api.get(`${API.ADMIN.LANGUAGE.GET_BY_ID}/${id}`),
 

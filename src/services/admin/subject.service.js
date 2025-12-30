@@ -5,6 +5,9 @@ export const subjectService = {
   getAll: (params) =>
     api.get(API.ADMIN.SUBJECT.GET, { params }),
 
+  getForPublic: () =>
+    api.get(API.ADMIN.SUBJECT.GET_FOR_PUBLIC),
+
   getById: (id) =>
     api.get(`${API.ADMIN.SUBJECT.GET_BY_ID}/${id}`),
 

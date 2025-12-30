@@ -25,6 +25,20 @@ export function useLanguages({ page, limit, search }) {
 }
 
 
+
+export function usePublicLanguages() {
+  // loading state,error state,retry logic,caching logic,refetch logic React Query handles ALL of that.
+  return useQuery({
+    queryKey: ["languages"],
+    queryFn: async () => {
+      const res = await languageService.getForPublic();
+      return res.data.data;
+    },
+    keepPreviousData: true,
+  });
+}
+
+
 /* =========================
    GET BOARDS (BY ID)
 ========================= */

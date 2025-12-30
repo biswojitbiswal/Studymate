@@ -5,6 +5,9 @@ export const levelService = {
   getAll: (params) =>
     api.get(API.ADMIN.LEVEL.GET, { params }),
 
+  getForPublic: () =>
+    api.get(API.ADMIN.LEVEL.GET_FOR_PUBLIC),
+
   getById: (id) =>
     api.get(`${API.ADMIN.LEVEL.GET_BY_ID}/${id}`),
 

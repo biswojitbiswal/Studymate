@@ -25,6 +25,19 @@ export function useBoards({ page, limit, search }) {
 }
 
 
+export function usePublicBoards() {
+  // loading state,error state,retry logic,caching logic,refetch logic React Query handles ALL of that.
+  return useQuery({
+    queryKey: ["boards"],
+    queryFn: async () => {
+      const res = await boardService.getForPublic();
+      return res.data.data;
+    },
+    keepPreviousData: true,
+  });
+}
+
+
 /* =========================
    GET BOARDS (BY ID)
 ========================= */

@@ -25,7 +25,7 @@ import {
 export function SearchSelect({
   value,
   onChange,
-  options,
+  options = [],
   placeholder,
 }) {
   const [open, setOpen] = React.useState(false);
@@ -36,22 +36,23 @@ export function SearchSelect({
         <Button
           variant="outline"
           role="combobox"
-          className={cn(
-            "w-full justify-between",
-            !value && "text-muted-foreground"
-          )}
+          className="w-full justify-between"
         >
           {value
             ? options.find((o) => o.value === value)?.label
             : placeholder}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-full p-0">
+      <PopoverContent
+        side="bottom"
+        align="start"
+        className="w-[--radix-popover-trigger-width] p-0"
+      >
         <Command>
-          <CommandInput placeholder={`Search ${placeholder.toLowerCase()}...`} />
-          <CommandEmpty>No result found.</CommandEmpty>
+          <CommandInput placeholder={`Search ${placeholder}...`} />
+          <CommandEmpty>No results found.</CommandEmpty>
 
           <CommandGroup>
             {options.slice(0, 10).map((option) => (
@@ -59,7 +60,7 @@ export function SearchSelect({
                 key={option.value}
                 value={option.label}
                 onSelect={() => {
-                  onChange(option.value);
+                  onChange(option.value);   // ✅ correct
                   setOpen(false);
                 }}
               >
@@ -78,3 +79,4 @@ export function SearchSelect({
     </Popover>
   );
 }
+

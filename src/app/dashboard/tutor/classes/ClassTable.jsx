@@ -1,5 +1,6 @@
 "use client";
 
+import { TableSkeleton } from "@/components/common/TableSkeleton";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -42,10 +43,29 @@ const statusStyles = {
 };
 
 
-export default function ClassTable() {
+export default function ClassTable({ data, isLoading, isError }) {
   const router = useRouter()
+
+
+  if (isLoading) {
+    return (
+      <div className="text-sm text-gray-500">
+        <TableSkeleton />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="text-sm text-red-500">
+        Failed to load classes
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+
       <table className="w-full text-sm">
         <thead className="bg-gray-50 text-gray-600">
           <tr>
@@ -60,7 +80,7 @@ export default function ClassTable() {
         </thead>
 
         <tbody className="divide-y">
-          {classes.map((cls) => (
+          {data?.data?.map((cls) => (
             <tr key={cls.id} className="hover:bg-gray-50 transition">
               <td className="px-4 py-3 font-medium text-gray-900">
                 {cls.title}
@@ -87,7 +107,7 @@ export default function ClassTable() {
               </td>
 
               <td className="px-4 py-3 text-gray-700">
-                {cls.students}
+                {cls.price}
               </td>
 
               <td className="px-4 py-3">
@@ -120,6 +140,7 @@ export default function ClassTable() {
           ))}
         </tbody>
       </table>
+
 
       {/* Pagination */}
       <div className="flex items-center justify-between px-4 py-3 border-t bg-gray-50">
