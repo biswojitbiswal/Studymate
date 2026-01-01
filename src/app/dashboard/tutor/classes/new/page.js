@@ -20,6 +20,7 @@ import { usePublicLanguages } from "@/hooks/admin/useLanguage";
 import { usePublicSubjects } from "@/hooks/admin/useSubject";
 import { useCreateClass } from "@/hooks/tutor/useClass";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 
 const DAYS = [
@@ -37,6 +38,9 @@ export default function CreateClassPage() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [syllabusText, setSyllabusText] = useState("");
+
+    const [previewImg, setPreviewImg] = useState(null);
+    const [previewVdo, setPreviewVdo] = useState(null);
 
 
     const [subjectId, setSubjectId] = useState(undefined);
@@ -61,6 +65,8 @@ export default function CreateClassPage() {
     const [isPaid, setIsPaid] = useState(false);
     const [price, setPrice] = useState(undefined);
     const [currency] = useState("INR");
+
+    const router = useRouter()
 
 
     /* ------------------ Auto rules ------------------ */
@@ -149,51 +155,85 @@ export default function CreateClassPage() {
         return true;
     };
 
+
+    if (previewImg && !previewImg.type.startsWith("image/")) {
+        toast.error("Preview image must be an image file");
+        return;
+    }
+
+    if (previewVdo && !previewVdo.type.startsWith("video/")) {
+        toast.error("Preview video must be a video file");
+        return;
+    }
+
+
     const { mutate: createClass, isPending } = useCreateClass();
 
     const handleSubmit = () => {
-        if (!validateForm()) return;
+        if (!validateForm()) {
+            toast.error("Please fix the highlighted fields");
+            return;
+        }
 
-        const payload = {
-            title,
-            description,
-            subjectId,
-            levelId,
-            boardId,
-            languageId,
+        const formData = new FormData();
 
-            syllabus: parseSyllabus(),
+        // Basic info
+        formData.append("title", title);
+        formData.append("description", description);
+        formData.append("subjectId", subjectId);
+        formData.append("levelId", levelId);
 
-            type,
-            visibility,
+        if (boardId) formData.append("boardId", boardId);
+        if (languageId) formData.append("languageId", languageId);
 
-            startDate,
-            endDate,
-            joiningStartDate,
-            joiningEndDate,
+        // Class config
+        formData.append("type", type);
+        formData.append("visibility", visibility);
 
-            daysOfWeek: type === "GROUP" ? daysOfWeek : undefined,
-            startTime: type === "GROUP" ? startTime : undefined,
-            durationMin: type === "GROUP" ? durationMin : undefined,
+        formData.append("startDate", startDate);
+        formData.append("endDate", endDate);
+        formData.append("joiningStartDate", joiningStartDate);
+        formData.append("joiningEndDate", joiningEndDate);
 
-            capacity,
-            isPaid,
-            price: isPaid ? price : undefined,
-            currency: isPaid ? currency : undefined,
-        };
+        formData.append("capacity", String(capacity));
+        formData.append("isPaid", String(isPaid));
 
-        createClass(payload, {
+        if (isPaid && price) {
+            formData.append("price", String(price));
+            formData.append("currency", currency);
+        }
+
+        // GROUP-only fields
+        if (type === "GROUP") {
+            daysOfWeek.forEach((day) =>
+                formData.append("daysOfWeek[]", day)
+            );
+
+            if (startTime) formData.append("startTime", startTime);
+            if (durationMin) formData.append("durationMin", String(durationMin));
+        }
+
+        // Syllabus (JSON)
+        formData.append("syllabus", parseSyllabus());
+
+        // Files
+        if (previewImg) formData.append("previewImg", previewImg);
+        if (previewVdo) formData.append("previewVdo", previewVdo);
+
+        createClass(formData, {
             onSuccess: () => {
                 toast.success("Class created successfully");
+                router.push("/dashboard/tutor/classes")
                 resetForm();
             },
             onError: (err) => {
-                const msg =
-                    err?.response?.data?.message || "Failed to create class";
-                toast.error(msg);
+                toast.error(
+                    err?.response?.data?.message || "Failed to create class"
+                );
             },
         });
     };
+
 
     const resetForm = () => {
         setTitle("");
@@ -273,6 +313,40 @@ export default function CreateClassPage() {
                         <p className="text-sm text-red-500 mt-1">{errors.description}</p>
                     )}
                 </div>
+
+                {/* Preview Media */}
+                <div className="grid grid-cols-2 gap-4">
+                    {/* Preview Image */}
+                    <div>
+                        <label className="text-sm font-medium">
+                            Preview Image <span className="text-gray-400">(optional)</span>
+                        </label>
+                        <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => setPreviewImg(e.target.files?.[0] || null)}
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                            JPG / PNG (recommended)
+                        </p>
+                    </div>
+
+                    {/* Preview Video */}
+                    <div>
+                        <label className="text-sm font-medium">
+                            Preview Video <span className="text-gray-400">(optional)</span>
+                        </label>
+                        <Input
+                            type="file"
+                            accept="video/*"
+                            onChange={(e) => setPreviewVdo(e.target.files?.[0] || null)}
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                            MP4 / WebM (short intro)
+                        </p>
+                    </div>
+                </div>
+
 
                 {/* ───────── Syllabus ───────── */}
                 <div>

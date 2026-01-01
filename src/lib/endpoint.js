@@ -75,8 +75,8 @@ export const API = {
       GET_BY_ID: `${BACKEND_URL}/tutor/classes`,
       DELETE: `${BACKEND_URL}/tutor/classes`,
       UPDATE: `${BACKEND_URL}/tutor/classes`,
-      PUBLISH: `${BACKEND_URL}/tutor/classes`,
-      ARCHIVE: `${BACKEND_URL}/tutor/classes`,
+      PUBLISH: `${BACKEND_URL}/tutor/classes/publish`,
+      ARCHIVE: `${BACKEND_URL}/tutor/classes/archive`,
     }
   }
 };

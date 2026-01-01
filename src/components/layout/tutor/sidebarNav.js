@@ -8,7 +8,8 @@ import {
  MessagesSquare,
  GraduationCap,
  CalendarRange,
- AlarmClock
+ AlarmClock,
+ BookOpenCheck
 } from "lucide-react";
 import { PiStudentFill } from "react-icons/pi";
 
@@ -22,7 +23,7 @@ export const navItems = [
   {
     label: "My Classes",
     href: "/dashboard/tutor/classes",
-    icon: CalendarRange,
+    icon: BookOpenCheck,
   },
   {
     label: "My Schedule",

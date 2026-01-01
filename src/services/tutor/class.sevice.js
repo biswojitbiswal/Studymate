@@ -14,12 +14,9 @@ export const classService = {
   update: (id, data) =>
     api.patch(`${API.TUTOR.CLASSES.UPDATE}/${id}`, data),
 
-  remove: (id) =>
-    api.delete(`${API.TUTOR.CLASSES.DELETE}/${id}`),
-
   publish: (id) => 
-    api.patch(`${API.TUTOR.CLASSES.PUBLISH}/${id}/publish`),
+    api.patch(`${API.TUTOR.CLASSES.PUBLISH}/${id}`),
 
   archive: (id) => 
-    api.patch(`${API.TUTOR.CLASSES.PUBLISH}/${id}/archive`)
+    api.patch(`${API.TUTOR.CLASSES.ARCHIVE}/${id}`)
 };

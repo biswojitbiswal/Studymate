@@ -34,9 +34,9 @@ export function useClasses(params) {
         page: params.page ?? 1,
         limit: params.limit ?? 10,
         search: params.search ?? "",
-        status: params.status ?? "ALL",
-        type: params.type ?? "ALL",
-        visibility: params.visibility ?? "ALL",
+        status: params.status ?? undefined,
+        type: params.type ?? undefined,
+        visibility: params.visibility ?? undefined,
         sortBy: params.sortBy ?? "createdAt",
         sortOrder: params.sortOrder ?? "desc",
     };
@@ -51,7 +51,6 @@ export function useClasses(params) {
         staleTime: 30_000,
     });
 }
-
 
 
 /* =========================
@@ -150,37 +149,38 @@ export function usePublishClass() {
 
 
 
-
 /* =========================
    DELETE TASK (OPTIMISTIC)
 ========================= */
-export function useArchiveClass(filters) {
+export function useArchiveClass() {
     const qc = useQueryClient();
 
     return useMutation({
         mutationFn: classService.archive,
 
-        onMutate: async (id) => {
+        onMutate: async (classId) => {
             await qc.cancelQueries({ queryKey: ["classes"] });
 
-            const prev = qc.getQueriesData({ queryKey: ["classes"] });
-
-            qc.setQueriesData({ queryKey: ["classes"] }, (old) => {
-                if (!old) return old;
-
-                return {
-                    ...old,
-                    data: old.data.filter((c) => c.id !== id),
-                    total: Math.max(old.total - 1, 0),
-                };
+            const previousQueries = qc.getQueriesData({
+                queryKey: ["classes"],
             });
 
-            return { prev };
+            previousQueries.forEach(([queryKey, old]) => {
+                if (!old || !Array.isArray(old.data)) return;
+
+                qc.setQueryData(queryKey, {
+                    ...old,
+                    data: old.data.filter((c) => c.id !== classId),
+                    total: Math.max((old.total ?? 1) - 1, 0),
+                });
+            });
+
+            return { previousQueries };
         },
 
-        onError: (_e, _id, ctx) => {
-            ctx?.prev?.forEach(([key, data]) => {
-                qc.setQueryData(key, data);
+        onError: (_err, _id, ctx) => {
+            ctx?.previousQueries?.forEach(([queryKey, data]) => {
+                qc.setQueryData(queryKey, data);
             });
         },
 
@@ -189,5 +189,7 @@ export function useArchiveClass(filters) {
         },
     });
 }
+
+
 
 
