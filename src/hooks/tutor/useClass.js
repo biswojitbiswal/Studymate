@@ -8,27 +8,6 @@ import { classService } from "@/services/tutor/class.sevice";
 /* =========================
    GET TASKS (LIST)
 ========================= */
-// export function useclasses({ page, limit, search, status, type, visibility, sortBy, sortOrder }) {
-//     // loading state,error state,retry logic,caching logic,refetch logic React Query handles ALL of that.
-//     return useQuery({
-//         queryKey: ["classes", page, limit, search, status, type, visibility, sortBy, sortOrder],
-//         queryFn: async () => {
-//             const res = await classService.getAll({
-//                 page,
-//                 limit,
-//                 search,
-//                 status,
-//                 type,
-//                 visibility,
-//                 sortBy,
-//                 sortOrder
-//             });
-//             return res.data; // { items, total }
-//         },
-//         placeholderData: (prev) => prev,
-//     });
-// }
-
 export function useClasses(params) {
     const filters = {
         page: params.page ?? 1,

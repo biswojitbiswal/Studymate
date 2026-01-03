@@ -77,6 +77,26 @@ export const API = {
       UPDATE: `${BACKEND_URL}/tutor/classes`,
       PUBLISH: `${BACKEND_URL}/tutor/classes/publish`,
       ARCHIVE: `${BACKEND_URL}/tutor/classes/archive`,
+    },
+
+    AVAILABILITY: {
+      CREATE: `${BACKEND_URL}/schedule/availibility`,
+      GET: `${BACKEND_URL}/schedule/availibility`,
+      DELETE: `${BACKEND_URL}/schedule/availibility`,
+      UPDATE: `${BACKEND_URL}/schedule/availibility`,
+      TOGGLE: `${BACKEND_URL}/schedule/availibility/toggle`,
+    },
+
+    TIMEOFF: {
+      CREATE: `${BACKEND_URL}/schedule/timeoff`,
+      GET: `${BACKEND_URL}/schedule/timeoff`,
+      DELETE: `${BACKEND_URL}/schedule/timeoff`,
+    },
+
+    LEAVE: {
+      CREATE: `${BACKEND_URL}/schedule/leave`,
+      GET: `${BACKEND_URL}/schedule/leave`,
+      DELETE: `${BACKEND_URL}/schedule/leave`,
     }
   }
 };
