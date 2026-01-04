@@ -6,7 +6,8 @@ import {
  LayoutDashboard,
  ListTodo,
  MessagesSquare,
- School
+ School,
+ Presentation
 } from "lucide-react";
 
 export const navItems = [
@@ -29,6 +30,6 @@ export const navItems = [
   {
     label: "My Classes",
     href: "/dashboard/student/classes",
-    icon: School,
+    icon: Presentation,
   }
 ];

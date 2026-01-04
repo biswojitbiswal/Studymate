@@ -5,6 +5,7 @@ import {
   Folder,
   Users,
   Layers,
+  Presentation,
 } from "lucide-react";
 
 export const adminNavItems = [
@@ -41,9 +42,9 @@ export const adminNavItems = [
   },
 
   {
-    label: "My Courses",
-    href: "/dashboard/admin/courses",
-    icon: BookOpen,
+    label: "Tuition Classes",
+    href: "/dashboard/admin/classes",
+    icon: Presentation,
   },
   {
     label: "My Orders",

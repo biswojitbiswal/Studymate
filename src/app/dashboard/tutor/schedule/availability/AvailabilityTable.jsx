@@ -46,7 +46,7 @@ export default function AvailabilityTable({
           {data.length === 0 ? (
             <TableRow>
               <TableCell colSpan={4} className="text-center py-6">
-                No leaves found
+                No availability found
               </TableCell>
             </TableRow>
           ) : (data.map((row) => (

@@ -4,15 +4,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useClasses } from "@/hooks/tutor/useClass";
+import { useClasses, usePublishClass } from "@/hooks/tutor/useClass";
 import { useDebounce } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "sonner";
 
 
 export default function TutorClassesPage() {
-  const [classes, setClasses] = useState([])
   const [page, setPage] = useState(1);
-  const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("ALL");
   const [type, setType] = useState("ALL");
@@ -35,6 +34,22 @@ export default function TutorClassesPage() {
     visibility: visibility === "ALL" ? undefined : visibility,
   })
   // console.log(status);
+
+  const { mutate: publishClass } = usePublishClass();
+
+  function handleClassPublish(id) {
+    publishClass(id, {
+      onSuccess: () => {
+        toast.success("Class published successfully");
+      },
+      onError: (err) => {
+        toast.error(
+          err?.response?.data?.message ||
+          "Failed to publish class"
+        );
+      },
+    });
+  }
 
 
   return (
@@ -115,6 +130,7 @@ export default function TutorClassesPage() {
           isError={isError}
           page={page}
           setPage={setPage}
+          onPublish={handleClassPublish}
         />
       </div>
     </div>

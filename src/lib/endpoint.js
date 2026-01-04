@@ -49,6 +49,11 @@ export const API = {
       GET_FOR_PUBLIC: `${BACKEND_URL}/subject/public`,
       DELETE: `${BACKEND_URL}/subject`,
       UPDATE: `${BACKEND_URL}/subject`
+    },
+
+    CLASSES: {
+      GET: `${BACKEND_URL}/admin/classes`,
+      ARCHIVE: `${BACKEND_URL}/admin/classes/archive`,
     }
   },
 

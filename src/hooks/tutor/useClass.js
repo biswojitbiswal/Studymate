@@ -3,7 +3,7 @@ import {
     useMutation,
     useQueryClient,
 } from "@tanstack/react-query";
-import { classService } from "@/services/tutor/class.sevice";
+import { classService } from "@/services/tutor/class.service";
 
 /* =========================
    GET TASKS (LIST)
@@ -82,48 +82,57 @@ export function useUpdateClass() {
 
 
 /* =========================
-   Publish Class
+   PUBLISH CLASS (OPTIMISTIC)
 ========================= */
 export function usePublishClass() {
     const qc = useQueryClient();
 
     return useMutation({
-        mutationFn: ({ id }) => classService.publish(id),
+        mutationFn: (classId) =>
+            classService.publish(classId),
 
-        onMutate: async ({ id }) => {
+        onMutate: async (classId) => {
+            // 1️⃣ Stop outgoing refetches
             await qc.cancelQueries({ queryKey: ["classes"] });
 
-            // Snapshot ALL task queries (pagination, filters, etc.)
-            const prev = qc.getQueriesData({ queryKey: ["classes"] });
-
-            qc.setQueriesData({ queryKey: ["classes"] }, (old) => {
-                if (!old) return old;
-
-                return {
-                    ...old,
-                    data: old.data.map((cls) =>
-                        cls.id === id ? { ...cls, status: "PUBLISHED" } : cls
-                    ),
-                };
+            // 2️⃣ Snapshot ALL class queries (pagination, filters, etc.)
+            const previousQueries = qc.getQueriesData({
+                queryKey: ["classes"],
             });
 
+            // 3️⃣ Optimistically update ALL cached lists
+            previousQueries.forEach(([queryKey, old]) => {
+                if (!old || !Array.isArray(old.data)) return;
 
-            return { prev };
-        },
-
-        onError: (_err, _vars, ctx) => {
-            if (ctx?.prev) {
-                ctx.prev.forEach(([key, data]) => {
-                    qc.setQueryData(key, data);
+                qc.setQueryData(queryKey, {
+                    ...old,
+                    data: old.data.map((cls) =>
+                        cls.id === classId
+                            ? { ...cls, status: "PUBLISHED" }
+                            : cls
+                    ),
                 });
-            }
+            });
+
+            return { previousQueries };
         },
 
-        onSettled: () => {
-            qc.invalidateQueries({ queryKey: ["classes"] });
+        // 4️⃣ Rollback on error
+        onError: (_err, _id, ctx) => {
+            ctx?.previousQueries?.forEach(([queryKey, data]) => {
+                qc.setQueryData(queryKey, data);
+            });
+        },
+
+        // 5️⃣ Background refetch (no visible flicker)
+        onSuccess: () => {
+            setTimeout(() => {
+                qc.invalidateQueries({ queryKey: ["classes"] });
+            }, 800);
         },
     });
 }
+
 
 
 

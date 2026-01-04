@@ -8,20 +8,18 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useArchiveClass } from "@/hooks/tutor/useClass";
+import { useAdminArchiveClass } from "@/hooks/admin/useClass";
 import { toast } from "sonner";
 
 export default function DeleteClassDialog({ open, setOpen, classId }) {
-  const deleteClass = useArchiveClass();
+  const deleteClass = useAdminArchiveClass();
 
   const handleConfirm = () => {
-    console.log("Entry");
-    
     if (!classId) return;
 
     deleteClass.mutate(classId, {
       onSuccess: () => {
-        toast.success("Class arvhived/deleted successfully");
+        toast.success("Class archived/deleted successfully");
         setOpen(false);
       },
       onError: () => {
@@ -41,7 +39,7 @@ export default function DeleteClassDialog({ open, setOpen, classId }) {
           <AlertDialogDescription>
             This action cannot be undone.
             All sessions, enrollments, and assignments related to this class
-            will be permanently removed.
+            may be permanently removed.
           </AlertDialogDescription>
         </AlertDialogHeader>
 

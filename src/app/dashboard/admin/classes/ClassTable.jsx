@@ -27,7 +27,7 @@ const statusStyles = {
 };
 
 
-export default function ClassTable({ data, isLoading, isError, page, setPage, onPublish }) {
+export default function ClassTable({ data, isLoading, isError, page, setPage }) {
   const [open, setOpen] = useState(false);
   const [selectedClassId, setSelectedClassId] = useState(null);
 
@@ -62,13 +62,11 @@ export default function ClassTable({ data, isLoading, isError, page, setPage, on
           <TableHeader>
             <TableRow className="bg-gray-50">
               <TableHead>Class Title</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Visibility</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Joining Date</TableHead>
-              <TableHead>Start / End Date</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Publish</TableHead>
+              <TableHead className="text-center">Tutor</TableHead>
+              <TableHead className="text-center">Type</TableHead>
+              <TableHead className="text-center">Visibility</TableHead>
+              <TableHead className="text-center">Status</TableHead>
+              <TableHead className="text-center">Price</TableHead>
               <TableHead className="text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -89,15 +87,21 @@ export default function ClassTable({ data, isLoading, isError, page, setPage, on
                   {cls.title}
                 </TableCell>
 
-                <TableCell className="text-gray-700">
+                <TableCell className="text-gray-700 text-center">
+                  {cls.tutor.user.name}
+                  <br />
+                  {cls.tutor.user.email}
+                </TableCell>
+
+                <TableCell className="text-gray-700 text-center">
                   {cls.type}
                 </TableCell>
 
-                <TableCell className="text-gray-700">
+                <TableCell className="text-gray-700 text-center">
                   {cls.visibility}
                 </TableCell>
 
-                <TableCell>
+                <TableCell className="text-center">
                   <Badge
                     className={`text-xs ${statusStyles[cls.status]}`}
                   >
@@ -105,46 +109,12 @@ export default function ClassTable({ data, isLoading, isError, page, setPage, on
                   </Badge>
                 </TableCell>
 
-                <TableCell className="text-gray-700">
-                  {cls.joiningStartDate.split("T")[0]}
-                  <br />
-                  {cls.joiningEndDate.split("T")[0]}
-                </TableCell>
-
-                <TableCell className="text-gray-700">
-                  {cls.startDate.split("T")[0]}
-                  <br />
-                  {cls.endDate.split("T")[0]}
-                </TableCell>
-
-                <TableCell className="font-medium">
+                <TableCell className="font-medium text-center">
                   ₹{cls.price}
                 </TableCell>
 
                 <TableCell>
-                  <Switch
-                    checked={cls.status === 'PUBLISHED'}
-                    onCheckedChange={() => onPublish(cls.id)}
-                    className="data-[state=checked]:bg-blue-600 hover:cursor-pointer"
-                  />
-                </TableCell>
-
-                <TableCell>
                   <div className="flex items-center justify-center gap-2">
-                    {/* Edit */}
-                    <Button
-                      size="icon"
-                      title="Edit"
-                      onClick={() =>
-                        router.push(
-                          `/dashboard/tutor/classes/${cls.id}/edit`
-                        )
-                      }
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
-                    >
-                      <Pencil size={16} />
-                    </Button>
-
                     {/* Delete */}
                     {cls.status !== "ARCHIVED" && (
                       <Button
@@ -164,7 +134,7 @@ export default function ClassTable({ data, isLoading, isError, page, setPage, on
                       title="View"
                       onClick={() =>
                         router.push(
-                          `/dashboard/tutor/classes/${cls.id}/overview`
+                          `/dashboard/admin/classes/${cls.id}`
                         )
                       }
                       className="border-blue-600 text-blue-600 hover:bg-blue-50"

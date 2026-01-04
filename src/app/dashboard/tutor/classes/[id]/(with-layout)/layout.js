@@ -9,6 +9,7 @@ import LoadingScreen from "@/components/common/LoadingScreen";
 import { ClassProvider } from "./ClassContext";
 import { useMemo } from "react";
 
+
 const tabs = [
     { name: "Overview", href: "overview" },
     { name: "Sessions", href: "session" },
@@ -43,6 +44,7 @@ export default function ClassLayout({ children }) {
         isDraft: klass?.status === "DRAFT",
         isGroup: klass?.type === "GROUP",
     }), [klass, id]);
+
 
     if (isLoading) return <LoadingScreen />;
     return (
@@ -81,7 +83,10 @@ export default function ClassLayout({ children }) {
                         <CheckCircle size={14} />
                         <span className="font-semibold">{klass?.status}</span>
                     </div>
+
+
                 </div>
+
 
                 {/* Tabs */}
                 <div className="flex gap-2 border-b">

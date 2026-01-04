@@ -21,7 +21,7 @@ export default function NavAuthActions() {
     return (
       <div className="flex items-center gap-4">
         <span className="text-blue-600 text-sm">
-          Hi, {user.name || user.email}
+          Hi, {user?.name || user?.email}
         </span>
 
         <a

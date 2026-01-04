@@ -37,7 +37,7 @@ export default function AdminTopBar() {
 
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm">
-                        {user.avatar ?? user?.name?.[0] ?? "A"}
+                        {user?.avatar ?? user?.name?.[0] ?? "A"}
                     </div>
                     {/* <span className="text-sm text-slate-700">
             {user?.name ?? "Admin"}
