@@ -147,3 +147,18 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+
+@keyframes lighting {
+  from {
+    stroke-dashoffset: 200;
+  }
+  to {
+    stroke-dashoffset: -200;
+  }
+}
+
+
+.animate-lighting {
+  animation: lighting 3s linear infinite;
+}

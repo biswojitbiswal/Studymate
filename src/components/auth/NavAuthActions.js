@@ -39,10 +39,10 @@ export default function NavAuthActions() {
   // If NOT logged in → show Sign in / Sign up
   return (
     <nav className="flex items-center gap-4 text-sm">
-      <a href="/signin" className="hover:underline text-blue-600">
+      <a href="/signin" className="text-blue-600 px-2 py-1 rounded-sm hover:bg-blue-600 hover:text-white">
         Sign in
       </a>
-      <a href="/signup" className="hover:underline text-blue-600">
+      <a href="/signup" className="text-blue-600 px-2 py-1 rounded-sm hover:bg-blue-600 hover:text-white">
         Sign up
       </a>
     </nav>
