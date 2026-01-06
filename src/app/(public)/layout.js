@@ -1,20 +1,17 @@
 import FloatingNavbar from "@/components/landing/Navbar";
 import "../globals.css";
+import Footer from "@/components/common/Footer";
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className="text-white antialiased">
-        
-        {/* Global Floating Navbar */}
-        <FloatingNavbar />
+    <>
+      <FloatingNavbar />
 
-        {/* Push content below fixed navbar */}
-        <main>
-          {children}
-        </main>
+      <main>
+        {children}
+      </main>
 
-      </body>
-    </html>
+      <Footer />
+    </>
   );
 }

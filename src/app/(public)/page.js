@@ -1,4 +1,5 @@
 import CTASection from "@/components/landing/CTASection";
+import ExploreClassesResources from "@/components/landing/ExploreClassResource";
 import Hero from "@/components/landing/Hero";
 import HowItWorks from "@/components/landing/HowItWorks";
 import KeyBenefits from "@/components/landing/KeyBenefits";
@@ -14,6 +15,7 @@ export default function HomePage() {
       <KeyBenefits />
       <WorkflowDiagram />
       <WhoIsStudyMateFor />
+      <ExploreClassesResources />
       <HowItWorks />
       <CTASection />
     </>

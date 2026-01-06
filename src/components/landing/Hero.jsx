@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import WorkflowDiagram from "./WorkFlowCard";
+import Image from "next/image";
 
 export default function Hero() {
   return (
@@ -73,8 +74,20 @@ export default function Hero() {
           <div className="relative hidden lg:block">
             <div className="relative h-[460px] w-full">
 
+              {/* HERO ILLUSTRATION */}
+              {/* <div className="absolute top-8 z-20 left-1/3 -translate-x-1/2 animate-float-slow">
+                <Image
+                  src="/Hero.png"
+                  alt="Learning illustration"
+                  width={480}
+                  height={580}
+                  priority
+                  className="select-none"
+                />
+              </div> */}
+
               {/* Card 1 */}
-              <div className="absolute left-6 top-6 w-64 rounded-2xl border border-blue-100 bg-white p-4 shadow-lg animate-float">
+              <div className="absolute left-2 top-14 z-10 w-64 rounded-2xl border border-blue-100 bg-white p-4 shadow-lg animate-float">
                 <p className="font-semibold text-blue-600">Live Class</p>
                 <div className="mt-3 space-y-2">
                   <div className="h-2 w-full rounded bg-blue-100" />
@@ -83,8 +96,10 @@ export default function Hero() {
               </div>
 
               {/* Card 2 */}
-              <div className="absolute right-6 top-42 w-64 rounded-2xl border border-indigo-100 bg-white p-4 shadow-lg animate-float-delayed">
-                <p className="font-semibold text-indigo-600">Mentored Group Study</p>
+              <div className="absolute right-2 top-34 z-10 w-64 rounded-2xl border border-indigo-100 bg-white p-4 shadow-lg animate-float-slow">
+                <p className="font-semibold text-indigo-600">
+                  Mentored Group Study
+                </p>
                 <div className="mt-3 space-y-2">
                   <div className="h-2 w-full rounded bg-indigo-100" />
                   <div className="h-2 w-2/3 rounded bg-indigo-100" />
@@ -92,22 +107,23 @@ export default function Hero() {
               </div>
 
               {/* Card 3 */}
-              <div className="absolute bottom-8 left-24 w-64 rounded-2xl border border-blue-100 bg-white p-4 shadow-lg animate-float-slow">
+              <div className="absolute bottom-16 left-24 z-10 w-64 rounded-2xl border border-blue-100 bg-white p-4 shadow-lg animate-float-slow">
                 <p className="font-semibold text-blue-600">Study Resource</p>
                 <div className="mt-3 space-y-2">
                   <div className="h-2 w-full rounded bg-blue-100" />
                   <div className="h-2 w-1/2 rounded bg-blue-100" />
                 </div>
               </div>
-            </div>
 
+            </div>
           </div>
+
 
         </div>
       </div>
 
       {/* Animations */}
-      <style jsx>{`
+      {/* <style jsx>{`
         @keyframes float {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-12px); }
@@ -123,7 +139,7 @@ export default function Hero() {
           animation: float 9s ease-in-out infinite;
           animation-delay: 2s;
         }
-      `}</style>
+      `}</style> */}
     </section>
   );
 }

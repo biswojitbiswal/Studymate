@@ -1,20 +1,42 @@
-// src/app/signin/page.js  (SERVER component — no "use client")
+// SERVER component — no "use client"
 import SignInForm from "@/components/auth/SigninForm";
 import RedirectIfAuthClient from "@/components/auth/RedirectIfAuth";
 
 export default function SignInPage() {
-
   return (
     <RedirectIfAuthClient redirectToHomeIfAuth={true}>
-      <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow-sm">
-        <h1 className="text-lg font-semibold mb-4 text-blue-600">Sign in</h1>
+      <section className="px-18">
+        <div
+          className="
+            mx-auto
+            flex
+            min-h-screen
+            max-w-7xl
+            items-center
+            justify-center
+            px-6
+          "
+        >
+          <div
+            className="
+              w-full
+              max-w-md
+              rounded-sm
+              border
+              bg-white
+              mt-4
+              p-6
+              shadow-sm
+            "
+          >
+            <h1 className="mb-6 text-lg font-semibold text-blue-600">
+              Sign in
+            </h1>
 
-        {/* Client-side form renders here and handles user input */}
-
-        <SignInForm />
-
-
-      </div>
+            <SignInForm />
+          </div>
+        </div>
+      </section>
     </RedirectIfAuthClient>
   );
 }
