@@ -96,7 +96,7 @@ export default function Hero() {
               </div>
 
               {/* Card 2 */}
-              <div className="absolute right-2 top-34 z-10 w-64 rounded-2xl border border-indigo-100 bg-white p-4 shadow-lg animate-float-slow">
+              <div className="absolute right-2 top-45 z-10 w-64 rounded-2xl border border-indigo-100 bg-white p-4 shadow-lg animate-float-slow">
                 <p className="font-semibold text-indigo-600">
                   Mentored Group Study
                 </p>

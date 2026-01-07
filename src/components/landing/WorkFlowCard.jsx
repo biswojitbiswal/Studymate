@@ -150,8 +150,8 @@ export default function WorkflowDiagram() {
                 ))}
 
                 {/* CARDS */}
-                <WorkflowCard id="live" title="Live Class" description="Start of learning" color="blue" className="left-10 top-10" />
-                <WorkflowCard id="mentor" title="Mentored Group Study" description="Discuss & Collaborate after class" color="indigo" className="right-20 top-40" />
+                <WorkflowCard id="live" title="Live Class" description="Start of learning" color="blue" className="left-10 top-20" />
+                <WorkflowCard id="mentor" title="Mentored Group Study" description="Discuss & Collaborate after class" color="indigo" className="right-20 top-35" />
                 <WorkflowCard id="assignment" title="Assignment" description="Apply Knowledge" color="indigo" className="left-10 top-64" />
                 <WorkflowCard
                     id="resources"
@@ -165,7 +165,7 @@ export default function WorkflowDiagram() {
                     title="Smart Scheduling"
                     description="System organizes everything"
                     color="indigo"
-                    className="right-10 bottom-30"
+                    className="right-10 bottom-35"
                 />
                 <WorkflowCard
                     id="attendance"

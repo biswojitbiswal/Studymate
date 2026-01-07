@@ -13,7 +13,8 @@ import {
     Star,
     GraduationCap,
     Video,
-    MessageCircle
+    MessageCircle,
+    ArrowRight
 } from "lucide-react";
 import { useState } from "react";
 
@@ -21,16 +22,16 @@ export default function ClassDetailsPage() {
     const [isWishlisted, setIsWishlisted] = useState(false);
 
     return (
-        <div className="min-h-screen px-22 py-36 bg-linear-to-b from-gray-50 to-white">
+        <div className="min-h-screen px-22 py-25 bg-linear-to-b from-gray-50 to-white">
             {/* Header Section */}
             <div className="relative bg-white overflow-hidden">
                 {/* Subtle Background Accent */}
                 <div className="absolute top-0 right-0 w-1/3 h-full bg-linear-to-l from-blue-50 to-transparent rounded-md"></div>
 
-                <div className="relative max-w-7xl mx-auto px-6 py-12">
+                <div className="relative max-w-7xl mx-auto px-6 py-6">
                     <div className="grid lg:grid-cols-2 gap-8 items-start">
                         {/* Left: Class Info */}
-                        <div className="space-y-6">
+                        <div className="space-y-3">
                             {/* Badge */}
                             <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 px-4 py-2 rounded-full text-sm font-medium text-blue-700">
                                 <Video className="w-4 h-4" />
@@ -39,7 +40,7 @@ export default function ClassDetailsPage() {
 
                             {/* Title */}
                             <h1 className="text-4xl lg:text-5xl font-bold leading-tight text-gray-900">
-                                Class 10 Mathematics – Live Batch
+                                Class 10 Mathematics
                             </h1>
 
                             {/* Meta Info */}
@@ -57,10 +58,10 @@ export default function ClassDetailsPage() {
                             </div>
 
                             {/* Description */}
-                            <p className="text-gray-700 text-lg leading-relaxed">
+                            {/* <p className="text-gray-700 text-lg leading-relaxed">
                                 A structured live class designed to help students master
                                 core concepts with regular practice, doubt solving, and mentor guidance.
-                            </p>
+                            </p> */}
 
                             {/* Quick Stats */}
                             <div className="grid grid-cols-3 gap-4 pt-4">
@@ -85,13 +86,11 @@ export default function ClassDetailsPage() {
                                     </div>
                                     <p className="text-2xl font-bold text-gray-900">4.8</p>
                                 </div>
-                            </div>
-
-                            
+                            </div> 
                         </div>
 
                         {/* Right: Video Preview */}
-                        <div className="lg:pt-8">
+                        <div className="">
                             <div className="relative group flex flex-col justify-between gap-8">
                                 {/* Preview Container */}
                                 <div className="relative bg-gray-900 rounded-2xl overflow-hidden shadow-xl border-2 border-blue-200">
@@ -115,7 +114,7 @@ export default function ClassDetailsPage() {
                                 </div>
 
                                 {/* Tutor Card */}
-                            <div className="bg-linear-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-5">
+                            {/* <div className="bg-linear-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-5">
                                 <p className="text-blue-600 text-xs uppercase tracking-wide font-semibold mb-3">Your Instructor</p>
                                 <div className="flex items-center gap-4">
                                     <div className="w-16 h-16 rounded-full bg-linear-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-xl font-bold shadow-lg">
@@ -139,7 +138,7 @@ export default function ClassDetailsPage() {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                             </div>
 
                         </div>
@@ -148,10 +147,10 @@ export default function ClassDetailsPage() {
             </div>
 
             {/* Main Content */}
-            <div className="max-w-7xl mx-auto px-6 py-12">
+            <div className="max-w-7xl mx-auto py-4">
                 <div className="grid lg:grid-cols-[1fr_380px] gap-10">
                     {/* Left Content */}
-                    <div className="space-y-10">
+                    <div className="space-y-4">
 
                         {/* What You'll Learn */}
                         <section className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
@@ -216,7 +215,7 @@ export default function ClassDetailsPage() {
                         </section>
 
                         {/* Tutor Details */}
-                        <section className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 p-8 shadow-sm">
+                        <section className="bg-linear-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 p-8 shadow-sm">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
                                     <GraduationCap className="w-5 h-5 text-white" />
@@ -281,7 +280,7 @@ export default function ClassDetailsPage() {
                                 <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
                                     <BookOpen className="w-5 h-5 text-blue-600" />
                                 </div>
-                                <h2 className="text-2xl font-bold text-gray-900">Course Syllabus</h2>
+                                <h2 className="text-2xl font-bold text-gray-900">Class Syllabus</h2>
                             </div>
 
                             <div className="space-y-3">
@@ -317,7 +316,7 @@ export default function ClassDetailsPage() {
                     <aside className="lg:sticky lg:top-6 h-fit">
                         <div className="bg-white rounded-2xl border-2 border-blue-100 shadow-lg overflow-hidden">
                             {/* Price Header with Gradient */}
-                            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white">
+                            <div className="bg-linear-to-r from-blue-600 to-indigo-600 p-6 text-white">
                                 <p className="text-blue-100 text-sm mb-2">Course Price</p>
                                 <div className="flex items-baseline gap-2">
                                     <span className="text-4xl font-bold">₹1,999</span>
@@ -345,7 +344,7 @@ export default function ClassDetailsPage() {
                                         "Certificate on completion",
                                     ].map((item, i) => (
                                         <div key={i} className="flex items-center gap-2 text-sm text-gray-600">
-                                            <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                                            <CheckCircle className="w-4 h-4 text-green-500 shrink-0" />
                                             {item}
                                         </div>
                                     ))}
@@ -353,7 +352,7 @@ export default function ClassDetailsPage() {
 
                                 {/* CTA Buttons */}
                                 <div className="space-y-3">
-                                    <button className="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/30 transition-all transform hover:scale-105">
+                                    <button onClick={() => router.push(`checkout/id`)} className="w-full py-3.5 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/30 transition-all transform hover:scale-105">
                                         Enroll Now
                                     </button>
 
@@ -377,7 +376,7 @@ export default function ClassDetailsPage() {
                         </div>
 
                         {/* Share Card */}
-                        <div className="mt-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 border border-gray-200">
+                        <div className="mt-4 bg-linear-to-br from-gray-50 to-gray-100 rounded-xl p-4 border border-gray-200">
                             <p className="text-sm font-medium text-gray-900 mb-3">Share this course</p>
                             <div className="flex gap-2">
                                 {['facebook', 'twitter', 'linkedin', 'whatsapp'].map((platform) => (
@@ -401,7 +400,7 @@ export default function ClassDetailsPage() {
 function MetaCard({ icon: Icon, label, value }) {
     return (
         <div className="flex items-start gap-3 p-4 rounded-xl bg-gray-50 border border-gray-200 hover:border-blue-200 hover:bg-blue-50/50 transition-all group">
-            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-blue-50 transition-colors">
+            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shrink-0 group-hover:bg-blue-50 transition-colors">
                 <Icon className="w-5 h-5 text-blue-600" />
             </div>
             <div>

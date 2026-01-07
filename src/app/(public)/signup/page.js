@@ -40,7 +40,7 @@ export default function SignUpPage() {
   return (
     <RedirectIfAuthClient redirectToHomeIfAuth={true}>
       {/* <RedirectIfAuth /> */}
-      <div className="max-w-md mx-auto">
+      <div className="max-w-md mx-auto pt-30">
         <h1 className="text-xl font-semibold mb-4">Sign up</h1>
         <form onSubmit={handleSubmit} className="space-y-3">
           <input value={name} onChange={(e) => setName(e.target.value)} type="name" placeholder="Enter your name" className="w-full border px-3 py-2 rounded" required />
