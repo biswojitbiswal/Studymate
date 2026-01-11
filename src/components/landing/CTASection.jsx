@@ -72,17 +72,17 @@ export default function CTASection() {
                   gap-2
                   rounded-xl
                   border
-                  border-gray-300
                   px-6 py-3
                   text-sm
                   font-medium
-                  text-gray-700
                   transition
-                  hover:border-blue-300
+                  bg-blue-600
+                  text-white
+                  hover:bg-white
                   hover:text-blue-600
                 "
                             >
-                                Sign In
+                                Create an Account
                             </a>
                         </div>
                     </div>

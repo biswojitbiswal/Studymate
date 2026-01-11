@@ -128,8 +128,8 @@ export default function WorkflowDiagram() {
     return (
         <div className="flex flex-col min-h-screen items-center justify-center p-8">
             <div className="text-center">
-                <h2 className="text-3xl font-bold text-gray-900">
-                    One Connected Learning Workflow
+                <h2 className="text-4xl font-bold text-gray-900">
+                    One Connected Learning <span className="text-blue-600">Workflow</span>
                 </h2>
                 <p className="mt-3 max-w-2xl mx-auto text-gray-600">
                     From live classes to group study, resources, and progress tracking —
@@ -150,9 +150,9 @@ export default function WorkflowDiagram() {
                 ))}
 
                 {/* CARDS */}
-                <WorkflowCard id="live" title="Live Class" description="Start of learning" color="blue" className="left-10 top-20" />
-                <WorkflowCard id="mentor" title="Mentored Group Study" description="Discuss & Collaborate after class" color="indigo" className="right-20 top-35" />
-                <WorkflowCard id="assignment" title="Assignment" description="Apply Knowledge" color="indigo" className="left-10 top-64" />
+                <WorkflowCard id="live" title="Live Class & Tasks" description="Start of learning" color="blue" className="left-10 top-20" />
+                <WorkflowCard id="mentor" title="Mentored Group Study" description="Discuss, doubt-solve & collaborate" color="indigo" className="right-20 top-35" />
+                <WorkflowCard id="assignment" title="Tasks & Assignments" description="Practice & track learning" color="indigo" className="left-10 top-64" />
                 <WorkflowCard
                     id="resources"
                     title="Study Resources"
@@ -170,7 +170,7 @@ export default function WorkflowDiagram() {
                 <WorkflowCard
                     id="attendance"
                     title="Attendance & Progress"
-                    description="Track outcomes"
+                    description="Track attendance & progress"
                     color="blue"
                     className="left-1/2 bottom-10 -translate-x-1/2"
                 />

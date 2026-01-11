@@ -8,22 +8,22 @@ import {
 const BENEFITS = [
   {
     title: "Everything in One Place",
-    desc: "Classes, group study, resources, assignments, and progress tracking — all organized in a single platform.",
+    desc: "Classes, group study, resources, tasks, and progress tracking — all organized in a single platform.",
     icon: Layers,
   },
   {
     title: "Better Engagement & Accountability",
-    desc: "Mentored group study, assignments, and attendance help students stay consistent and involved.",
+    desc: "Guided tasks, mentored group study, and attendance tracking help students stay consistent and accountable beyond live classes.",
     icon: Users,
   },
   {
     title: "Less Manual Work for Tutors",
-    desc: "Smart scheduling and automation reduce repetitive tasks so tutors can focus on teaching.",
+    desc: "Smart scheduling, task tracking, and automation reduce repetitive work so tutors can focus on teaching and mentoring.",
     icon: Zap,
   },
   {
     title: "Designed for Real Learning Progress",
-    desc: "Every feature is connected to encourage regular practice, collaboration, and measurable improvement.",
+    desc: "Track effort, measure progress, and improve consistently with connected learning workflows and tutor feedback.",
     icon: TrendingUp,
   },
 ];

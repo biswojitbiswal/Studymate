@@ -4,6 +4,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
+import { FaGoogle } from "react-icons/fa";
+import Link from "next/link";
+import { Lock, Mail } from "lucide-react";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -37,37 +40,60 @@ export default function SignInForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      <input
-        className="w-full border px-3 py-2 rounded border-blue-600 text-black"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        type="email"
-      />
 
-      <input
-        className="w-full border px-3 py-2 rounded border-blue-600 text-black"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        type="password"
-      />
+      <div>
+        <label className="block text-sm font-medium mb-1">Email Address</label>
+        <div className="relative">
+          <Mail className="absolute left-3 top-4 h-5 w-5 text-blue-500" />
+          <input
+            className="w-full pl-10 py-2 rounded-lg border"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            type="email"
+          />
+        </div>
+      </div>
+    
 
-      <select
-        className="w-full border px-3 py-2 rounded border-blue-600 text-black"
-        value={role}
-        onChange={(e) => setRole(e.target.value)}
-      >
-        <option value="STUDENT">Student</option>
-        <option value="TUTOR">Tutor</option>
-        <option value="ADMIN">Admin</option>
-      </select>
+      <div>
+        <label className="block text-sm font-medium mb-1">Password</label>
+        <div className="relative">
+          <Lock className="absolute left-3 top-4 h-5 w-5 text-blue-500" />
+          <input
+            className="w-full pl-10 py-2 rounded-lg border focus:ring-2"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            type="password"
+          />
+        </div>
+      </div>
+
+
+      {/* Remember + Forgot */}
+      <div className="flex items-center justify-between text-sm">
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            className="h-4 w-4 rounded border-gray-300 accent-blue-600"
+          />
+          <span className="text-gray-700">Remember Me</span>
+        </label>
+
+        <Link
+          href="/forgot-password"
+          className="text-red-500 font-medium hover:underline"
+        >
+          Forgot Password?
+        </Link>
+      </div>
 
       <button
         type="submit"
-        className="w-full py-2 rounded bg-blue-600 text-white"
+        className="w-full py-2 rounded bg-blue-600 text-white hover:cursor-pointer"
         disabled={loading}
       >
         {loading ? "Signing in..." : "Sign in"}

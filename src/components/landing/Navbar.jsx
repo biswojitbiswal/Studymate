@@ -43,6 +43,9 @@ export default function FloatingNavbar() {
           <Link href="/classes" className="hover:text-blue-600 transition">
             Classes
           </Link>
+          <Link href="/groups" className="hover:text-blue-600 transition">
+            Groups
+          </Link>
           <Link href="/tutors" className="hover:text-blue-600 transition">
             Tutors
           </Link>

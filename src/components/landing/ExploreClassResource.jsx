@@ -55,7 +55,7 @@ const RESOURCES = [
 
 export default function ExploreClassesResources() {
   return (
-    <section className="px-18 pt-16">
+    <section className="px-18 pt-8">
       <div className="mx-auto max-w-7xl px-6 space-y-10">
 
         {/* HEADER */}
