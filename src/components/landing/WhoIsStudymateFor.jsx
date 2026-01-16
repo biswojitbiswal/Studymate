@@ -18,10 +18,10 @@ export default function WhoIsStudyMateFor() {
           {/* HEADER */}
           <div className="space-y-3 text-center animate-fade-up">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Who Is <span className="text-blue-600">StudyMate</span> For?
+              Who Is <span className="text-blue-600">StudyNest</span> For?
             </h2>
             <p className="max-w-xl text-sm leading-relaxed text-gray-600">
-              StudyMate is designed to support both sides of learning —
+              StudyNest is designed to support both sides of learning —
               helping students learn better and tutors teach smarter.
             </p>
           </div>

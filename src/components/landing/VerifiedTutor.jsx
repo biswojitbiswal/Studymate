@@ -24,7 +24,7 @@ const VERIFIED_POINTS = [
     },
     {
         title: "Platform Approved",
-        desc: "Only approved tutors can create classes and teach on StudyMate.",
+        desc: "Only approved tutors can create classes and teach on StudyNest.",
         icon: UserCheck,
     },
     {
@@ -44,7 +44,7 @@ export default function VerifiedTutorsSection() {
                         Learn from <span className="text-blue-600">Verified Tutors</span>
                     </h2>
                     <p className="mt-4 text-gray-600">
-                        Every tutor on StudyMate goes through a verification process to
+                        Every tutor on StudyNest goes through a verification process to
                         ensure quality, expertise, and trusted learning.
                     </p>
                 </div>

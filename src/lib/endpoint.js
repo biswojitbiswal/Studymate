@@ -8,10 +8,8 @@ export const API = {
   AUTH_SIGNUP: `${BACKEND_URL}/auth/signup`,
   AUTH_REFRESH: `${BACKEND_URL}/auth/refresh`,
   AUTH_SIGNOUT: `${BACKEND_URL}/auth/signout`,
-  PROFILE: `${BACKEND_URL}/auth/profile`, // optional if you have profile route
-  // example resource:
-  CLASSES: `${BACKEND_URL}/classes`,
-  USERS: `${BACKEND_URL}/users`,
+  PROFILE: `${BACKEND_URL}/auth/profile`,
+  VERIFY_EMAIL: `${BACKEND_URL}/auth/verify-email`,
 
 
   ADMIN: {

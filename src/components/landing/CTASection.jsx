@@ -39,7 +39,7 @@ export default function CTASection() {
 
                         <p className="max-w-xl text-sm leading-relaxed text-gray-600">
                             Whether you’re a student looking to learn better or a tutor ready to
-                            teach smarter, StudyMate gives you everything you need — all in one place.
+                            teach smarter, StudyNest gives you everything you need — all in one place.
                         </p>
 
                         {/* actions */}

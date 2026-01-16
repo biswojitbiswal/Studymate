@@ -10,7 +10,7 @@ export default function TopBar() {
         <header className="h-14 w-full bg-white border-b flex items-center justify-between px-6">
             {/* Left */}
             <div className="hidden sm:block font-bold text-lg text-blue-600">
-                Studymate
+                StudyNest
             </div>
 
             {/* Right */}

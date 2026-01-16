@@ -3,7 +3,7 @@ import "./globals.css";
 import Providers from "@/components/providers";
 
 export const metadata = {
-  title: "StudyMate",
+  title: "StudyNest",
   description: "Study & tuition management platform",
 };
 

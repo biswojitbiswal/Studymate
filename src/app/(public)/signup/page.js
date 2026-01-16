@@ -5,6 +5,9 @@ import Image from "next/image"
 import Link from "next/link"
 import { FaFacebook, FaGoogle, FaInstagramSquare } from "react-icons/fa"
 import { BsTwitterX } from "react-icons/bs"
+import { useAuthStore } from "@/store/auth"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 export const SignupForm = ({ type }) => {
   const [formData, setFormData] = useState({
@@ -13,11 +16,39 @@ export const SignupForm = ({ type }) => {
     phone: "",
     password: "",
     confirmPassword: "",
+    provider: "CREDENTIALS",
+    signupIntent: type === "Student" ? "STUDENT" : "TUTOR",
   })
+  const [err, setErr] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+
+  const signup = useAuthStore((s) => s.signup);
 
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+    setErr(null);
+
+    try {
+      const { user } = await signup(formData);
+      console.log(user);
+      
+      toast.success("Signup Successful, Please verify your email.")
+      router.push("/signin");
+    } catch (err) {
+      console.error(err);
+      setErr(err?.message ?? "Signup failed");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -89,10 +120,12 @@ export const SignupForm = ({ type }) => {
         </div>
       </div>
 
-      <button className="w-full flex items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-white font-semibold hover:bg-blue-700 transition hover:cursor-pointer">
-        Sign Up as {type === "Student" ? "Student" : "Tutor"}
+      <button onClick={handleSubmit} disabled={loading} className="w-full flex items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-white font-semibold hover:bg-blue-700 transition hover:cursor-pointer">
+        {loading && loading ? 'Signing Up....' : `Sign Up as ${type === "Student" ? "Student" : "Tutor"}`}
         <ChevronRight className="h-4 w-4" />
       </button>
+
+      {err && <div className="text-red-600 text-sm mt-1">{err}</div>}
 
       <p className="text-center text-md">
         Already have an account?{" "}

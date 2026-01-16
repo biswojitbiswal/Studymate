@@ -22,7 +22,7 @@ export default function StudentIllustration() {
       </h2>
 
       <p className="text-blue-100 mb-6">
-        Track tasks, join classes, and stay consistent with Studymate.
+        Track tasks, join classes, and stay consistent with StudyNest.
       </p>
 
       <Button

@@ -24,7 +24,7 @@ export default function TutorIllustration() {
       </h2>
 
       <p className="text-blue-100 mb-6">
-        Create classes, assign tasks, and help students succeed on Studymate.
+        Create classes, assign tasks, and help students succeed on StudyNest.
       </p>
 
       <Button

@@ -64,7 +64,7 @@ export default function ExploreClassesResources() {
             Explore <span className="text-blue-600">Classes & Resources</span>
           </h2>
           <p className="max-w-xl mx-auto text-sm text-gray-600">
-            A glimpse of what you can learn and access on StudyMate.
+            A glimpse of what you can learn and access on StudyNest.
           </p>
         </div>
 

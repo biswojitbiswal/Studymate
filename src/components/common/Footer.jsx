@@ -12,7 +12,7 @@ export default function Footer() {
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white">
                 <GraduationCap className="h-5 w-5" />
               </div>
-              <span className="text-lg font-bold text-gray-900">StudyMate</span>
+              <span className="text-lg font-bold text-gray-900">StudyNest</span>
             </div>
             <p className="mt-3 text-sm text-gray-600 max-w-xs">
               A smarter learning platform designed for students and tutors to
@@ -53,7 +53,7 @@ export default function Footer() {
 
         {/* BOTTOM */}
         <div className="mt-10 border-t pt-6 text-center text-xs text-gray-500">
-          © {new Date().getFullYear()} StudyMate. All rights reserved.
+          © {new Date().getFullYear()} StudyNest. All rights reserved.
         </div>
       </div>
     </footer>

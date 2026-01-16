@@ -18,7 +18,7 @@ export default function AdminSidebar() {
     return (
         <aside className="w-56 bg-blue-600 text-white flex flex-col shadow-lg shadow-black/10">
             <div className="h-14 flex items-center px-6 font-semibold border-b border-white/10">
-                StudyMate
+                StudyNest
             </div>
 
             <nav className="flex-1 px-3 py-4 space-y-1">

@@ -2,6 +2,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { API } from "@/lib/endpoint";
+import { toast } from "sonner";
 
 /* =========================================================
    Helpers (used by api-client)
@@ -10,7 +11,7 @@ import { API } from "@/lib/endpoint";
 export function getAuthToken() {
   try {
     if (typeof window === "undefined") return null;
-    const raw = localStorage.getItem("studymate_auth");
+    const raw = localStorage.getItem("StudyNest_auth");
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     return parsed?.state?.token ?? null;
@@ -91,10 +92,11 @@ export const useAuthStore = create(
         const data = await res.json();
 
         if (!res.ok) {
-          throw new Error(data?.message || "Signup failed");
+          toast.error(data?.message || "Signup failed");
         }
 
-        return data;
+        const user = data?.user ?? data?.data?.user;
+        return {user};
       },
 
       /* ================= REFRESH (FIXED) ================= */
@@ -161,7 +163,7 @@ export const useAuthStore = create(
       },
     }),
     {
-      name: "studymate_auth",
+      name: "StudyNest_auth",
       getStorage: () =>
         typeof window !== "undefined" ? localStorage : null,
     }

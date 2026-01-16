@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import NavAuthActions from "../auth/NavAuthActions";
+import Image from "next/image";
 
 export default function FloatingNavbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -16,26 +17,27 @@ export default function FloatingNavbar() {
   return (
     <header className="fixed top-6 left-1/2 z-50 w-[86%] max-w-7xl -translate-x-1/2 ">
       <nav
-  className={`
+        className={`
     relative flex items-center justify-between
     rounded-2xl px-6 py-3
     transition-all duration-300 ease-out
     hover:-translate-y-px hover:shadow-xl border border-blue-100
-    ${
-      scrolled
-        ? "bg-white/80 backdrop-blur-xl shadow-lg"
-        : "bg-transparent shadow-md"
-    }
+    ${scrolled
+            ? "bg-white/80 backdrop-blur-xl shadow-lg"
+            : "bg-transparent shadow-md"
+          }
   `}
->
+      >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white font-bold">
-            S
-          </div>
-          <span className="text-lg font-semibold text-gray-900">
-            StudyMate
-          </span>
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/logo.png"
+            alt="StudyNest Logo"
+            unoptimized
+            width={130}
+            height={100}
+            priority
+          />
         </Link>
 
         {/* Center Navigation */}

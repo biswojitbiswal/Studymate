@@ -15,8 +15,10 @@ export default function SignInForm() {
   const [role, setRole] = useState("STUDENT");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false)
   const [err, setErr] = useState(null);
   const [loading, setLoading] = useState(false);
+  
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -24,7 +26,7 @@ export default function SignInForm() {
     setErr(null);
 
     try {
-      const { user } = await login(email, password, role);
+      const { user } = await login(email, password, rememberMe);
 
       if (user?.role === "TUTOR") router.push("/dashboard/tutor");
       else if (user?.role === "STUDENT") router.push("/dashboard/student");
@@ -55,7 +57,7 @@ export default function SignInForm() {
           />
         </div>
       </div>
-    
+
 
       <div>
         <label className="block text-sm font-medium mb-1">Password</label>
@@ -77,6 +79,7 @@ export default function SignInForm() {
       <div className="flex items-center justify-between text-sm">
         <label className="flex items-center gap-2 cursor-pointer">
           <input
+            onChange={() => setRememberMe(!rememberMe)}
             type="checkbox"
             className="h-4 w-4 rounded border-gray-300 accent-blue-600"
           />

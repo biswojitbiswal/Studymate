@@ -133,7 +133,7 @@ export default function WorkflowDiagram() {
                 </h2>
                 <p className="mt-3 max-w-2xl mx-auto text-gray-600">
                     From live classes to group study, resources, and progress tracking —
-                    StudyMate connects every part of learning into one seamless system.
+                    StudyNest connects every part of learning into one seamless system.
                 </p>
             </div>
             <div ref={containerRef} className="relative h-[600px] w-full max-w-4xl">

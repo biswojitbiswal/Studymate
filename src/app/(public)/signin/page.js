@@ -9,7 +9,7 @@ import { BsTwitterX } from "react-icons/bs";
 export default function SignInPage() {
   return (
     <RedirectIfAuthClient redirectToHomeIfAuth={true}>
-      <section className="min-h-screen flex items-center justify-center bg-white px-6 py-28">
+      <section className="min-h-screen flex items-center justify-center bg-white px-6 py-24">
         <div className="w-full max-w-lg rounded-md shadow-md border pt-6">
 
           {/* Header */}
@@ -33,32 +33,6 @@ export default function SignInPage() {
             >
               <SignInForm />
             </div>
-
-            {/* Remember + Forgot */}
-            {/* <div className="mt-4 flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600"
-                />
-                <span className="text-gray-700">Remember Me</span>
-              </label>
-
-              <a
-                href="/forgot-password"
-                className="text-red-500 font-medium hover:underline"
-              >
-                Forgot Password?
-              </a>
-            </div> */}
-
-            {/* Login Button */}
-            {/* <button
-              type="submit"
-              className="mt-6 w-full rounded-full bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700 transition"
-            >
-              Login
-            </button> */}
 
             {/* Create account */}
             <p className="mt-4 text-center text-sm text-gray-600">

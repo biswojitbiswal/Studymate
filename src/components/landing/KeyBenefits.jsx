@@ -37,11 +37,11 @@ export default function KeyBenefits() {
           {/* HEADER */}
           <div className="space-y-4 text-center animate-fade-up">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Why <span className="text-blue-600">StudyMate</span> Works Better
+              Why <span className="text-blue-600">StudyNest</span> Works Better
             </h2>
 
             <p className="max-w-xl text-sm leading-relaxed text-gray-600">
-              StudyMate isn’t just a collection of tools.
+              StudyNest isn’t just a collection of tools.
               It’s a thoughtfully connected learning system designed to make
               studying simpler, more engaging, and more effective for both
               students and tutors.
