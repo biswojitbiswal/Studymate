@@ -57,6 +57,14 @@ export const API = {
 
 
   STUDENT: {
+    GET_STUDENTS: `${BACKEND_URL}/student`,
+    GET_ME: `${BACKEND_URL}/student/me`,
+    UPDATE_ME: `${BACKEND_URL}/student/me`,
+    GET_STUDENT_BY_ID: `${BACKEND_URL}/student`,
+
+
+
+
     TASK: {
       CREATE: `${BACKEND_URL}/task`,
       GET: `${BACKEND_URL}/task`,

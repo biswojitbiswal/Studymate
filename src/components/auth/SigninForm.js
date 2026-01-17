@@ -18,7 +18,7 @@ export default function SignInForm() {
   const [rememberMe, setRememberMe] = useState(false)
   const [err, setErr] = useState(null);
   const [loading, setLoading] = useState(false);
-  
+
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -28,9 +28,33 @@ export default function SignInForm() {
     try {
       const { user } = await login(email, password, rememberMe);
 
-      if (user?.role === "TUTOR") router.push("/dashboard/tutor");
-      else if (user?.role === "STUDENT") router.push("/dashboard/student");
-      else if (user?.role === "ADMIN") router.push("/dashboard/admin");
+      console.log(user);
+      
+      if (!user) {
+        router.push("/");
+        return;
+      }
+
+      if (user?.role === "TUTOR") {
+        router.push("/dashboard/tutor");
+        return;
+      } else if (user?.role === "ADMIN") {
+        router.push("/dashboard/admin");
+        return;
+      } else if (user?.role === "STUDENT") {
+        if (user.signupIntent === 'STUDENT') {
+          if (!user.profileCompleted) {
+            router.push("/student-profile-completed");
+            return;
+          }
+          router.push("/dashboard/student");
+          return;
+        }
+        if (user.signupIntent === 'TUTOR') {
+          router.push("/tutor-apply")
+          return;
+        }
+      }
       else router.push("/");
     } catch (err) {
       console.error(err);
