@@ -80,6 +80,15 @@ export const API = {
 
 
   TUTOR: {
+    TUTOR_APPLY: `${BACKEND_URL}/tutor/apply`,
+    GET_TUTORS: `${BACKEND_URL}/tutor`,
+    GET_ME: `${BACKEND_URL}/tutor/me`,
+    UPDATE_ME: `${BACKEND_URL}/tutor/me`,
+    GET_TUTOR_BY_ID: `${BACKEND_URL}/tutor`,
+    TUTOR_APPROVED: `${BACKEND_URL}/tutor/approved`,
+
+
+
     CLASSES: {
       CREATE: `${BACKEND_URL}/tutor/classes`,
       GET: `${BACKEND_URL}/tutor/classes`,

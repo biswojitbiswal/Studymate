@@ -34,8 +34,8 @@ export default function FloatingNavbar() {
             src="/logo.png"
             alt="StudyNest Logo"
             unoptimized
-            width={130}
-            height={100}
+            width={140}
+            height={120}
             priority
           />
         </Link>

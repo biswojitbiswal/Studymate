@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { SearchSelect } from "@/components/ui/SearchSelect";
 import { useRouter } from "next/navigation";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 
 /* ------------------ Data hooks ------------------ */
@@ -14,7 +14,8 @@ import { usePublicLevels } from "@/hooks/admin/useLevel";
 import { usePublicBoards } from "@/hooks/admin/useBoard";
 import { usePublicLanguages } from "@/hooks/admin/useLanguage";
 import { usePublicSubjects } from "@/hooks/admin/useSubject";
-import { useUpdateStudentProfile } from "@/hooks/student/useStudent";
+import { useMyStudent, useUpdateStudentProfile } from "@/hooks/student/useStudent";
+import LoadingScreen from "@/components/common/LoadingScreen";
 
 export default function CompleteStudentProfilePage() {
   const router = useRouter();
@@ -45,6 +46,8 @@ export default function CompleteStudentProfilePage() {
 
   /* ------------------ Mutation ------------------ */
   const { mutate: updateProfile, isPending } = useUpdateStudentProfile();
+  const { data: me, isLoading } = useMyStudent();
+
 
   /* ------------------ Helpers ------------------ */
   const parseGoals = () =>
@@ -75,7 +78,7 @@ export default function CompleteStudentProfilePage() {
     if (avatar) formData.append("avatar", avatar);
     if (levelId) formData.append("levelId", levelId);
     if (boardId) formData.append("boardId", boardId);
-    if (languageId) formData.append("preferredLanguageId", languageId);
+    if (languageId) formData.append("languageId", languageId);
 
     subjectIds.forEach((id) => formData.append("subjectIds[]", id));
     parseGoals().forEach((g) => formData.append("goals[]", g));
@@ -92,9 +95,50 @@ export default function CompleteStudentProfilePage() {
     });
   };
 
-  /* ------------------ UI ------------------ */
+
+  useEffect(() => {
+    if (!me) return;
+
+    // Academic info
+    if (me?.data?.levelId) setLevelId(me?.data?.levelId);
+    if (me?.data?.boardId) setBoardId(me?.data?.boardId);
+    if (me?.data?.preferredLanguageId) setLanguageId(me?.data?.preferredLanguageId);
+
+    // Subjects (many-to-many)
+    if (me?.data?.studentSubjects?.length) {
+      setSubjectIds(me?.data?.studentSubjects.map((s) => s.subjectId));
+    }
+
+    // Goals
+    if (me?.data?.goals?.length) {
+      setGoalsText(me?.data?.goals.join("\n"));
+    }
+
+    // Avatar preview (existing uploaded image)
+    if (me?.data?.user?.avatar) {
+      setAvatarPreview(
+        `${me?.data?.user.avatar}`
+      );
+    }
+  }, [me]);
+
+
+  useEffect(() => {
+    if (!isLoading && me?.data?.user?.profileCompleted) {
+      router.replace("/dashboard/student");
+    }
+  }, [isLoading, me]);
+
+
+  if (isLoading) {
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-24">
+    <LoadingScreen />
+  );
+}
+
+
+  return (
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-30">
       <Card className="w-full max-w-3xl rounded-lg shadow-md">
         <CardContent className="px-10 py-6">
           {/* Header */}

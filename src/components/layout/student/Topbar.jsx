@@ -2,6 +2,8 @@
 
 import { Search, Bell, LogOut, Power } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function TopBar() {
     const { user, logout } = useAuthStore();
@@ -9,12 +11,22 @@ export default function TopBar() {
     return (
         <header className="h-14 w-full bg-white border-b flex items-center justify-between px-6">
             {/* Left */}
-            <div className="hidden sm:block font-bold text-lg text-blue-600">
+            {/* <div className="hidden sm:block font-bold text-lg text-blue-600">
                 StudyNest
-            </div>
+            </div> */}
+            <Link href="/" className="flex items-center">
+                <Image
+                    src="/logo.png"
+                    alt="StudyNest Logo"
+                    unoptimized
+                    width={140}
+                    height={120}
+                    priority
+                />
+            </Link>
 
             {/* Right */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
 
                 {/* Logout */}
                 <button
@@ -34,12 +46,21 @@ export default function TopBar() {
 
 
                 <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm">
-                        {user?.avatar ?? user?.name?.[0].toUpperCase() ?? "A"}
+                    <div className="relative w-8 h-8 rounded-full overflow-hiddenflex items-center justify-center text-white text-sm font-medium border-2 border-blue-600 hover:cursor-pointer">
+                        {user?.avatar ? (
+                            <Image
+                                src={user.avatar}
+                                alt={user?.name || "User avatar"}
+                                fill
+                                className="object-cover"
+                            />
+                        ) : (
+                            <span>
+                                {user?.name?.charAt(0).toUpperCase() || "U"}
+                            </span>
+                        )}
                     </div>
-                    {/* <span className="text-sm text-slate-700">
-            {user?.name ?? "Admin"}
-          </span> */}
+
                 </div>
             </div>
         </header>
