@@ -43,7 +43,7 @@
 // }
 export default function LoadingScreen() {
   return (
-    <div className="w-full h-[70vh] flex flex-col items-center justify-center gap-3">
+    <div className="w-full min-h-screen flex flex-col items-center justify-center gap-3">
       
       <div className="relative w-10 h-10">
         {/* Soft base */}

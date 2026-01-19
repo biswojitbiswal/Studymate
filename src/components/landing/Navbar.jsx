@@ -15,10 +15,10 @@ export default function FloatingNavbar() {
   }, []);
 
   return (
-    <header className="fixed top-6 left-1/2 z-50 w-[86%] max-w-7xl -translate-x-1/2 ">
+    <header className="fixed top-6 inset-x-0 z-50 flex justify-center">
       <nav
         className={`
-    relative flex items-center justify-between
+    w-[86%] max-w-7xl relative flex items-center justify-between
     rounded-2xl px-6 py-3
     transition-all duration-300 ease-out
     hover:-translate-y-px hover:shadow-xl border border-blue-100

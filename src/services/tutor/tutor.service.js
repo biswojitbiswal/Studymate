@@ -2,11 +2,11 @@ import api from "@/lib/api-client";
 import { API } from "@/lib/endpoint";
 
 export const tutorService = {
-    tutorApply: (data) =>
-        api.post(API.TUTOR.TUTOR_APPLY, { data }),
+    tutorApply: (formData) =>
+        api.post(API.TUTOR.TUTOR_APPLY, formData),
 
     tutorApproved: (id) =>
-        api.post(`${API.TUTOR.TUTOR_APPROVED}/${id}`),
+        api.patch(`${API.TUTOR.TUTOR_APPROVED}/${id}`),
 
     getAll: (params) =>
         api.get(API.TUTOR.GET_TUTORS, { params }),

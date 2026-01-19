@@ -21,7 +21,7 @@ export default function LogoutButton() {
     }
 
     return (
-        <button onClick={doLogout} className="text-lg text-blue-600">
+        <button onClick={doLogout} className="text-lg text-blue-600 hover:cursor-pointer">
             Logout
         </button>
     );
