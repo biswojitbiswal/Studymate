@@ -54,17 +54,17 @@ export default function NavAuthActions() {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end" sideOffset={10}
-            className="z-9999 w-48">
-            <div className="px-3 py-2 hover:cursor-pointer">
+            className="z-9999 w-48 rounded-md">
+            {/* <div className="px-3 py-2 hover:cursor-pointer">
               <p className="text-sm font-medium">
                 {user?.name || "User"}
               </p>
             </div>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator /> */}
 
             <DropdownMenuItem asChild>
               <Link href="/profile" className="flex items-center gap-2 hover:cursor-pointer">
-                <User size={16} />
+                <User size={20} className="text-blue-600"/>
                 Profile
               </Link>
             </DropdownMenuItem>
@@ -73,7 +73,7 @@ export default function NavAuthActions() {
 
             <DropdownMenuItem asChild>
               <Link href={dashboardUrl} className="flex items-center gap-2 hover:cursor-pointer">
-                <LayoutDashboard size={16} />
+                <LayoutDashboard size={20} className="text-blue-600" />
                 Dashboard
               </Link>
             </DropdownMenuItem>
