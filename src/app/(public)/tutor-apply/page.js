@@ -102,7 +102,7 @@ export default function TutorApplyPage() {
 
     useEffect(() => {
         if (tutor?.data?.tutorStatus === "APPROVED") {
-            router.replace("/tutor/dashboard");
+            router.replace("/dashboard/tutor");
         }
     }, [tutor, router]);
 

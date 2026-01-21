@@ -25,7 +25,7 @@ const GROUP_FEATURES = [
 
 export default function GroupStudySection() {
   return (
-    <section className="py-10 bg-white">
+    <section className="py-4 bg-white">
       <div className="mx-auto max-w-6xl px-6">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto">
@@ -39,7 +39,7 @@ export default function GroupStudySection() {
         </div>
 
         {/* Feature Cards */}
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {GROUP_FEATURES.map((feature, index) => (
             <Card
               key={index}
@@ -63,7 +63,7 @@ export default function GroupStudySection() {
         </div>
 
         {/* CTA */}
-        <div className="mt-12 text-center">
+        <div className="mt-8 text-center">
           <Link href="/groups">
             <Button size="lg" className="rounded-full border border-blue-600 bg-blue-600 px-8 hover:text-blue-600 hover:bg-white hover:cursor-pointer">
               Explore Study Groups

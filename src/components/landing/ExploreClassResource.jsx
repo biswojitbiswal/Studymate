@@ -56,10 +56,10 @@ const RESOURCES = [
 export default function ExploreClassesResources() {
   return (
     <section className="px-18 pt-8">
-      <div className="mx-auto max-w-7xl px-6 space-y-10">
+      <div className="mx-auto max-w-7xl px-6 space-y-6">
 
         {/* HEADER */}
-        <div className="text-center space-y-4">
+        <div className="text-center space-y-2">
           <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
             Explore <span className="text-blue-600">Classes & Resources</span>
           </h2>
@@ -69,7 +69,7 @@ export default function ExploreClassesResources() {
         </div>
 
         {/* FEATURED CLASSES */}
-        <div className="space-y-6">
+        <div className="space-y-3">
           <SectionHeader title="Featured Classes" link="View All Classes" />
 
           <div className="grid gap-6 md:grid-cols-3">
@@ -80,7 +80,7 @@ export default function ExploreClassesResources() {
         </div>
 
         {/* POPULAR RESOURCES */}
-        <div className="space-y-6">
+        <div className="space-y-3">
           <SectionHeader title="Popular Resources" link="View All Resources" />
 
           <div className="grid gap-6 md:grid-cols-3">

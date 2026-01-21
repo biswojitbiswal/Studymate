@@ -30,7 +30,7 @@ const BENEFITS = [
 
 export default function KeyBenefits() {
   return (
-    <section className="px-18 py-12">
+    <section className="px-18 py-10">
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex flex-col items-center justify-center gap-10">
 

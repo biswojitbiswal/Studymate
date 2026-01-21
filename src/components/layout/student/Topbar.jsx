@@ -10,10 +10,6 @@ export default function TopBar() {
 
     return (
         <header className="h-14 w-full bg-white border-b flex items-center justify-between px-6">
-            {/* Left */}
-            {/* <div className="hidden sm:block font-bold text-lg text-blue-600">
-                StudyNest
-            </div> */}
             <Link href="/" className="flex items-center">
                 <Image
                     src="/logo.png"
@@ -46,7 +42,10 @@ export default function TopBar() {
 
 
                 <div className="flex items-center gap-2">
-                    <div className="relative w-8 h-8 rounded-full overflow-hiddenflex items-center justify-center text-white text-sm font-medium border-2 border-blue-600 hover:cursor-pointer">
+                    <Link
+                        href="/profile"
+                        className="relative w-8 h-8 rounded-full overflow-hidden flex items-center justify-center text-white text-sm font-medium border-2 border-blue-600 hover:cursor-pointer"
+                    >
                         {user?.avatar ? (
                             <Image
                                 src={user.avatar}
@@ -59,8 +58,7 @@ export default function TopBar() {
                                 {user?.name?.charAt(0).toUpperCase() || "U"}
                             </span>
                         )}
-                    </div>
-
+                    </Link>
                 </div>
             </div>
         </header>

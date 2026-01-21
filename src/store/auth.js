@@ -46,9 +46,6 @@ let _refreshPromise = null;
 export const useAuthStore = create(
   persist(
     (set, get) => ({
-      // undefined = not checked yet
-      // null = checked, not logged in
-      // object = logged in
       user: undefined,
       token: null,
 

@@ -48,7 +48,7 @@ export default function FloatingNavbar() {
       <>
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          <Image src="/logo.png" alt="StudyNest" width={130} height={40} />
+          <Image src="/logo.png" alt="StudyNest" width={130} height={60} />
         </Link>
 
         {/* Center Navigation */}
@@ -94,10 +94,6 @@ export default function FloatingNavbar() {
             </SheetTrigger>
 
             <SheetContent side="right" className="w-72">
-              {/* ✅ Accessibility title (hidden visually) */}
-              {/* <VisuallyHidden> */}
-              {/* <SheetTitle>StudyNest Menu</SheetTitle> */}
-              {/* </VisuallyHidden> */}
 
               <SheetTitle>
                 <Link href="/">

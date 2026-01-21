@@ -36,19 +36,20 @@ export default function NavAuthActions() {
       <div className="flex items-center gap-4">
         <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
           <div
+          className="rounded-full"
             onMouseEnter={() => setOpen(true)}
             onMouseLeave={() => setOpen(false)}
           >
           <DropdownMenuTrigger asChild>
             <button 
-              className="focus:outline-none hover:cursor-pointer"
+              className="focus:outline-none hover:cursor-pointer rounded-full"
             >
               <Image
                 src={user?.avatar || "/avatar-placeholder.png"}
                 alt="avatar"
-                width={80}
-                height={80}
-                className="h-9 w-9 rounded-full object-cover border"
+                width={40}
+                height={40}
+                className="rounded-full object-cover border-2 border-blue-600"
               />
             </button>
           </DropdownMenuTrigger>
@@ -94,12 +95,12 @@ export default function NavAuthActions() {
   // If NOT logged in → show Sign in / Sign up
   return (
     <nav className="flex items-center gap-4 text-sm">
-      <a href="/signin" className="text-blue-600 px-2 py-1 rounded-sm hover:bg-blue-600 hover:text-white">
+      <Link href="/signin" className="text-blue-600 px-2 py-1 rounded-sm hover:bg-blue-600 hover:text-white">
         Sign in
-      </a>
-      <a href="/signup" className="text-blue-600 px-2 py-1 rounded-sm hover:bg-blue-600 hover:text-white">
+      </Link>
+      {/* <a href="/signup" className="text-blue-600 px-2 py-1 rounded-sm hover:bg-blue-600 hover:text-white">
         Sign up
-      </a>
+      </a> */}
     </nav>
   );
 }

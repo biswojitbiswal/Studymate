@@ -24,10 +24,10 @@ export default function Hero() {
             </span>
 
             <h1 className="text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
-              Smart Learning.
+              Smart Learning
               <br />
               <span className="text-blue-600">
-                Seamless Teaching.
+                Seamless Teaching
               </span>
             </h1>
 

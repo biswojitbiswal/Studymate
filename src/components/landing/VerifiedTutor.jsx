@@ -36,7 +36,7 @@ const VERIFIED_POINTS = [
 
 export default function VerifiedTutorsSection() {
     return (
-        <section className="py-10 bg-gray-50">
+        <section className="py-10">
             <div className="mx-auto max-w-6xl px-6">
                 {/* Header */}
                 <div className="text-center max-w-2xl mx-auto">
