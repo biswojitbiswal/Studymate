@@ -33,11 +33,31 @@ export function useTutors({ page, limit, search }) {
         limit,
         search,
       });
-      return res.data;
+      return res.data.data;
     },
     keepPreviousData: true,
   });
 }
+
+
+/* =========================
+   GET TUTOR REQUESTS (ADMIN)
+========================= */
+export function useTutorRequests({ page, limit, search, status }) {
+  return useQuery({
+    queryKey: ["tutor-requests", page, limit, search, status],
+    queryFn: async () => {
+      const res = await tutorService.getAllRequests({
+        page,
+        limit,
+        search,
+      });
+      return res.data.data;
+    },
+    keepPreviousData: true,
+  });
+}
+
 
 /* =========================
    GET TUTOR BY ID
@@ -96,6 +116,27 @@ export function useApproveTutor() {
       tutorService.tutorApproved(tutorId),
 
     onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["tutor-requests"] });
+      qc.invalidateQueries({ queryKey: ["tutors"] });
+      qc.invalidateQueries({ queryKey: ["tutor", "me"] });
+    },
+  });
+}
+
+
+
+/* =========================
+   REJECT TUTOR (ADMIN)
+========================= */
+export function useRejectTutor() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: (tutorId) =>
+      tutorService.tutorRejected(tutorId),
+
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["tutor-requests"] });
       qc.invalidateQueries({ queryKey: ["tutors"] });
       qc.invalidateQueries({ queryKey: ["tutor", "me"] });
     },

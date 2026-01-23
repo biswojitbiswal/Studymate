@@ -21,26 +21,9 @@ export default function SubjectTable({
 }) {
 
 
-    /* ================= LOADING ================= */
-    if (loading) {
-        return (
-            <div className="border rounded-lg bg-white p-6 text-center text-sm text-slate-500">
-                <TableSkeleton />
-            </div>
-        );
-    }
-
-    /* ================= EMPTY ================= */
-    if (!data.length) {
-        return (
-            <div className="border rounded-lg bg-white p-6 text-center text-sm text-slate-500">
-                No subjects found
-            </div>
-        );
-    }
 
     return (
-        <div className="border rounded-lg overflow-x-auto bg-white">
+        loading ? <TableSkeleton /> : <div className="border rounded-lg overflow-x-auto bg-white">
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -54,7 +37,13 @@ export default function SubjectTable({
                 </TableHeader>
 
                 <TableBody>
-                    {data.map((subject) => (
+                    {data?.length === 0 ? (
+                        <TableRow>
+                            <TableCell colSpan={4} className="text-center py-6">
+                                No subject found
+                            </TableCell>
+                        </TableRow>
+                    ) : (data.map((subject) => (
                         <TableRow key={subject.id}>
                             <TableCell className="font-medium">
                                 {subject.name}
@@ -111,7 +100,7 @@ export default function SubjectTable({
                                 </div>
                             </TableCell>
                         </TableRow>
-                    ))}
+                    )))}
                 </TableBody>
             </Table>
 

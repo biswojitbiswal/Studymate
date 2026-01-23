@@ -8,8 +8,14 @@ export const tutorService = {
     tutorApproved: (id) =>
         api.patch(`${API.TUTOR.TUTOR_APPROVED}/${id}`),
 
+    tutorRejected: (id) =>
+        api.patch(`${API.TUTOR.TUTOR_REJECTED}/${id}`),
+
     getAll: (params) =>
         api.get(API.TUTOR.GET_TUTORS, { params }),
+
+    getAllRequests: (params) =>
+        api.get(API.TUTOR.GET_TUTOR_REQUESTS, { params }),
 
     getById: (id) =>
         api.get(`${API.TUTOR.GET_TUTOR_BY_ID}/${id}`),

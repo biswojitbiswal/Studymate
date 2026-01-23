@@ -21,26 +21,11 @@ export default function LanguageTable({
 }) {
 
 
-    /* ================= LOADING ================= */
-    if (loading) {
-        return (
-            <div className="border rounded-lg bg-white p-6 text-center text-sm text-slate-500">
-                <TableSkeleton />
-            </div>
-        );
-    }
 
-    /* ================= EMPTY ================= */
-    if (!data.length) {
-        return (
-            <div className="border rounded-lg bg-white p-6 text-center text-sm text-slate-500">
-                No languages found
-            </div>
-        );
-    }
+
 
     return (
-        <div className="border rounded-lg overflow-x-auto bg-white">
+        loading ? <TableSkeleton /> : <div className="border rounded-lg overflow-x-auto bg-white">
             <Table>
                 <TableHeader>
                     <TableRow>

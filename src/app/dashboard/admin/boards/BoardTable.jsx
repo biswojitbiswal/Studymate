@@ -21,26 +21,8 @@ export default function BoardTable({
 }) {
 
 
-    /* ================= LOADING ================= */
-    if (loading) {
-        return (
-            <div className="border rounded-lg bg-white p-6 text-center text-sm text-slate-500">
-                <TableSkeleton />
-            </div>
-        );
-    }
-
-    /* ================= EMPTY ================= */
-    if (!data.length) {
-        return (
-            <div className="border rounded-lg bg-white p-6 text-center text-sm text-slate-500">
-                No boards found
-            </div>
-        );
-    }
-
     return (
-        <div className="border rounded-lg overflow-x-auto bg-white">
+        loading ? (<TableSkeleton />) : <div className="border rounded-lg overflow-x-auto bg-white">
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -54,64 +36,72 @@ export default function BoardTable({
                 </TableHeader>
 
                 <TableBody>
-                    {data.map((board) => (
-                        <TableRow key={board.id}>
-                            <TableCell className="font-medium">
-                                {board.name}
-                            </TableCell>
+                    {
+                        data?.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={4} className="text-center py-6">
+                                    No boards found
+                                </TableCell>
+                            </TableRow>
+                        ) : (data.map((board) => (
+                            <TableRow key={board.id}>
+                                <TableCell className="font-medium">
+                                    {board.name}
+                                </TableCell>
 
-                            <TableCell>{board.slug}</TableCell>
-                            <TableCell>{board.priority}</TableCell>
+                                <TableCell>{board.slug}</TableCell>
+                                <TableCell>{board.priority}</TableCell>
 
-                            {/* ICON */}
-                            <TableCell>
-                                {board.icon ? (
-                                    <img
-                                        src={board.icon}
-                                        alt={board.name}
-                                        className="h-8 w-8 rounded object-cover"
-                                    />
-                                ) : (
-                                    <span className="text-xs text-slate-400">
-                                        —
-                                    </span>
-                                )}
-                            </TableCell>
+                                {/* ICON */}
+                                <TableCell>
+                                    {board.icon ? (
+                                        <img
+                                            src={board.icon}
+                                            alt={board.name}
+                                            className="h-8 w-8 rounded object-cover"
+                                        />
+                                    ) : (
+                                        <span className="text-xs text-slate-400">
+                                            —
+                                        </span>
+                                    )}
+                                </TableCell>
 
-                            {/* STATUS */}
-                            <TableCell>
-                                <span
-                                    className={`px-2 py-1 rounded text-xs font-medium
+                                {/* STATUS */}
+                                <TableCell>
+                                    <span
+                                        className={`px-2 py-1 rounded text-xs font-medium
                     ${board.status === "ACTIVE"
-                                            ? "bg-green-100 text-green-700"
-                                            : "bg-gray-100 text-gray-600"
-                                        }`}
-                                >
-                                    {board.status}
-                                </span>
-                            </TableCell>
-
-                            {/* ACTIONS */}
-                            <TableCell className="text-right">
-                                <div className="flex justify-end gap-1">
-                                    <button
-                                        onClick={() => onEdit(board)}
-                                        className="p-2 rounded-md text-blue-600 hover:bg-blue-100 transition"
+                                                ? "bg-green-100 text-green-700"
+                                                : "bg-gray-100 text-gray-600"
+                                            }`}
                                     >
-                                        <SquarePen size={16} />
-                                    </button>
+                                        {board.status}
+                                    </span>
+                                </TableCell>
 
-                                    {
-                                        board.status !== 'ARCHIVED' && (<DeleteBoardDialog board={board}>
-                                            <button className="p-2 rounded-md text-red-600 hover:bg-red-100 transition">
-                                                <Trash2 size={16} />
-                                            </button>
-                                        </DeleteBoardDialog>)
-                                    }
-                                </div>
-                            </TableCell>
-                        </TableRow>
-                    ))}
+                                {/* ACTIONS */}
+                                <TableCell className="text-right">
+                                    <div className="flex justify-end gap-1">
+                                        <button
+                                            onClick={() => onEdit(board)}
+                                            className="p-2 rounded-md text-blue-600 hover:bg-blue-100 transition"
+                                        >
+                                            <SquarePen size={16} />
+                                        </button>
+
+                                        {
+                                            board.status !== 'ARCHIVED' && (<DeleteBoardDialog board={board}>
+                                                <button className="p-2 rounded-md text-red-600 hover:bg-red-100 transition">
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            </DeleteBoardDialog>)
+                                        }
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        )))
+                    }
                 </TableBody>
             </Table>
 
@@ -140,5 +130,6 @@ export default function BoardTable({
                 </div>
             </div>
         </div>
+
     );
 }

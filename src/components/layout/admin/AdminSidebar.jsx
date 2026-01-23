@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { adminNavItems } from "./sidebarNav";
+import Image from "next/image";
 
 export default function AdminSidebar() {
     const pathname = usePathname();
@@ -17,11 +18,21 @@ export default function AdminSidebar() {
 
     return (
         <aside className="w-56 bg-blue-600 text-white flex flex-col shadow-lg shadow-black/10">
-            <div className="h-14 flex items-center px-6 font-semibold border-b border-white/10">
-                StudyNest
+            <div className="h-14 bg-white flex items-center px-6 font-semibold border-b border-white/10">
+                <Link href="/" className="flex items-center">
+                    <Image
+                        src="/logo.png"
+                        alt="StudyNest Logo"
+                        unoptimized
+                        width={140}
+                        height={100}
+                        priority
+                    />
+                </Link>
             </div>
 
-            <nav className="flex-1 px-3 py-4 space-y-1">
+
+            <nav className="flex-1 px-3 py-1.5 space-y-1">
                 {adminNavItems.map((item) => {
                     const Icon = item.icon;
 

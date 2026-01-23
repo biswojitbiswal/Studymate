@@ -13,3 +13,18 @@ export function useVerifyEmail() {
   });
 }
 
+
+export function useToggleUserStatus() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (userId) =>
+      authService.toggleStatus(userId),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries(["tutors"]);
+      queryClient.invalidateQueries(["students"]);
+    },
+  });
+}
+

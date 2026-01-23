@@ -10,6 +10,7 @@ export const API = {
   AUTH_SIGNOUT: `${BACKEND_URL}/auth/signout`,
   PROFILE: `${BACKEND_URL}/auth/profile`,
   VERIFY_EMAIL: `${BACKEND_URL}/auth/verify-email`,
+  TOGGLE_STATUS: `${BACKEND_URL}/auth/toggle`,
 
 
   ADMIN: {
@@ -85,7 +86,9 @@ export const API = {
     GET_ME: `${BACKEND_URL}/tutor/me`,
     UPDATE_ME: `${BACKEND_URL}/tutor/me`,
     GET_TUTOR_BY_ID: `${BACKEND_URL}/tutor`,
+    GET_TUTOR_REQUESTS: `${BACKEND_URL}/tutor/requests`,
     TUTOR_APPROVED: `${BACKEND_URL}/tutor/approved`,
+    TUTOR_REJECTED: `${BACKEND_URL}/tutor/rejected`,
 
 
 

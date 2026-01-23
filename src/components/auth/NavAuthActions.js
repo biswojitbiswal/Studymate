@@ -36,56 +36,56 @@ export default function NavAuthActions() {
       <div className="flex items-center gap-4">
         <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
           <div
-          className="rounded-full"
+            className="rounded-full"
             onMouseEnter={() => setOpen(true)}
             onMouseLeave={() => setOpen(false)}
           >
-          <DropdownMenuTrigger asChild>
-            <button 
-              className="focus:outline-none hover:cursor-pointer rounded-full"
-            >
-              <Image
-                src={user?.avatar || "/avatar-placeholder.png"}
-                alt="avatar"
-                width={40}
-                height={40}
-                className="rounded-full object-cover border-2 border-blue-600"
-              />
-            </button>
-          </DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
+              <button className="focus:outline-none hover:cursor-pointer rounded-full">
+                {user?.avatar ? (
+                  <Image
+                    src={user.avatar}
+                    alt="avatar"
+                    width={40}
+                    height={40}
+                    className="rounded-full object-cover border-2 border-blue-600"
+                  />
+                ) : (
+                  <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center border-2 border-blue-600">
+                    <User size={20} className="text-blue-600" />
+                  </div>
+                )}
+              </button>
+            </DropdownMenuTrigger>
 
-          <DropdownMenuContent align="end" sideOffset={10}
-            className="z-9999 w-48 rounded-md">
-            {/* <div className="px-3 py-2 hover:cursor-pointer">
-              <p className="text-sm font-medium">
-                {user?.name || "User"}
-              </p>
-            </div>
-            <DropdownMenuSeparator /> */}
 
-            <DropdownMenuItem asChild>
-              <Link href="/profile" className="flex items-center gap-2 hover:cursor-pointer">
-                <User size={20} className="text-blue-600"/>
-                Profile
-              </Link>
-            </DropdownMenuItem>
+            <DropdownMenuContent align="end" sideOffset={10}
+              className="z-9999 w-48 rounded-md">
 
-            <DropdownMenuSeparator />
 
-            <DropdownMenuItem asChild>
-              <Link href={dashboardUrl} className="flex items-center gap-2 hover:cursor-pointer">
-                <LayoutDashboard size={20} className="text-blue-600" />
-                Dashboard
-              </Link>
-            </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/profile" className="flex items-center gap-2 hover:cursor-pointer">
+                  <User size={20} className="text-blue-600" />
+                  Profile
+                </Link>
+              </DropdownMenuItem>
 
-            <DropdownMenuSeparator />
+              <DropdownMenuSeparator />
 
-            <DropdownMenuItem className="flex items-center gap-2 text-red-600">
-              <LogOut size={16} />
-              <LogoutButton />
-            </DropdownMenuItem>
-          </DropdownMenuContent>
+              <DropdownMenuItem asChild>
+                <Link href={dashboardUrl} className="flex items-center gap-2 hover:cursor-pointer">
+                  <LayoutDashboard size={20} className="text-blue-600" />
+                  Dashboard
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem className="flex items-center gap-2 text-red-600">
+                <LogOut size={16} />
+                <LogoutButton />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
           </div>
         </DropdownMenu >
       </div >

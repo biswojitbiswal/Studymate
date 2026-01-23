@@ -38,14 +38,6 @@ export default function ClassTable({ data, isLoading, isError, page, setPage }) 
     setOpen(true)
   }
 
-  if (isLoading) {
-    return (
-      <div className="text-sm text-gray-500">
-        <TableSkeleton />
-      </div>
-    );
-  }
-
   if (isError) {
     return (
       <div className="text-sm text-red-500">
@@ -55,7 +47,7 @@ export default function ClassTable({ data, isLoading, isError, page, setPage }) 
   }
 
   return (
-    <>
+    isLoading ? <TableSkeleton /> : <>
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
 
         <Table>

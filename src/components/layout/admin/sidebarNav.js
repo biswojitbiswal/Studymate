@@ -6,13 +6,20 @@ import {
   Users,
   Layers,
   Presentation,
+  GraduationCap,
+  Languages,
+  NotebookPen,
+  UserCheck,
+  LayoutDashboard,
 } from "lucide-react";
+import { FaBookOpen, FaChalkboardTeacher } from "react-icons/fa";
+import { FaChartBar } from "react-icons/fa6";
 
 export const adminNavItems = [
   {
     label: "Dashboard",
     href: "/dashboard/admin",
-    icon: Home,
+    icon: LayoutDashboard,
   },
   {
     label: "Master",
@@ -21,26 +28,40 @@ export const adminNavItems = [
       {
         label: "Board",
         href: "/dashboard/admin/boards",
-        icon: BookOpen,
+        icon: FaBookOpen,
       },
       {
         label: "Levels",
         href: "/dashboard/admin/levels",
-        icon: ShoppingCart,
+        icon: FaChartBar,
       },
       {
         label: "Languages",
         href: "/dashboard/admin/languages",
-        icon: Folder,
+        icon: Languages,
       },
       {
         label: "Subject",
         href: "/dashboard/admin/subjects",
-        icon: Users,
+        icon: NotebookPen,
       },
     ],
   },
-
+  {
+    label: "Tutor Requests",
+    href: "/dashboard/admin/tutor-requests",
+    icon: UserCheck,
+  },
+  {
+    label: "Tutors",
+    href: "/dashboard/admin/tutors",
+    icon: FaChalkboardTeacher,
+  },
+{
+    label: "Students",
+    href: "/dashboard/admin/students",
+    icon: GraduationCap,
+  },
   {
     label: "Tuition Classes",
     href: "/dashboard/admin/classes",

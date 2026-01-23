@@ -21,26 +21,8 @@ export default function LevelTable({
 }) {
 
 
-    /* ================= LOADING ================= */
-    if (loading) {
-        return (
-            <div className="border rounded-lg bg-white p-6 text-center text-sm text-slate-500">
-                <TableSkeleton />
-            </div>
-        );
-    }
-
-    /* ================= EMPTY ================= */
-    if (!data.length) {
-        return (
-            <div className="border rounded-lg bg-white p-6 text-center text-sm text-slate-500">
-                No levels found
-            </div>
-        );
-    }
-
     return (
-        <div className="border rounded-lg overflow-x-auto bg-white">
+        loading ? <TableSkeleton /> : <div className="border rounded-lg overflow-x-auto bg-white">
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -54,7 +36,13 @@ export default function LevelTable({
                 </TableHeader>
 
                 <TableBody>
-                    {data.map((level) => (
+                    {data?.length === 0 ? (
+                        <TableRow>
+                            <TableCell colSpan={4} className="text-center py-6">
+                                No level found
+                            </TableCell>
+                        </TableRow>
+                    ) : (data?.map((level) => (
                         <TableRow key={level.id}>
                             <TableCell className="font-medium">
                                 {level.name}
@@ -111,7 +99,7 @@ export default function LevelTable({
                                 </div>
                             </TableCell>
                         </TableRow>
-                    ))}
+                    )))}
                 </TableBody>
             </Table>
 

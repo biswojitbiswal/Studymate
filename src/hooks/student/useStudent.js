@@ -31,7 +31,7 @@ export function useStudents({ page, limit, search }) {
         limit,
         search,
       });
-      return res.data; // { items, total }
+      return res.data.data; // { items, total }
     },
     keepPreviousData: true,
   });
