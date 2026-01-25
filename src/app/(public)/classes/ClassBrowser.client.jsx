@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Heart, Users, Star, Clock, Video, Play, Search, ChevronDown, SlidersHorizontal, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Heart, Users, Star, Clock, Video, Play, Search, ChevronDown, SlidersHorizontal, X, UserPlus } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { usePublicLanguages } from "@/hooks/admin/useLanguage";
@@ -28,7 +28,7 @@ const DEFAULT_SORT = {
 };
 
 
-const ClassBrowser = () => {
+const ClassBrowser = ({ initialData }) => {
     const [hoveredClass, setHoveredClass] = useState(null);
     const [wishlist, setWishlist] = useState([]);
     const [showFilters, setShowFilters] = useState(false);
@@ -37,17 +37,21 @@ const ClassBrowser = () => {
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1)
 
+    const [showPreviewModal, setShowPreviewModal] = useState(false);
+    const [previewClass, setPreviewClass] = useState(null);
+
+
+    const isFirstLoad = useRef(true);
+
     const debouncedSearch = useDebounce(search, 500);
 
     const router = useRouter()
-
 
     const { data: subjects = [] } = usePublicSubjects();
     const { data: levels = [] } = usePublicLevels();
     const { data: languages = [] } = usePublicLanguages();
     const { data: boards = [] } = usePublicBoards();
 
-    // Filter options
     const filterOptions = {
         subjects,
         boards,
@@ -98,16 +102,20 @@ const ClassBrowser = () => {
         sortOrder: selectedFilters.sortOrder || "desc",
     };
 
-    console.log(browseParams);
 
     const {
         data,
         isLoading,
-    } = useBrowseClasses(browseParams);
+    } = useBrowseClasses(browseParams, {
+        initialData: isFirstLoad.current ? initialData : undefined,
+    });
 
 
     const classes = data?.data?.items || [];
-    console.log(classes);
+
+    useEffect(() => {
+        isFirstLoad.current = false;
+    }, []);
 
     useEffect(() => {
         setPage(1);
@@ -388,7 +396,7 @@ const ClassBrowser = () => {
                                 >
                                     <div className="flex flex-col sm:flex-row gap-4">
                                         {/* Thumbnail */}
-                                        <div className="relative shrink-0 w-full sm:w-48 h-44 bg-amber-500 rounded-md overflow-hidden">
+                                        <div className="relative shrink-0 w-full sm:w-48 h-44 bg-amber-500 rounded-sm overflow-hidden">
                                             <Image
                                                 src={classItem?.previewImg || "/logo.png"}
                                                 alt={classItem.title}
@@ -420,12 +428,12 @@ const ClassBrowser = () => {
                                                 </div>
                                                 <button
                                                     onClick={() => toggleWishlist(classItem.id)}
-                                                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                                                    className="p-2 hover:bg-blue-100 rounded-full transition-colors hover:cursor-pointer"
                                                 >
                                                     <Heart
-                                                        className={`w-5 h-5 ${wishlist.includes(classItem.id)
+                                                        className={`w-5 h-5 hover:text-blue-600 ${wishlist.includes(classItem.id)
                                                             ? "fill-red-500 text-red-500"
-                                                            : "text-gray-400"
+                                                            : "text-blue-500"
                                                             }`}
                                                     />
                                                 </button>
@@ -445,7 +453,10 @@ const ClassBrowser = () => {
                                                         </span>
                                                         <StarRating rating={classItem.tutor.rating} size={14} />
 
-
+                                                        <button className="flex items-center justify-center gap-1 text-sm px-2 border border-blue-600 text-blue-600 rounded-sm hover:bg-blue-100 font-medium transition-colors whitespace-nowrap hover:cursor-pointer">
+                                                            <UserPlus className="w-4 h-4" />
+                                                            <span>Follow</span>
+                                                        </button>
                                                     </div>
                                                     <div className="flex items-center gap-3 text-xs text-gray-600">
                                                         <span className="flex items-center gap-1">
@@ -489,7 +500,7 @@ const ClassBrowser = () => {
         py-2.5
         bg-blue-600 hover:bg-blue-700
         text-white font-semibold
-        rounded-lg transition-colors
+        rounded-md transition-colors hover:cursor-pointer
       "
                                                     >
                                                         Buy Now
@@ -504,84 +515,119 @@ const ClassBrowser = () => {
                     </div>
 
                     {/* Fixed Video Preview */}
-                    {isLoading ? <PreviewSkeleton /> : <div className="hidden lg:block w-80 shrink-0">
-                        <div className="sticky top-6 bg-white rounded-xl shadow-lg p-4">
-                            <h3 className="text-lg font-bold text-gray-900 mb-3">
-                                Class Preview
-                            </h3>
-                            {hoveredClass ? (
-                                <div>
-                                    <div className="relative mb-3 w-full h-48 rounded-lg overflow-hidden">
-                                        {hoveredClass?.previewVdo ? (
-                                            <video
-                                                src={hoveredClass.previewVdo}
-                                                autoPlay
-                                                muted
-                                                loop
-                                                playsInline
-                                                className="w-full h-full object-cover"
-                                            />
-                                        ) : (
-                                            <img
-                                                src={hoveredClass?.previewImg || "/logo.png"}
-                                                alt={hoveredClass?.title}
-                                                className="w-full h-full object-cover"
-                                            />
-                                        )}
+                    {isLoading ? (
+                        <PreviewSkeleton />
+                    ) : (
+                        <div className="hidden lg:block w-80 shrink-0">
+                            <div className="sticky top-6 bg-white rounded-xl shadow-lg p-4">
+                                <h3 className="text-lg font-bold text-gray-900 mb-3">
+                                    Class Preview
+                                </h3>
 
-                                        {/* Play Overlay (optional) */}
-                                        <button className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors">
-                                            <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center">
-                                                <Play className="w-8 h-8 text-blue-600 ml-1" />
+                                {hoveredClass ? (
+                                    <div>
+                                        {/* Preview Media */}
+                                        <div className="relative mb-3 w-full h-48 rounded-lg overflow-hidden">
+                                            {hoveredClass?.previewVdo ? (
+                                                <video
+                                                    src={hoveredClass.previewVdo}
+                                                    autoPlay
+                                                    muted
+                                                    loop
+                                                    playsInline
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                <img
+                                                    src={hoveredClass?.previewImg || "/logo.png"}
+                                                    alt={hoveredClass?.title}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            )}
+
+                                            {/* Play overlay */}
+                                            <button
+                                                onClick={() => {
+                                                    setPreviewClass(hoveredClass);
+                                                    setShowPreviewModal(true);
+                                                }}
+                                                className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition-colors"
+                                            >
+                                                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg">
+                                                    <Play className="w-8 h-8 text-blue-600 ml-1" />
+                                                </div>
+                                            </button>
+                                        </div>
+
+                                        {/* Title */}
+                                        <h4 className="font-bold text-gray-900 mb-2">
+                                            {hoveredClass.title}
+                                        </h4>
+
+                                        {/* Tutor + Follow */}
+                                        <div className="flex items-center gap-3 mb-3">
+                                            <img
+                                                src={hoveredClass.tutor.user.avatar}
+                                                alt={hoveredClass.tutor.user.name}
+                                                className="w-8 h-8 rounded-full"
+                                            />
+
+                                            <div className="flex-1">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-sm font-semibold text-gray-900">
+                                                        {hoveredClass.tutor.user.name}
+                                                    </span>
+                                                    <StarRating rating={hoveredClass.tutor.rating} size={12} />
+                                                    <button className="flex items-center justify-center gap-1 text-sm px-2 border border-blue-600 text-blue-600 rounded-sm hover:bg-blue-100 font-medium transition-colors whitespace-nowrap hover:cursor-pointer">
+                                                        <UserPlus className="w-4 h-4" />
+                                                        <span>Follow</span>
+                                                    </button>
+                                                </div>
                                             </div>
+
+
+                                        </div>
+
+                                        {/* Meta */}
+                                        <div className="space-y-2 text-sm text-gray-600 mb-4">
+                                            <div className="flex items-center gap-2">
+                                                <Users className="w-4 h-4" />
+                                                <span>{hoveredClass.tutor.totalStudents} students</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Video className="w-4 h-4" />
+                                                <span>{hoveredClass.type}</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Actions */}
+                                        <button
+                                            onClick={() => {
+                                                setPreviewClass(hoveredClass);
+                                                setShowPreviewModal(true);
+                                            }}
+                                            className="flex items-center justify-center gap-2 w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg  hover:cursor-pointer"
+                                        >
+                                            <Video className="w-5 h-5" />
+                                            <span>Watch Preview</span>
+                                        </button>
+
+                                        <button className="flex items-center justify-center gap-2 w-full mt-2 py-2.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold rounded-lg hover:cursor-pointer">
+                                            <Heart className="w-5 h-5" /> <span>Add to Wishlist</span>
                                         </button>
                                     </div>
-                                    <h4 className="font-bold text-gray-900 mb-2">
-                                        {hoveredClass?.title}
-                                    </h4>
-                                    <div className="flex items-center gap-2 mb-3">
-                                        <img
-                                            src={hoveredClass?.tutor?.user?.avatar}
-                                            alt={hoveredClass.tutor.user?.name}
-                                            className="w-8 h-8 rounded-full"
-                                        />
-                                        <div>
-                                            <div className="text-sm font-medium text-gray-900">
-                                                {hoveredClass.tutor.user.name}
-                                            </div>
-                                            <div className="text-sm">
-                                                <StarRating rating={hoveredClass.tutor?.rating} size={12} />
-                                            </div>
-
-                                        </div>
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center h-64 text-gray-400">
+                                        <Video className="w-16 h-16 mb-3" />
+                                        <p className="text-center">
+                                            Hover over a class to see preview
+                                        </p>
                                     </div>
-                                    <div className="space-y-2 text-sm text-gray-600 mb-4">
-                                        <div className="flex items-center gap-2">
-                                            <Users className="w-4 h-4" />
-                                            <span>{hoveredClass.tutor.totalStudents} students enrolled</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Video className="w-4 h-4" />
-                                            <span>{hoveredClass.type}</span>
-                                        </div>
-                                    </div>
-                                    <button className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">
-                                        Watch Preview
-                                    </button>
-                                    <button className="w-full mt-2 py-2.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold rounded-lg transition-colors">
-                                        + Follow
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="flex flex-col items-center justify-center h-64 text-gray-400">
-                                    <Video className="w-16 h-16 mb-3" />
-                                    <p className="text-center">
-                                        Hover over a class to see preview
-                                    </p>
-                                </div>
-                            )}
+                                )}
+                            </div>
                         </div>
-                    </div>}
+                    )}
+
                 </div>
 
 
@@ -649,6 +695,77 @@ const ClassBrowser = () => {
                 )}
 
             </div>
+
+
+            {/* Watch preview modal */}
+            {showPreviewModal && previewClass && (
+                <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center px-4">
+                    <div className="bg-white rounded-md w-full max-w-3xl overflow-hidden shadow-2xl">
+
+                        {/* Header */}
+                        <div className="flex items-center justify-between p-4 border-b">
+                            <div>
+                                <h3 className="text-lg font-bold text-gray-900">
+                                    {previewClass.title}
+                                </h3>
+                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                    <span>{previewClass.tutor.user.name}</span>
+                                    <StarRating rating={previewClass.tutor.rating} size={12} />
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={() => setShowPreviewModal(false)}
+                                className="p-2 hover:bg-blue-100 rounded-full hover:cursor-pointer"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        {/* Video */}
+                        <div className="w-full h-[380px] bg-black">
+                            {previewClass.previewVdo ? (
+                                <video
+                                    src={previewClass.previewVdo}
+                                    controls
+                                    autoPlay
+                                    className="w-full h-full object-contain"
+                                />
+                            ) : (
+                                <img
+                                    src={previewClass.previewImg || "/logo.png"}
+                                    alt={previewClass.title}
+                                    className="w-full h-full object-contain"
+                                />
+                            )}
+                        </div>
+
+                        {/* Footer */}
+                        <div className="p-4 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+                            <div className="text-sm text-gray-600">
+                                {previewClass.tutor.totalStudents} students • {previewClass.type}
+                            </div>
+
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => {
+                                        setShowPreviewModal(false);
+                                        router.push(`/classes/${previewClass.id}`);
+                                    }}
+                                    className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg hover:cursor-pointer"
+                                >
+                                    View Class Details
+                                </button>
+
+                                <button className="flex items-center gap-2 px-5 py-2.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold rounded-lg hover:cursor-pointer">
+                                    <Heart className="w-5 h-5" />
+                                    <span>Wishlist</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
 
             {showFilters && (

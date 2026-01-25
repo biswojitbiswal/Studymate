@@ -8,38 +8,39 @@ import { commonClassService } from "@/services/public/class.service";
 /* =========================
    GET Classes (LIST)
 ========================= */
-export function useBrowseClasses(params = {}) {
-    const filters = {
-        page: params.page ?? 1,
-        limit: params.limit ?? 10,
+export function useBrowseClasses(params = {}, options = {},) {
+    // const filters = {
+    //     page: params.page ?? 1,
+    //     limit: params.limit ?? 10,
 
-        search: params.search ?? "",
-        sortBy: params.sortBy ?? "createdAt",
-        sortOrder: params.sortOrder ?? "desc",
+    //     search: params.search ?? "",
+    //     sortBy: params.sortBy ?? "createdAt",
+    //     sortOrder: params.sortOrder ?? "desc",
 
-        subjectIds: params.subjectIds ?? [],
-        boardIds: params.boardIds ?? [],
-        levelIds: params.levelIds ?? [],
-        languageIds: params.languageIds ?? [],
+    //     subjectIds: params.subjectIds ?? [],
+    //     boardIds: params.boardIds ?? [],
+    //     levelIds: params.levelIds ?? [],
+    //     languageIds: params.languageIds ?? [],
 
-        type: params.type ?? null,
+    //     type: params.type ?? null,
 
-        maxPrice: params.maxPrice ?? null,
-        paid: params.paid ?? null,
+    //     maxPrice: params.maxPrice ?? null,
+    //     paid: params.paid ?? null,
 
-        minRating: Array.isArray(params.ratings) && params.ratings.length
-            ? Math.max(...params.ratings)
-            : null,
-    };
+    //     minRating: Array.isArray(params.ratings) && params.ratings.length
+    //         ? Math.max(...params.ratings)
+    //         : null,
+    // };
 
     return useQuery({
-        queryKey: ["browse-classes", filters],
+        queryKey: ["browse-classes", params],
         queryFn: async () => {
-            const res = await commonClassService.getAllBrowseClass(filters);
+            const res = await commonClassService.getAllBrowseClass(params);
             return res?.data?.data;
         },
+        initialData: options.initialData,
         keepPreviousData: true,
-        staleTime: 30_000,
+        staleTime: 0, // ✅ REQUIRED
     });
 }
 
