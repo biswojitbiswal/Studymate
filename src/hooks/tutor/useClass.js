@@ -6,7 +6,7 @@ import {
 import { classService } from "@/services/tutor/class.service";
 
 /* =========================
-   GET TASKS (LIST)
+   GET Classes (LIST)
 ========================= */
 export function useClasses(params) {
     const filters = {
@@ -33,7 +33,7 @@ export function useClasses(params) {
 
 
 /* =========================
-   GET Task (BY ID)
+   GET Class (BY ID)
 ========================= */
 export function useClass(id) {
     return useQuery({
@@ -48,7 +48,7 @@ export function useClass(id) {
 
 
 /* =========================
-   CREATE Task
+   CREATE Class
 ========================= */
 export function useCreateClass() {
     const qc = useQueryClient();
@@ -62,7 +62,7 @@ export function useCreateClass() {
 }
 
 /* =========================
-   UPDATE TASK
+   UPDATE Class
 ========================= */
 export function useUpdateClass() {
     const qc = useQueryClient();
@@ -138,7 +138,7 @@ export function usePublishClass() {
 
 
 /* =========================
-   DELETE TASK (OPTIMISTIC)
+   DELETE Class (OPTIMISTIC)
 ========================= */
 export function useArchiveClass() {
     const qc = useQueryClient();

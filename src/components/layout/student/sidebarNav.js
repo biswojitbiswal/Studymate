@@ -3,11 +3,13 @@ import {
   BookOpen,
   ShoppingCart,
   Folder,
- LayoutDashboard,
- ListTodo,
- MessagesSquare,
- School,
- Presentation
+  LayoutDashboard,
+  ListTodo,
+  MessagesSquare,
+  School,
+  Presentation,
+  Brain,
+  BrainIcon
 } from "lucide-react";
 
 export const navItems = [
@@ -16,11 +18,15 @@ export const navItems = [
     href: "/dashboard/student",
     icon: LayoutDashboard,
   },
-
   {
     label: "My Task",
     href: "/dashboard/student/tasks/my",
     icon: ListTodo,
+  },
+  {
+    label: "My Classes",
+    href: "/dashboard/student/classes",
+    icon: Presentation,
   },
   {
     label: "My Chats",
@@ -28,8 +34,8 @@ export const navItems = [
     icon: MessagesSquare,
   },
   {
-    label: "My Classes",
-    href: "/dashboard/student/classes",
-    icon: Presentation,
+    label: "Knowledge Vault",
+    href: "/dashboard/student/knowledge-vault",
+    icon: BrainIcon,
   }
 ];

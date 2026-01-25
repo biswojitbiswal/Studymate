@@ -13,6 +13,11 @@ export const API = {
   TOGGLE_STATUS: `${BACKEND_URL}/auth/toggle`,
 
 
+  //Classes
+  BROWSE_CLASSES: `${BACKEND_URL}/public/classes/browse`,
+  BROWSE_CLASSES_BY_ID: `${BACKEND_URL}/public/classes`,
+
+
   ADMIN: {
     BOARD: {
       CREATE: `${BACKEND_URL}/board`,

@@ -5,11 +5,14 @@ import { getAuthToken, storeLogout, setAuthToken } from "@/store/auth";
 
 const api = axios.create({
   baseURL: BACKEND_URL,
-  // headers: {
-  //   "Content-Type": "application/json",
-  // },
-  // IMPORTANT: allow cookies to be sent/received (refresh cookie)
   withCredentials: true,
+
+  // ✅ GLOBAL QUERY SERIALIZER (THIS FIXES subjectIds)
+  paramsSerializer: (params) =>
+    qs.stringify(params, {
+      arrayFormat: "repeat", // subjectIds=1&subjectIds=2
+      skipNulls: true,
+    }),
 });
 
 /* --- Request interceptor: attach Authorization if we have an access token --- */
@@ -93,7 +96,7 @@ api.interceptors.response.use(
         processQueue(refreshError, null);
         try {
           storeLogout();
-        } catch (e) {}
+        } catch (e) { }
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;

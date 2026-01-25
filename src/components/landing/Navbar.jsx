@@ -19,7 +19,7 @@ export default function FloatingNavbar() {
 
   return (
     <header className="fixed top-6 inset-x-0 z-50 flex justify-center">
-      <nav className="w-[86%] max-w-7xl">
+      <nav className="w-[92%] lg:w-[86%] max-w-7xl">
 
         {/* Desktop Navbar */}
         <div className="hidden lg:flex items-center justify-between
