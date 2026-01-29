@@ -11,6 +11,10 @@ import {
   NotebookPen,
   UserCheck,
   LayoutDashboard,
+  HandCoins,
+  Banknote,
+  Wallet,
+  Ticket,
 } from "lucide-react";
 import { FaBookOpen, FaChalkboardTeacher } from "react-icons/fa";
 import { FaChartBar } from "react-icons/fa6";
@@ -22,7 +26,7 @@ export const adminNavItems = [
     icon: LayoutDashboard,
   },
   {
-    label: "Master",
+    label: "Academic",
     icon: Layers,
     children: [
       {
@@ -44,6 +48,27 @@ export const adminNavItems = [
         label: "Subject",
         href: "/dashboard/admin/subjects",
         icon: NotebookPen,
+      },
+    ],
+  },
+  {
+    label: "Pricing & Revenue",
+    icon: Wallet,
+    children: [
+      {
+        label: "Commission",
+        href: "/dashboard/admin/commission",
+        icon: HandCoins,
+      },
+      {
+        label: "Taxes",
+        href: "/dashboard/admin/taxes",
+        icon: Banknote,
+      },
+      {
+        label: "Coupons",
+        href: "/dashboard/admin/coupons",
+        icon: Ticket,
       },
     ],
   },

@@ -15,9 +15,12 @@
 }
 
 /* apply */
-html, body, #__next {
+html,
+body,
+#__next {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
@@ -100,7 +103,7 @@ body {
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
 
-  
+
   /* --popover: 0 0% 100%;
   --popover-foreground: 222.2 84% 4.9%; */
 }
@@ -143,6 +146,7 @@ body {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -153,6 +157,7 @@ body {
   from {
     stroke-dashoffset: 200;
   }
+
   to {
     stroke-dashoffset: -200;
   }
@@ -166,9 +171,12 @@ body {
 
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-12px);
   }
@@ -189,4 +197,24 @@ body {
   animation: float 9s ease-in-out infinite;
   animation-delay: 2s;
   will-change: transform;
+}
+
+
+
+/* Reserve scrollbar space so layout never shifts */
+.scrollbar-gutter-stable {
+  scrollbar-gutter: stable;
+}
+
+/* Hide scrollbar visually but keep scroll */
+.no-scrollbar {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE / Edge */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari */
 }

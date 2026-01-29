@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth";
+import BookLoader from "./common/AnimatedLoader";
+import LoadingScreen from "./common/LoadingScreen";
 
 const queryClient = new QueryClient();
 
@@ -18,7 +20,9 @@ export default function Providers({ children }) {
   if (user === undefined) {
     return (
       <div className="h-screen flex items-center justify-center">
-        Checking session...
+        {/* <LoadingScreen> */}
+          <BookLoader text="Preparing your learning space..." />
+        {/* </LoadingScreen> */}
       </div>
     );
   }

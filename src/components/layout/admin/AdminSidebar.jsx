@@ -17,7 +17,7 @@ export default function AdminSidebar() {
 
 
     return (
-        <aside className="w-56 bg-blue-600 text-white flex flex-col shadow-lg shadow-black/10">
+        <aside className="w-56 bg-blue-600 text-white flex flex-col shadow-lg shadow-black/10 min-h-screen">
             <div className="h-14 bg-white flex items-center px-6 font-semibold border-b border-white/10">
                 <Link href="/" className="flex items-center">
                     <Image
@@ -32,7 +32,7 @@ export default function AdminSidebar() {
             </div>
 
 
-            <nav className="flex-1 px-3 py-1.5 space-y-1">
+            <nav className="flex-1 px-3 py-1.5 space-y-1 overflow-y-scroll scrollbar-gutter-stable no-scrollbar">
                 {adminNavItems.map((item) => {
                     const Icon = item.icon;
 

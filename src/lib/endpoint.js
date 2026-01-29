@@ -58,7 +58,32 @@ export const API = {
     CLASSES: {
       GET: `${BACKEND_URL}/admin/classes`,
       ARCHIVE: `${BACKEND_URL}/admin/classes/archive`,
-    }
+    },
+
+    COMMISSION: {
+      CREATE: `${BACKEND_URL}/commission`,
+      GET: `${BACKEND_URL}/commission`,
+      GET_BY_ID: `${BACKEND_URL}/commission`,
+      DELETE: `${BACKEND_URL}/commission`,
+      UPDATE: `${BACKEND_URL}/commission`
+    },
+
+    TAX: {
+      CREATE: `${BACKEND_URL}/tax-setting`,
+      GET: `${BACKEND_URL}/tax-setting`,
+      GET_BY_ID: `${BACKEND_URL}/tax-setting`,
+      DELETE: `${BACKEND_URL}/tax-setting`,
+      UPDATE: `${BACKEND_URL}/tax-setting`
+    },
+
+    COUPON: {
+      CREATE: `${BACKEND_URL}/coupon`,
+      GET: `${BACKEND_URL}/coupon`,
+      GET_BY_ID: `${BACKEND_URL}/coupon`,
+      DELETE: `${BACKEND_URL}/coupon`,
+      UPDATE: `${BACKEND_URL}/coupon`
+    },
+
   },
 
 
