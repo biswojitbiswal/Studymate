@@ -7,20 +7,7 @@ export default function BookLoader({
 }) {
   return (
     <div
-      className="
-        h-screen 
-        w-full 
-        flex 
-        flex-col 
-        items-center 
-        justify-center 
-        
-        gap-3
-        bg-gradient-to-b 
-        from-blue-50 
-        via-white 
-        to-blue-100
-      "
+      className="h-screen w-full flex flex-col items-center justify-center gap-3 bg-gradient-to-b from-blue-50 via-white to-blue-100"
     >
       {/* Lottie as spinner */}
       <div className="w-40 h-40">
