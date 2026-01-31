@@ -52,7 +52,7 @@ export const useAuthStore = create(
       /* ================= LOGIN ================= */
 
       login: async (email, password, role) => {
-        const res = await fetch(API.AUTH_SIGNIN, {
+        const res = await fetch(`/api/v1${API.AUTH_SIGNIN}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
@@ -79,7 +79,7 @@ export const useAuthStore = create(
       /* ================= SIGNUP ================= */
 
       signup: async (payload) => {
-        const res = await fetch(API.AUTH_SIGNUP, {
+        const res = await fetch(`/api/v1${API.AUTH_SIGNUP}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
@@ -105,21 +105,21 @@ export const useAuthStore = create(
 
         _refreshPromise = (async () => {
           try {
-            const res = await fetch(API.AUTH_REFRESH, {
+            const res = await fetch(`/api/v1${API.AUTH_REFRESH}`, {
               method: "POST",
               credentials: "include",
             });
 
-            // if (!res.ok) {
-            //   // refresh failed → user is not authenticated
-            //   set({ user: null, token: null });
-            //   return null;
-            // }
-
             if (!res.ok) {
-              console.warn("⚠️ Refresh failed, keeping user for now");
+              // refresh failed → user is not authenticated
+              set({ user: null, token: null });
               return null;
             }
+
+            // if (!res.ok) {
+            //   console.warn("⚠️ Refresh failed, keeping user for now");
+            //   return null;
+            // }
 
             const data = await res.json();
             const token = data?.accessToken ?? data?.data?.accessToken;
@@ -147,7 +147,7 @@ export const useAuthStore = create(
 
       logout: async () => {
         try {
-          await fetch(API.AUTH_SIGNOUT, {
+          await fetch(`/api/v1${API.AUTH_SIGNOUT}`, {
             method: "POST",
             credentials: "include",
           });

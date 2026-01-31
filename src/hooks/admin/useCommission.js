@@ -9,9 +9,8 @@ import { commissionService } from "@/services/admin/commission.service";
    GET COMMISSIONS (LIST)
 ========================= */
 export function useCommissions({ page, limit, search }) {
-  // loading state,error state,retry logic,caching logic,refetch logic React Query handles ALL of that.
   return useQuery({
-    queryKey: ["commissions", page, limit, search],
+    queryKey: ["commissions", { page, limit, search }],
     queryFn: async () => {
       const res = await commissionService.getAll({
         page,
@@ -23,6 +22,7 @@ export function useCommissions({ page, limit, search }) {
     keepPreviousData: true,
   });
 }
+
 
 
 /* =========================
@@ -58,8 +58,8 @@ export function useUpdateCommission() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, formData }) =>
-      commissionService.update(id, formData),
+    mutationFn: ({ id, payload }) =>
+      commissionService.update(id, payload),
 
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["commissions"] });
@@ -72,7 +72,7 @@ export function useUpdateCommission() {
 ========================= */
 export function useDeleteCommission({ page, limit, search }) {
   const qc = useQueryClient();
-  const queryKey = ["commissions", page, limit, search];
+  const queryKey = ["commissions", { page, limit, search }];
 
   return useMutation({
     mutationFn: commissionService.remove,
@@ -87,7 +87,7 @@ export function useDeleteCommission({ page, limit, search }) {
 
         return {
           ...old,
-          items: old.items.filter((b) => b.id !== id),
+          data: old.data.filter((c) => c.id !== id),
           total: Math.max(old.total - 1, 0),
         };
       });
@@ -106,4 +106,5 @@ export function useDeleteCommission({ page, limit, search }) {
     },
   });
 }
+
 

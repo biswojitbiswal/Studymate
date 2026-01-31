@@ -27,8 +27,6 @@ export default function SignInForm() {
 
     try {
       const { user } = await login(email, password, rememberMe);
-
-      console.log(user);
       
       if (!user) {
         router.push("/");

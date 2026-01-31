@@ -56,8 +56,8 @@ export const adminNavItems = [
     icon: Wallet,
     children: [
       {
-        label: "Commission",
-        href: "/dashboard/admin/commission",
+        label: "Commissions",
+        href: "/dashboard/admin/commissions",
         icon: HandCoins,
       },
       {

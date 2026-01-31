@@ -57,8 +57,8 @@ export function useUpdateTax() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, formData }) =>
-      taxService.update(id, formData),
+    mutationFn: ({ id, payload }) =>
+      taxService.update(id, payload),
 
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["taxes"] });
