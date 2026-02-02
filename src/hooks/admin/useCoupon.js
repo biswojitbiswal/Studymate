@@ -57,8 +57,8 @@ export function useUpdateCoupon() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, formData }) =>
-      couponService.update(id, formData),
+    mutationFn: ({ id, ...payload }) =>
+      couponService.update(id, payload),
 
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["coupons"] });
