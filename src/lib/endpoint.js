@@ -18,6 +18,12 @@ export const API = {
   BROWSE_CLASSES_BY_ID: `${BACKEND_URL}/public/classes`,
 
 
+
+  //Checkout
+  GET_CHECKOUT_DETAILS: `${BACKEND_URL}/order/checkout`,
+  CREATE_ORDER: `${BACKEND_URL}/order`,
+
+
   ADMIN: {
     BOARD: {
       CREATE: `${BACKEND_URL}/board`,
@@ -79,6 +85,7 @@ export const API = {
     COUPON: {
       CREATE: `${BACKEND_URL}/coupon`,
       GET: `${BACKEND_URL}/coupon`,
+      GET_COUPON: `${BACKEND_URL}/coupon/checkout`,
       GET_BY_ID: `${BACKEND_URL}/coupon`,
       DELETE: `${BACKEND_URL}/coupon`,
       UPDATE: `${BACKEND_URL}/coupon`

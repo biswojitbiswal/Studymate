@@ -24,6 +24,29 @@ export function useCoupons({ page, limit, search }) {
 }
 
 
+
+/* =========================
+   GET COUPON For Checkout
+========================= */
+export function useCheckoutCoupons(productId, itemType) {
+  return useQuery({
+    queryKey: ["checkout-coupons", productId, itemType],
+
+    queryFn: async () => {
+      const res = await couponService.getForCheckout({
+        productId,
+        itemType,
+      });
+      return res?.data?.data;
+    },
+
+    enabled: !!productId && !!itemType, // wait for checkout data
+
+    staleTime: 1000 * 60, // 1 min (coupons don't change frequently)
+    keepPreviousData: true,
+  });
+}
+
 /* =========================
    GET COUPON (BY ID)
 ========================= */

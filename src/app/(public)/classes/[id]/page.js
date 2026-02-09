@@ -3,6 +3,7 @@
 import ClassDetailsSkeleton from "@/components/skeleton/ClassDetailsSkeleton";
 import { useBrowseClass } from "@/hooks/public/useClass";
 import { usePublishClass } from "@/hooks/tutor/useClass";
+import { useAuthStore } from "@/store/auth";
 import {
     Calendar,
     Clock,
@@ -26,9 +27,11 @@ export default function ClassDetailsPage() {
     const [isWishlisted, setIsWishlisted] = useState(false);
 
     const param = useParams();
-    const router = useRouter()
+    const router = useRouter();
 
-    const { data, isLoading } = useBrowseClass(param.id)
+    const user = useAuthStore((s) => s.user);
+    const { data, isLoading } = useBrowseClass(param.id);
+
 
 
     function formatDuration(startDate, endDate) {
@@ -67,7 +70,15 @@ export default function ClassDetailsPage() {
     function formatClassTiming(startTime, durationMin) {
         if (!startTime || !durationMin) return "Flexible";
 
-        const start = new Date(startTime);
+        // startTime expected: "HH:mm:ss" or "HH:mm"
+        const [hours, minutes] = startTime.split(":").map(Number);
+
+        if (isNaN(hours) || isNaN(minutes)) return "Flexible";
+
+        // Create a fake date in IST
+        const start = new Date();
+        start.setHours(hours, minutes, 0, 0);
+
         const end = new Date(start.getTime() + durationMin * 60 * 1000);
 
         const formatter = new Intl.DateTimeFormat("en-IN", {
@@ -77,11 +88,9 @@ export default function ClassDetailsPage() {
             timeZone: "Asia/Kolkata",
         });
 
-        const startFormatted = formatter.format(start);
-        const endFormatted = formatter.format(end);
-
-        return `${startFormatted} – ${endFormatted}`;
+        return `${formatter.format(start)} – ${formatter.format(end)}`;
     }
+
 
 
     function formatDate(date) {
@@ -92,7 +101,9 @@ export default function ClassDetailsPage() {
         });
     }
 
-    if(isLoading){
+
+
+    if (isLoading) {
         return <ClassDetailsSkeleton />
     }
 
@@ -455,19 +466,19 @@ export default function ClassDetailsPage() {
                                         </div>
                                     ))}
                                 </div>
-    
+
                                 {/* CTA Buttons - Hidden on mobile, shown on larger screens */}
                                 <div className="hidden lg:flex lg:flex-col space-y-3">
                                     <button
-                                        onClick={() => alert("clicked")}
-                                        className="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/30 transition-all transform hover:scale-105"
+                                        onClick={() => router.push(`/checkout/class/${param.id}`)}
+                                        className="w-full py-3.5 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/30 transition-all transform hover:scale-105 hover:cursor-pointer"
                                     >
                                         Enroll Now
                                     </button>
 
                                     <button
                                         onClick={() => setIsWishlisted(!isWishlisted)}
-                                        className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-semibold transition-all ${isWishlisted
+                                        className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-semibold transition-all hover:cursor-pointer ${isWishlisted
                                             ? 'border-red-500 text-red-600 bg-red-50'
                                             : 'border-gray-300 text-gray-700 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50'
                                             }`}
@@ -488,8 +499,8 @@ export default function ClassDetailsPage() {
                     <button
                         onClick={() => setIsWishlisted(!isWishlisted)}
                         className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 font-semibold transition-all hover:cursor-pointer ${isWishlisted
-                                ? 'border-red-500 text-red-600 bg-red-50'
-                                : 'border-gray-300 text-gray-700 active:border-blue-500 active:text-blue-600 active:bg-blue-50'
+                            ? 'border-red-500 text-red-600 bg-red-50'
+                            : 'border-gray-300 text-gray-700 active:border-blue-500 active:text-blue-600 active:bg-blue-50'
                             }`}
                     >
                         <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-red-500' : ''}`} />
@@ -498,7 +509,7 @@ export default function ClassDetailsPage() {
 
                     {/* Enroll Button - Takes remaining space */}
                     <button
-                        onClick={() => alert("Clicked")}
+                        onClick={() => router.push(`/checkout/class/${param.id}`)}
                         className="flex-1 py-3 bg-gradient-to-r hover:cursor-pointer from-blue-600 to-indigo-600 active:from-blue-700 active:to-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/30 transition-all"
                     >
                         Enroll Now

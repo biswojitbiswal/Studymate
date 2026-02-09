@@ -5,6 +5,9 @@ export const couponService = {
   getAll: (params) =>
     api.get(API.ADMIN.COUPON.GET, { params }),
 
+  getForCheckout: (params) =>
+    api.get(API.ADMIN.COUPON.GET_COUPON, { params }),
+
   getById: (id) =>
     api.get(`${API.ADMIN.COUPON.GET_BY_ID}/${id}`),
 
