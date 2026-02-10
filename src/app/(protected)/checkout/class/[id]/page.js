@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useCheckoutDetails } from '@/hooks/public/useOrder';
-import { useCheckoutCoupons } from '@/hooks/admin/useCoupon';
+import { useCheckoutCoupons, useValidateCoupon } from '@/hooks/admin/useCoupon';
+import { toast } from 'sonner';
 
 
 const DAY_MAP = {
@@ -18,7 +19,7 @@ const DAY_MAP = {
 };
 
 function formatDays(days) {
-    if (!days || days.length === 0) return "Flexible";
+    if (!days || days?.length === 0) return "Flexible";
     return days.map(d => DAY_MAP[d] || d).join(", ");
 }
 
@@ -26,7 +27,7 @@ function formatDays(days) {
 
 const CheckoutPage = () => {
     const [selectedCoupon, setSelectedCoupon] = useState(null);
-    const [promoCode, setPromoCode] = useState('');
+    // const [promoCode, setPromoCode] = useState('');
     // const [currentCouponIndex, setCurrentCouponIndex] = useState(0);
     const [activeIndex, setActiveIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
@@ -35,11 +36,11 @@ const CheckoutPage = () => {
 
     const param = useParams();
 
-    const { data, isLoading: checkoutLoading } = useCheckoutDetails(param.id);
-    const { data: availableCoupons, isLoading: couponLoading } = useCheckoutCoupons(param.id, 'CLASS')
-    console.log(availableCoupons);
+    const { data, isLoading: checkoutLoading } = useCheckoutDetails(param?.id);
+    const { data: availableCoupons, isLoading: couponLoading } = useCheckoutCoupons(param?.id, 'CLASS')
+    const validateCouponMutation = useValidateCoupon();
 
-    const loopCoupons = availableCoupons.length > 0 ? [...availableCoupons, availableCoupons[0]] : [];
+    const loopCoupons = availableCoupons?.length > 0 ? [...availableCoupons, availableCoupons[0]] : [];
 
 
     const goTo = (index) => {
@@ -47,7 +48,7 @@ const CheckoutPage = () => {
     };
 
     useEffect(() => {
-        if (!availableCoupons.length) return;
+        if (!availableCoupons?.length) return;
         if (selectedCoupon) return;
         if (isPaused) return;
 
@@ -60,10 +61,10 @@ const CheckoutPage = () => {
 
 
     useEffect(() => {
-        if (!availableCoupons.length) return;
+        if (!availableCoupons?.length) return;
 
         // reached cloned slide
-        if (activeIndex === availableCoupons.length) {
+        if (activeIndex === availableCoupons?.length) {
             setTimeout(() => {
                 setEnableTransition(false);
                 setActiveIndex(0);
@@ -78,7 +79,6 @@ const CheckoutPage = () => {
     }, [activeIndex, availableCoupons, enableTransition]);
 
 
-    // Sample class data
     const classDetails = {
         title: 'Math Tutoring Session',
         instructor: 'Mr. Sharma',
@@ -89,86 +89,78 @@ const CheckoutPage = () => {
         gstRate: 18
     };
 
-    const calculateTotal = () => {
-        let subtotal = classDetails.tutorFee + classDetails.platformFee;
-        let discount = 0;
-
-        if (selectedCoupon) {
-            if (selectedCoupon.type === 'percentage') {
-                discount = (classDetails.tutorFee * selectedCoupon.discount) / 100;
-            } else {
-                discount = selectedCoupon.discount;
-            }
-        }
-
-        const afterDiscount = subtotal - discount;
-        const gst = (afterDiscount * classDetails.gstRate) / 100;
-        const total = afterDiscount + gst;
-
-        return {
-            subtotal,
-            discount,
-            afterDiscount,
-            gst,
-            total
-        };
-    };
-
-    const totals = calculateTotal();
 
     const applyCoupon = (coupon) => {
-        setSelectedCoupon(coupon);
-        setPromoCode(coupon.code);
+        validateCouponMutation.mutate(
+            {
+                couponCode: coupon.code,
+                productId: param?.id,
+                itemType: "CLASS",
+            },
+            {
+                onSuccess: (res) => {
+                    // console.log(res);
 
-        const index = availableCoupons.findIndex((c) => c.id === coupon.id);
-        setActiveIndex(index);
-    };
+                    setSelectedCoupon({
+                        ...coupon,
+                        pricing: res?.data?.pricing,
+                    });
+                    // setPromoCode(coupon.code);
 
+                    // lock slider on selected coupon
+                    const index = availableCoupons.findIndex(c => c?.id === coupon?.id);
+                    setActiveIndex(index);
 
+                    toast.success("Coupon applied 🎉");
+                },
 
-    const applyPromoCode = () => {
-        const coupon = availableCoupons.find(
-            (c) => c.code.toLowerCase() === promoCode.toLowerCase()
-        );
-
-        if (!coupon) {
-            alert("Invalid promo code");
-            return;
-        }
-
-        applyCoupon(coupon);
+                onError: (err) => {
+                    const msg =
+                        err?.response?.data?.message || "Coupon not valid";
+                    toast.error(msg);
+                },
+            }
+        )
     };
 
 
     const removeCoupon = () => {
         setSelectedCoupon(null);
-        setPromoCode("");
     };
 
 
-    const nextCoupon = () => {
-        setActiveIndex((prev) =>
-            prev === availableCoupons.length - 1 ? 0 : prev + 1
-        );
-    };
+    // const nextCoupon = () => {
+    //     setActiveIndex((prev) =>
+    //         prev === availableCoupons?.length - 1 ? 0 : prev + 1
+    //     );
+    // };
 
-    const prevCoupon = () => {
-        setActiveIndex((prev) =>
-            prev === 0 ? availableCoupons.length - 1 : prev - 1
-        );
-    };
+    // const prevCoupon = () => {
+    //     setActiveIndex((prev) =>
+    //         prev === 0 ? availableCoupons?.length - 1 : prev - 1
+    //     );
+    // };
+
+    // Handle Loading for all the data
+    // Add skeleton loading
+    // Create Order
+    // Intergrate Razorpay
+    // make responsive
+    // hide payment method in small screen
+    // hide the heading in small screen
+    // Add cursor-pointer in all the button
 
 
     return (
-        <div className="min-h-screen py-4 px-4 sm:px-6 lg:px-22">
+        <div className="min-h-screen px-4 sm:px-6 lg:px-22">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
-                {/* <div className="text-center mb-8">
-                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
-                    Checkout
+                <div className="text-center mb-4">
+                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-1">
+                    Secure Checkout
                 </h1>
                 <p className="text-gray-600">Complete your payment to book your class</p>
-                </div> */}
+                </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-8">
                     {/* Left Section - Class Details & Coupons */}
@@ -253,8 +245,8 @@ const CheckoutPage = () => {
                                         {/* Price */}
                                         <div className="flex justify-between items-center text-sm">
                                             <span className="text-medium text-gray-500">Class Price</span>
-                                            <span className="text-medium font-bold text-blue-600">
-                                                ₹{data?.klass?.price.toFixed(2)}
+                                            <span className="text-lg font-bold text-blue-600">
+                                                ₹{data?.klass?.price?.toFixed(2)}
                                             </span>
                                         </div>
 
@@ -282,7 +274,7 @@ const CheckoutPage = () => {
 
 
                         {/* Available Coupons – Single Card Carousel */}
-                        {availableCoupons.length > 0 && (
+                        {availableCoupons?.length > 0 && (
                             <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.06)] p-5">
 
                                 <h2 className="text-lg font-semibold text-gray-900 mb-2">
@@ -303,13 +295,13 @@ const CheckoutPage = () => {
                                         }}
                                     >
                                         {loopCoupons.map((coupon, index) => {
-                                            const isApplied = selectedCoupon?.id === coupon.id;
+                                            const isApplied = selectedCoupon?.id === coupon?.id;
 
                                             return (
                                                 <div key={index} className="min-w-full px-1">
                                                     <div
                                                         className={`flex items-center justify-between gap-4 rounded-xl border px-4 py-3 transition
-                ${isApplied
+                                                            ${isApplied
                                                                 ? "border-green-500 bg-green-50"
                                                                 : "border-gray-200 hover:border-blue-400"
                                                             }`}
@@ -318,19 +310,19 @@ const CheckoutPage = () => {
                                                         <div className="flex flex-col">
                                                             <div className="flex items-center gap-3">
                                                                 <span className="font-semibold text-gray-900 text-sm tracking-wide">
-                                                                    {coupon.code}
+                                                                    {coupon?.code}
                                                                 </span>
 
                                                                 <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-md">
-                                                                    {coupon.discountType === "PERCENTAGE"
-                                                                        ? `${coupon.discountValue}% OFF`
+                                                                    {coupon?.discountType === "PERCENTAGE"
+                                                                        ? `${coupon?.discountValue}% OFF`
                                                                         : `₹${coupon.discountValue} OFF`}
                                                                 </span>
                                                             </div>
 
                                                             {coupon.description && (
                                                                 <p className="text-xs text-gray-600 mt-0.5 line-clamp-1">
-                                                                    {coupon.description}
+                                                                    {coupon?.description}
                                                                 </p>
                                                             )}
                                                         </div>
@@ -338,15 +330,20 @@ const CheckoutPage = () => {
                                                         {/* RIGHT BUTTON */}
                                                         <button
                                                             onClick={() => applyCoupon(coupon)}
-                                                            disabled={isApplied}
+                                                            disabled={isApplied || validateCouponMutation.isPending}
                                                             className={`flex-shrink-0 px-4 py-1.5 rounded-lg text-sm font-medium transition
-                  ${isApplied
+                                                            ${isApplied
                                                                     ? "bg-green-600 text-white cursor-not-allowed"
                                                                     : "bg-blue-600 text-white hover:bg-blue-700 active:scale-95"
                                                                 }`}
                                                         >
-                                                            {isApplied ? "Applied" : "Apply"}
+                                                            {validateCouponMutation.isPending
+                                                                ? "Checking..."
+                                                                : isApplied
+                                                                    ? "Applied"
+                                                                    : "Apply"}
                                                         </button>
+
                                                     </div>
                                                 </div>
                                             );
@@ -360,9 +357,9 @@ const CheckoutPage = () => {
                                         <button
                                             key={index}
                                             onClick={() => goTo(index)}
-                                            className={`h-2 w-2 rounded-full transition ${activeIndex % availableCoupons.length === index
-                                                    ? "bg-blue-600 w-4"
-                                                    : "bg-gray-300"
+                                            className={`h-2 w-2 rounded-full transition ${activeIndex % availableCoupons?.length === index
+                                                ? "bg-blue-600 w-4"
+                                                : "bg-gray-300"
                                                 }`}
                                         />
                                     ))}
@@ -374,7 +371,7 @@ const CheckoutPage = () => {
 
 
                         {/* Payment Methods */}
-                        <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] p-6">
+                        <div className="sm:hidden lg:block bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] p-6">
                             <h2 className="text-xl font-semibold text-gray-900 mb-4">
                                 Payment Method
                             </h2>
@@ -422,7 +419,7 @@ const CheckoutPage = () => {
                                         </button>
                                     </div>
                                     <code className="text-xs font-mono text-green-700">
-                                        {selectedCoupon.code}
+                                        {selectedCoupon?.code}
                                     </code>
                                 </div>
                             )}
@@ -430,23 +427,20 @@ const CheckoutPage = () => {
                             <div className="space-y-3 mb-4">
                                 <div className="flex justify-between text-gray-700">
                                     <span>Tutor Fee</span>
-                                    <span className="font-medium">₹{data?.pricing?.subtotal.toFixed(2)}</span>
+                                    <span className="font-medium">₹{selectedCoupon?.pricing?.subtotal ?? data?.pricing?.subtotal?.toFixed(2)}</span>
                                 </div>
-                                {/* <div className="flex justify-between text-gray-700">
-                                    <span>Platform Fee</span>
-                                    <span className="font-medium">₹{classDetails.platformFee}</span>
-                                </div> */}
+
 
                                 {selectedCoupon && (
                                     <div className="flex justify-between text-green-600">
                                         <span>Discount</span>
-                                        <span className="font-medium">-₹{totals.discount.toFixed(2)}</span>
+                                        <span className="font-medium">-₹{selectedCoupon?.pricing?.discount?.toFixed(2)}</span>
                                     </div>
                                 )}
 
                                 <div className="flex justify-between text-gray-700 text-sm">
-                                    <span>Tax ({data?.pricing?.toalTaxPecentage}%)</span>
-                                    <span className="font-medium">₹{data?.pricing?.totaltaxAmount.toFixed(2)}</span>
+                                    <span>Tax ({selectedCoupon?.pricing?.toalTaxPecentage ?? data?.pricing?.toalTaxPecentage}%)</span>
+                                    <span className="font-medium">₹{selectedCoupon?.pricing?.totaltaxAmount ?? data?.pricing?.totaltaxAmount?.toFixed(2)}</span>
                                 </div>
                             </div>
 
@@ -454,18 +448,18 @@ const CheckoutPage = () => {
                                 <div className="flex justify-between items-center">
                                     <span className="text-lg font-semibold text-gray-900">Total Amount</span>
                                     <span className="text-2xl font-bold text-blue-600">
-                                        ₹{data?.pricing?.totalAmount.toFixed(2)}
+                                        ₹{selectedCoupon?.pricing?.totalAmount ?? data?.pricing?.totalAmount?.toFixed(2)}
                                     </span>
                                 </div>
                                 {selectedCoupon && (
                                     <p className="text-sm text-green-600 mt-1 text-right">
-                                        You saved ₹{totals.discount.toFixed(2)}!
+                                        You saved ₹{selectedCoupon?.pricing?.discount?.toFixed(2)}!
                                     </p>
                                 )}
                             </div>
 
                             <button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                                Pay ₹{data?.pricing?.totalAmount.toFixed(2)}
+                                Pay ₹{selectedCoupon?.pricing?.totalAmount ?? data?.pricing?.totalAmount?.toFixed(2)}
                             </button>
 
                             <p className="text-xs text-gray-500 text-center mt-4">

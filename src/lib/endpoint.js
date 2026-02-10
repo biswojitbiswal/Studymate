@@ -88,7 +88,8 @@ export const API = {
       GET_COUPON: `${BACKEND_URL}/coupon/checkout`,
       GET_BY_ID: `${BACKEND_URL}/coupon`,
       DELETE: `${BACKEND_URL}/coupon`,
-      UPDATE: `${BACKEND_URL}/coupon`
+      UPDATE: `${BACKEND_URL}/coupon`,
+      VALIDATE: `${BACKEND_URL}/coupon/validate`,
     },
 
   },

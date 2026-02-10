@@ -73,6 +73,20 @@ export function useCreateCoupon() {
   });
 }
 
+
+/* =========================
+   VALIDATE COUPON
+========================= */
+export function useValidateCoupon() {
+  return useMutation({
+    mutationFn: async (payload) => {
+      const res = await couponService.validate(payload);
+      return res?.data;
+    },
+  });
+}
+
+
 /* =========================
    UPDATE COUPON
 ========================= */
