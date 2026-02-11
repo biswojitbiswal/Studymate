@@ -1,5 +1,6 @@
 import { API } from "@/lib/endpoint";
 import ClassBrowser from "./ClassBrowser.client";
+import { toast } from "sonner";
 
 
 async function getInitialData() {
@@ -9,7 +10,7 @@ async function getInitialData() {
   );
 
   if (!res.ok) {
-    throw new Error("Failed to fetch classes");
+    toast.error("Failed to fetch classes");
   }
 
   return res.json();

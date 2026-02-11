@@ -6,6 +6,8 @@ import { useParams } from 'next/navigation';
 import { useCheckoutDetails } from '@/hooks/public/useOrder';
 import { useCheckoutCoupons, useValidateCoupon } from '@/hooks/admin/useCoupon';
 import { toast } from 'sonner';
+import { CheckoutSkeleton } from '@/components/skeleton/CheckoutSkeleton';
+import { InlineLoader } from '@/components/common/InlineLoader';
 
 
 const DAY_MAP = {
@@ -129,48 +131,34 @@ const CheckoutPage = () => {
     };
 
 
-    // const nextCoupon = () => {
-    //     setActiveIndex((prev) =>
-    //         prev === availableCoupons?.length - 1 ? 0 : prev + 1
-    //     );
-    // };
-
-    // const prevCoupon = () => {
-    //     setActiveIndex((prev) =>
-    //         prev === 0 ? availableCoupons?.length - 1 : prev - 1
-    //     );
-    // };
-
-    // Handle Loading for all the data
-    // Add skeleton loading
     // Create Order
     // Intergrate Razorpay
-    // make responsive
-    // hide payment method in small screen
-    // hide the heading in small screen
-    // Add cursor-pointer in all the button
 
 
     return (
-        <div className="min-h-screen px-4 sm:px-6 lg:px-22">
-            <div className="max-w-7xl mx-auto">
+        checkoutLoading ? <CheckoutSkeleton /> : <div className="min-h-screen px-4 sm:px-6 lg:px-22 pb-6">
+            <div className="max-w-7xl mx-auto pb-14 lg:pb-0">
                 {/* Header */}
-                <div className="text-center mb-4">
-                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-1">
-                    Secure Checkout
-                </h1>
-                <p className="text-gray-600">Complete your payment to book your class</p>
+                <div className="hidden lg:block text-center mb-4">
+                    <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-1">
+                        Secure Checkout
+                    </h1>
+                    <p className="text-gray-600">Complete your payment to book your class</p>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-8">
                     {/* Left Section - Class Details & Coupons */}
                     <div className="lg:col-span-2 space-y-4">
                         {/* Class Details Card */}
-                        <div className="bg-white rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.1)] py-4 px-6">
-                            <div className="flex items-start justify-between mb-2">
-                                <h2 className="text-xl font-semibold text-gray-900">Class Details</h2>
+                        <div className="bg-white rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.1)] py-4 px-5 sm:px-6 overflow-hidden">
 
-                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                            {/* HEADER */}
+                            <div className="flex items-start justify-between mb-3">
+                                <h2 className="text-xl font-semibold text-gray-900">
+                                    Class Details
+                                </h2>
+
+                                <div className="hidden sm:flex items-center gap-2 text-sm text-gray-600">
                                     <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                             d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -179,27 +167,33 @@ const CheckoutPage = () => {
                                 </div>
                             </div>
 
-                            <div className="flex gap-6">
+                            {/* MAIN BODY */}
+                            <div className="flex flex-col lg:flex-row gap-6">
 
-                                {/* LEFT SIDE (existing info) */}
-                                <div className="flex gap-4 flex-1">
-                                    <div className="flex-shrink-0">
-                                        <img
-                                            src={data?.klass?.previewImg}
-                                            alt={data?.klass?.title}
-                                            className="w-24 h-24 object-cover rounded-xl"
-                                        />
-                                    </div>
+                                {/* LEFT SIDE */}
+                                <div className="flex-1">
 
-                                    <div className="flex-1">
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                                            {data?.klass?.title}
-                                        </h3>
+                                    <div className="flex flex-col lg:flex-row gap-5">
 
-                                        <div className="space-y-2 text-sm text-gray-600">
+                                        {/* IMAGE */}
+                                        <div className="lg:w-44 flex-shrink-0">
+                                            <img
+                                                src={data?.klass?.previewImg}
+                                                alt={data?.klass?.title}
+                                                className="w-full h-44 lg:h-32 object-cover rounded-xl"
+                                            />
+                                        </div>
 
-                                            {/* Instructor */}
-                                            <p className="flex items-center gap-2">
+                                        {/* CLASS INFO */}
+                                        <div className="flex-1">
+
+                                            {/* TITLE */}
+                                            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 break-words">
+                                                {data?.klass?.title}
+                                            </h3>
+
+                                            {/* INSTRUCTOR */}
+                                            <p className="flex items-center gap-2 text-sm text-gray-600 mt-2">
                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                                         d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -210,20 +204,8 @@ const CheckoutPage = () => {
                                                 </span>
                                             </p>
 
-                                            {/* Duration
-                                            <p className="flex items-center gap-2">
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                                Duration:
-                                                <span className="font-medium">
-                                                    {getClassDuration(data?.sessions)}
-                                                </span>
-                                            </p> */}
-
-                                            {/* Schedule */}
-                                            <p className="flex items-center gap-2">
+                                            {/* SCHEDULE */}
+                                            <p className="flex items-center gap-2 text-sm text-gray-600 mt-2">
                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                                         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -233,24 +215,52 @@ const CheckoutPage = () => {
                                                     {formatDays(data?.klass?.daysOfWeek)}
                                                 </span>
                                             </p>
+
+                                            
+
                                         </div>
+                                    </div>
+
+                                    {/* ===== MOBILE INFO PANEL ===== */}
+                                    <div className="grid grid-cols-3 gap-3 mt-4 lg:hidden">
+
+                                        <div className="bg-gray-50 rounded-lg p-3 text-center">
+                                            <p className="text-xs text-gray-500">Price</p>
+                                            <p className="font-bold text-blue-600">
+                                                ₹{data?.klass?.price?.toFixed(2)}
+                                            </p>
+                                        </div>
+
+                                        <div className="bg-gray-50 rounded-lg p-3 text-center">
+                                            <p className="text-xs text-gray-500">Type</p>
+                                            <p className="font-semibold">
+                                                {data?.klass?.type === "GROUP" ? "Group" : "Private"}
+                                            </p>
+                                        </div>
+
+                                        <div className="bg-gray-50 rounded-lg p-3 text-center">
+                                            <p className="text-xs text-gray-500">Seats</p>
+                                            <p className="font-semibold">
+                                                {data?.klass?.capacity}
+                                            </p>
+                                        </div>
+
                                     </div>
                                 </div>
 
-                                {/* RIGHT SIDE (NEW INFO PANEL) */}
-                                <div className="w-48 border-l pl-6 flex flex-col justify-between">
 
-                                    <div className="space-y-3">
+                                {/* ===== RIGHT SIDEBAR (DESKTOP ONLY) ===== */}
+                                <div className="hidden lg:flex w-52 border-l pl-6 flex-col justify-between">
 
-                                        {/* Price */}
+                                    <div className="space-y-4">
+
                                         <div className="flex justify-between items-center text-sm">
-                                            <span className="text-medium text-gray-500">Class Price</span>
-                                            <span className="text-lg font-bold text-blue-600">
+                                            <span className="text-gray-500">Class Price</span>
+                                            <span className="text-xl font-bold text-blue-600">
                                                 ₹{data?.klass?.price?.toFixed(2)}
                                             </span>
                                         </div>
 
-                                        {/* Type */}
                                         <div className="flex justify-between text-sm">
                                             <span className="text-gray-500">Type</span>
                                             <span className="font-medium">
@@ -258,7 +268,6 @@ const CheckoutPage = () => {
                                             </span>
                                         </div>
 
-                                        {/* Seats */}
                                         <div className="flex justify-between text-sm">
                                             <span className="text-gray-500">Capacity</span>
                                             <span className="font-medium">
@@ -267,11 +276,9 @@ const CheckoutPage = () => {
                                         </div>
 
                                     </div>
-
                                 </div>
                             </div>
                         </div>
-
 
                         {/* Available Coupons – Single Card Carousel */}
                         {availableCoupons?.length > 0 && (
@@ -331,14 +338,14 @@ const CheckoutPage = () => {
                                                         <button
                                                             onClick={() => applyCoupon(coupon)}
                                                             disabled={isApplied || validateCouponMutation.isPending}
-                                                            className={`flex-shrink-0 px-4 py-1.5 rounded-lg text-sm font-medium transition
+                                                            className={`flex-shrink-0 px-4 py-1.5 rounded-lg text-sm font-medium transition hover:cursor-pointer
                                                             ${isApplied
                                                                     ? "bg-green-600 text-white cursor-not-allowed"
                                                                     : "bg-blue-600 text-white hover:bg-blue-700 active:scale-95"
                                                                 }`}
                                                         >
                                                             {validateCouponMutation.isPending
-                                                                ? "Checking..."
+                                                                ? <InlineLoader />
                                                                 : isApplied
                                                                     ? "Applied"
                                                                     : "Apply"}
@@ -357,7 +364,7 @@ const CheckoutPage = () => {
                                         <button
                                             key={index}
                                             onClick={() => goTo(index)}
-                                            className={`h-2 w-2 rounded-full transition ${activeIndex % availableCoupons?.length === index
+                                            className={`h-2 w-2 rounded-full transition hover:cursor-pointer ${activeIndex % availableCoupons?.length === index
                                                 ? "bg-blue-600 w-4"
                                                 : "bg-gray-300"
                                                 }`}
@@ -371,7 +378,7 @@ const CheckoutPage = () => {
 
 
                         {/* Payment Methods */}
-                        <div className="sm:hidden lg:block bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] p-6">
+                        <div className="hidden lg:block bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] p-6">
                             <h2 className="text-xl font-semibold text-gray-900 mb-4">
                                 Payment Method
                             </h2>
@@ -411,7 +418,7 @@ const CheckoutPage = () => {
                                         </span>
                                         <button
                                             onClick={removeCoupon}
-                                            className="text-red-600 hover:text-red-700"
+                                            className="text-red-600 hover:text-red-700 hover:cursor-pointer"
                                         >
                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -458,7 +465,7 @@ const CheckoutPage = () => {
                                 )}
                             </div>
 
-                            <button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                            <button className="hidden lg:block w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:cursor-pointer hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                                 Pay ₹{selectedCoupon?.pricing?.totalAmount ?? data?.pricing?.totalAmount?.toFixed(2)}
                             </button>
 
@@ -474,8 +481,34 @@ const CheckoutPage = () => {
                             </p>
                         </div>
                     </div>
+
+                    {/* Mobile Sticky Pay Bar */}
+                    <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] px-4 py-3">
+
+                        {/* Price Row */}
+                        <div className="flex items-center justify-between mb-2">
+                            <div className="flex flex-col">
+                                <span className="text-xs text-gray-500">Total Amount</span>
+                                <span className="text-lg font-bold text-gray-900">
+                                    ₹{selectedCoupon?.pricing?.totalAmount ?? data?.pricing?.totalAmount?.toFixed(2)}
+                                </span>
+                                {selectedCoupon && (
+                                    <span className="text-xs text-green-600">
+                                        Saved ₹{selectedCoupon?.pricing?.discount?.toFixed(2)}
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Pay Button */}
+                            <button className="ml-4 flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-semibold text-base hover:from-blue-700 hover:cursor-pointer hover:to-indigo-700 transition-all shadow-md active:scale-95">
+                                Pay ₹{selectedCoupon?.pricing?.totalAmount ?? data?.pricing?.totalAmount?.toFixed(2)}
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
+
         </div>
     );
 };

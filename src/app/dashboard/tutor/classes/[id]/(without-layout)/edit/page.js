@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/select";
 
 import { useClass, useUpdateClass } from "@/hooks/tutor/useClass";
-import { InlineLoader } from "@/components/common/InlineLoader";
 import LoadingScreen from "@/components/common/LoadingScreen";
 
 const DAYS = [
