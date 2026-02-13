@@ -1,5 +1,5 @@
 import { orderService } from "@/services/public/order.service";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export function useCheckoutDetails(classId, options = {}) {
   return useQuery({
@@ -22,6 +22,18 @@ export function useCreateOrder(options = {}) {
     mutationFn: async (payload) => {
       const res = await orderService.create(payload);
       return res?.data?.data;
+    },
+    ...options,
+  });
+}
+
+
+export function useVerifyPayment(options = {}) {
+  return useMutation({
+    mutationKey: ["verify-payment"],
+    mutationFn: async (payload) => {
+      const res = await orderService.verify(payload);
+      return res?.data;
     },
     ...options,
   });

@@ -7,4 +7,7 @@ export const orderService = {
 
   create: (data) =>
     api.post(API.CREATE_ORDER, data),
+
+  verify: (data) => 
+    api.post(API.VERIFY_PAYMENT, data),
 };

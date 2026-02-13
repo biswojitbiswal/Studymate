@@ -22,6 +22,7 @@ export const API = {
   //Checkout
   GET_CHECKOUT_DETAILS: `${BACKEND_URL}/order/checkout`,
   CREATE_ORDER: `${BACKEND_URL}/order`,
+  VERIFY_PAYMENT: `${BACKEND_URL}/payments/verify`,
 
 
   ADMIN: {

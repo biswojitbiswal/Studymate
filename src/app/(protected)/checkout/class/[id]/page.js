@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
-import { useCheckoutDetails } from '@/hooks/public/useOrder';
+import { useParams, useRouter } from 'next/navigation';
+import { useCheckoutDetails, useCreateOrder, useVerifyPayment } from '@/hooks/public/useOrder';
 import { useCheckoutCoupons, useValidateCoupon } from '@/hooks/admin/useCoupon';
 import { toast } from 'sonner';
 import { CheckoutSkeleton } from '@/components/skeleton/CheckoutSkeleton';
 import { InlineLoader } from '@/components/common/InlineLoader';
+import useRazorpayScript from '@/hooks/public/useRazorpayScript';
+import { useAuthStore } from '@/store/auth';
 
 
 const DAY_MAP = {
@@ -29,14 +31,14 @@ function formatDays(days) {
 
 const CheckoutPage = () => {
     const [selectedCoupon, setSelectedCoupon] = useState(null);
-    // const [promoCode, setPromoCode] = useState('');
-    // const [currentCouponIndex, setCurrentCouponIndex] = useState(0);
     const [activeIndex, setActiveIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
     const [enableTransition, setEnableTransition] = useState(true);
 
 
     const param = useParams();
+    const router = useRouter()
+    const user = useAuthStore((s) => s.user);
 
     const { data, isLoading: checkoutLoading } = useCheckoutDetails(param?.id);
     const { data: availableCoupons, isLoading: couponLoading } = useCheckoutCoupons(param?.id, 'CLASS')
@@ -81,17 +83,6 @@ const CheckoutPage = () => {
     }, [activeIndex, availableCoupons, enableTransition]);
 
 
-    const classDetails = {
-        title: 'Math Tutoring Session',
-        instructor: 'Mr. Sharma',
-        duration: '1 Hour',
-        image: '/class-image.jpg',
-        tutorFee: 500,
-        platformFee: 50,
-        gstRate: 18
-    };
-
-
     const applyCoupon = (coupon) => {
         validateCouponMutation.mutate(
             {
@@ -131,8 +122,86 @@ const CheckoutPage = () => {
     };
 
 
-    // Create Order
     // Intergrate Razorpay
+    const razorpayLoaded = useRazorpayScript();
+
+    const { mutateAsync: createOrder, isPending } = useCreateOrder();
+    const { mutateAsync: verifyPayment } = useVerifyPayment();
+
+
+    const handlePayment = async () => {
+        if (!razorpayLoaded) {
+            toast.success("Payment gateway loading. Please wait.");
+            return;
+        }
+
+        try {
+            const paymentData = await createOrder({
+                productId: param?.id,
+                itemType: "CLASS",
+                couponCode: selectedCoupon?.code || undefined,
+            });
+
+            /*
+              paymentData we receive:
+              {
+                orderId,
+                razorpayOrderId,
+                amount,
+                currency,
+                keyId
+              }
+            */
+
+            /* 2️⃣ Open Razorpay Checkout */
+            const options = {
+                key: paymentData.keyId,
+                amount: paymentData.amount,
+                currency: paymentData.currency,
+                order_id: paymentData.razorpayOrderId,
+
+                image: "/logo.png",
+
+                theme: { color: "#2563eb" },
+
+                prefill: {
+                    name: user.name,
+                    email: user.email,
+                    contact: user.phone
+                },
+
+                notes: {
+                    platform: "studynest",
+                },
+
+                handler: async function (response) {
+                    await verifyPayment({
+                        orderId: paymentData.orderId,
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature,
+                    });
+
+                    // redirect to waiting screen
+                    router.push(`/dashboard/student/order/${paymentData.orderId}`);
+                },
+
+                modal: {
+                    ondismiss: function () {
+                        console.log("User closed payment popup");
+                    },
+                },
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+
+        } catch (err) {
+            console.log(err);
+            alert("Payment initialization failed");
+        }
+    };
+
 
 
     return (
@@ -216,7 +285,7 @@ const CheckoutPage = () => {
                                                 </span>
                                             </p>
 
-                                            
+
 
                                         </div>
                                     </div>
@@ -465,7 +534,7 @@ const CheckoutPage = () => {
                                 )}
                             </div>
 
-                            <button className="hidden lg:block w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:cursor-pointer hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                            <button onClick={handlePayment} disabled={isPending} className="hidden lg:block w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:cursor-pointer hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                                 Pay ₹{selectedCoupon?.pricing?.totalAmount ?? data?.pricing?.totalAmount?.toFixed(2)}
                             </button>
 
@@ -500,7 +569,7 @@ const CheckoutPage = () => {
                             </div>
 
                             {/* Pay Button */}
-                            <button className="ml-4 flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-semibold text-base hover:from-blue-700 hover:cursor-pointer hover:to-indigo-700 transition-all shadow-md active:scale-95">
+                            <button onClick={handlePayment} disabled={isPending} className="ml-4 flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-semibold text-base hover:from-blue-700 hover:cursor-pointer hover:to-indigo-700 transition-all shadow-md active:scale-95">
                                 Pay ₹{selectedCoupon?.pricing?.totalAmount ?? data?.pricing?.totalAmount?.toFixed(2)}
                             </button>
                         </div>
