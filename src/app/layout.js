@@ -5,6 +5,9 @@ import Providers from "@/components/providers";
 export const metadata = {
   title: "StudyNest",
   description: "Study & tuition management platform",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({ children }) {
