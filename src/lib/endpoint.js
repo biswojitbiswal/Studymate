@@ -1,117 +1,117 @@
-// export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4040/api/v1";
-export const BACKEND_URL = "";
+// // export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4040/api/v1";
+// export const BACKEND_URL = "";
 
 
 
 export const API = {
-  AUTH_SIGNIN: `${BACKEND_URL}/auth/signin`,
-  AUTH_SIGNUP: `${BACKEND_URL}/auth/signup`,
-  AUTH_REFRESH: `${BACKEND_URL}/auth/refresh`,
-  AUTH_SIGNOUT: `${BACKEND_URL}/auth/signout`,
-  PROFILE: `${BACKEND_URL}/auth/profile`,
-  VERIFY_EMAIL: `${BACKEND_URL}/auth/verify-email`,
-  TOGGLE_STATUS: `${BACKEND_URL}/auth/toggle`,
+  AUTH_SIGNIN: `/auth/signin`,
+  AUTH_SIGNUP: `/auth/signup`,
+  AUTH_REFRESH: `/auth/refresh`,
+  AUTH_SIGNOUT: `/auth/signout`,
+  PROFILE: `/auth/profile`,
+  VERIFY_EMAIL: `/auth/verify-email`,
+  TOGGLE_STATUS: `/auth/toggle`,
 
 
   //Classes
-  BROWSE_CLASSES: `${BACKEND_URL}/public/classes/browse`,
-  BROWSE_CLASSES_BY_ID: `${BACKEND_URL}/public/classes`,
+  BROWSE_CLASSES: `/public/classes/browse`,
+  BROWSE_CLASSES_BY_ID: `/public/classes`,
 
 
 
   //Checkout
-  GET_CHECKOUT_DETAILS: `${BACKEND_URL}/order/checkout`,
-  CREATE_ORDER: `${BACKEND_URL}/order`,
-  VERIFY_PAYMENT: `${BACKEND_URL}/payments/verify`,
+  GET_CHECKOUT_DETAILS: `/order/checkout`,
+  CREATE_ORDER: `/order`,
+  VERIFY_PAYMENT: `/payments/verify`,
 
 
   ADMIN: {
     BOARD: {
-      CREATE: `${BACKEND_URL}/board`,
-      GET: `${BACKEND_URL}/board`,
-      GET_BY_ID: `${BACKEND_URL}/board`,
-      GET_FOR_PUBLIC: `${BACKEND_URL}/board/public`,
-      DELETE: `${BACKEND_URL}/board`,
-      UPDATE: `${BACKEND_URL}/board`
+      CREATE: `/board`,
+      GET: `/board`,
+      GET_BY_ID: `/board`,
+      GET_FOR_PUBLIC: `/board/public`,
+      DELETE: `/board`,
+      UPDATE: `/board`
     },
 
     LEVEL: {
-      CREATE: `${BACKEND_URL}/level`,
-      GET: `${BACKEND_URL}/level`,
-      GET_BY_ID: `${BACKEND_URL}/level`,
-      GET_FOR_PUBLIC: `${BACKEND_URL}/level/public`,
-      DELETE: `${BACKEND_URL}/level`,
-      UPDATE: `${BACKEND_URL}/level`
+      CREATE: `/level`,
+      GET: `/level`,
+      GET_BY_ID: `/level`,
+      GET_FOR_PUBLIC: `/level/public`,
+      DELETE: `/level`,
+      UPDATE: `/level`
     },
 
     LANGUAGE: {
-      CREATE: `${BACKEND_URL}/language`,
-      GET: `${BACKEND_URL}/language`,
-      GET_BY_ID: `${BACKEND_URL}/language`,
-      GET_FOR_PUBLIC: `${BACKEND_URL}/language/public`,
-      DELETE: `${BACKEND_URL}/language`,
-      UPDATE: `${BACKEND_URL}/language`
+      CREATE: `/language`,
+      GET: `/language`,
+      GET_BY_ID: `/language`,
+      GET_FOR_PUBLIC: `/language/public`,
+      DELETE: `/language`,
+      UPDATE: `/language`
     },
 
     SUBJECT: {
-      CREATE: `${BACKEND_URL}/subject`,
-      GET: `${BACKEND_URL}/subject`,
-      GET_BY_ID: `${BACKEND_URL}/subject`,
-      GET_FOR_PUBLIC: `${BACKEND_URL}/subject/public`,
-      DELETE: `${BACKEND_URL}/subject`,
-      UPDATE: `${BACKEND_URL}/subject`
+      CREATE: `/subject`,
+      GET: `/subject`,
+      GET_BY_ID: `/subject`,
+      GET_FOR_PUBLIC: `/subject/public`,
+      DELETE: `/subject`,
+      UPDATE: `/subject`
     },
 
     CLASSES: {
-      GET: `${BACKEND_URL}/admin/classes`,
-      ARCHIVE: `${BACKEND_URL}/admin/classes/archive`,
+      GET: `/admin/classes`,
+      ARCHIVE: `/admin/classes/archive`,
     },
 
     COMMISSION: {
-      CREATE: `${BACKEND_URL}/commission`,
-      GET: `${BACKEND_URL}/commission`,
-      GET_BY_ID: `${BACKEND_URL}/commission`,
-      DELETE: `${BACKEND_URL}/commission`,
-      UPDATE: `${BACKEND_URL}/commission`
+      CREATE: `/commission`,
+      GET: `/commission`,
+      GET_BY_ID: `/commission`,
+      DELETE: `/commission`,
+      UPDATE: `/commission`
     },
 
     TAX: {
-      CREATE: `${BACKEND_URL}/tax-setting`,
-      GET: `${BACKEND_URL}/tax-setting`,
-      GET_BY_ID: `${BACKEND_URL}/tax-setting`,
-      DELETE: `${BACKEND_URL}/tax-setting`,
-      UPDATE: `${BACKEND_URL}/tax-setting`
+      CREATE: `/tax-setting`,
+      GET: `/tax-setting`,
+      GET_BY_ID: `/tax-setting`,
+      DELETE: `/tax-setting`,
+      UPDATE: `/tax-setting`
     },
 
     COUPON: {
-      CREATE: `${BACKEND_URL}/coupon`,
-      GET: `${BACKEND_URL}/coupon`,
-      GET_COUPON: `${BACKEND_URL}/coupon/checkout`,
-      GET_BY_ID: `${BACKEND_URL}/coupon`,
-      DELETE: `${BACKEND_URL}/coupon`,
-      UPDATE: `${BACKEND_URL}/coupon`,
-      VALIDATE: `${BACKEND_URL}/coupon/validate`,
+      CREATE: `/coupon`,
+      GET: `/coupon`,
+      GET_COUPON: `/coupon/checkout`,
+      GET_BY_ID: `/coupon`,
+      DELETE: `/coupon`,
+      UPDATE: `/coupon`,
+      VALIDATE: `/coupon/validate`,
     },
 
   },
 
 
   STUDENT: {
-    GET_STUDENTS: `${BACKEND_URL}/student`,
-    GET_ME: `${BACKEND_URL}/student/me`,
-    UPDATE_ME: `${BACKEND_URL}/student/me`,
-    GET_STUDENT_BY_ID: `${BACKEND_URL}/student`,
+    GET_STUDENTS: `/student`,
+    GET_ME: `/student/me`,
+    UPDATE_ME: `/student/me`,
+    GET_STUDENT_BY_ID: `/student`,
 
 
 
 
     TASK: {
-      CREATE: `${BACKEND_URL}/task`,
-      GET: `${BACKEND_URL}/task`,
-      GET_BY_ID: `${BACKEND_URL}/task`,
-      DELETE: `${BACKEND_URL}/task`,
-      UPDATE: `${BACKEND_URL}/task`,
-      COMPLETE: `${BACKEND_URL}/task/status`
+      CREATE: `/task`,
+      GET: `/task`,
+      GET_BY_ID: `/task`,
+      DELETE: `/task`,
+      UPDATE: `/task`,
+      COMPLETE: `/task/status`
     }
   },
 
@@ -120,45 +120,45 @@ export const API = {
 
 
   TUTOR: {
-    TUTOR_APPLY: `${BACKEND_URL}/tutor/apply`,
-    GET_TUTORS: `${BACKEND_URL}/tutor`,
-    GET_ME: `${BACKEND_URL}/tutor/me`,
-    UPDATE_ME: `${BACKEND_URL}/tutor/me`,
-    GET_TUTOR_BY_ID: `${BACKEND_URL}/tutor`,
-    GET_TUTOR_REQUESTS: `${BACKEND_URL}/tutor/requests`,
-    TUTOR_APPROVED: `${BACKEND_URL}/tutor/approved`,
-    TUTOR_REJECTED: `${BACKEND_URL}/tutor/rejected`,
+    TUTOR_APPLY: `/tutor/apply`,
+    GET_TUTORS: `/tutor`,
+    GET_ME: `/tutor/me`,
+    UPDATE_ME: `/tutor/me`,
+    GET_TUTOR_BY_ID: `/tutor`,
+    GET_TUTOR_REQUESTS: `/tutor/requests`,
+    TUTOR_APPROVED: `/tutor/approved`,
+    TUTOR_REJECTED: `/tutor/rejected`,
 
 
 
     CLASSES: {
-      CREATE: `${BACKEND_URL}/tutor/classes`,
-      GET: `${BACKEND_URL}/tutor/classes`,
-      GET_BY_ID: `${BACKEND_URL}/tutor/classes`,
-      DELETE: `${BACKEND_URL}/tutor/classes`,
-      UPDATE: `${BACKEND_URL}/tutor/classes`,
-      PUBLISH: `${BACKEND_URL}/tutor/classes/publish`,
-      ARCHIVE: `${BACKEND_URL}/tutor/classes/archive`,
+      CREATE: `/tutor/classes`,
+      GET: `/tutor/classes`,
+      GET_BY_ID: `/tutor/classes`,
+      DELETE: `/tutor/classes`,
+      UPDATE: `/tutor/classes`,
+      PUBLISH: `/tutor/classes/publish`,
+      ARCHIVE: `/tutor/classes/archive`,
     },
 
     AVAILABILITY: {
-      CREATE: `${BACKEND_URL}/schedule/availibility`,
-      GET: `${BACKEND_URL}/schedule/availibility`,
-      DELETE: `${BACKEND_URL}/schedule/availibility`,
-      UPDATE: `${BACKEND_URL}/schedule/availibility`,
-      TOGGLE: `${BACKEND_URL}/schedule/availibility/toggle`,
+      CREATE: `/schedule/availibility`,
+      GET: `/schedule/availibility`,
+      DELETE: `/schedule/availibility`,
+      UPDATE: `/schedule/availibility`,
+      TOGGLE: `/schedule/availibility/toggle`,
     },
 
     TIMEOFF: {
-      CREATE: `${BACKEND_URL}/schedule/timeoff`,
-      GET: `${BACKEND_URL}/schedule/timeoff`,
-      DELETE: `${BACKEND_URL}/schedule/timeoff`,
+      CREATE: `/schedule/timeoff`,
+      GET: `/schedule/timeoff`,
+      DELETE: `/schedule/timeoff`,
     },
 
     LEAVE: {
-      CREATE: `${BACKEND_URL}/schedule/leave`,
-      GET: `${BACKEND_URL}/schedule/leave`,
-      DELETE: `${BACKEND_URL}/schedule/leave`,
+      CREATE: `/schedule/leave`,
+      GET: `/schedule/leave`,
+      DELETE: `/schedule/leave`,
     }
   }
 };
