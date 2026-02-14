@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 async function getInitialData() {
   const res = await fetch(
-    "http://localhost:3000/api/v1/public/classes/browse?page=1&limit=10&sortBy=createdAt&sortOrder=desc",
+    `${process.env.BACKEND_INTERNAL_URL}/api/v1/public/classes/browse?page=1&limit=10&sortBy=createdAt&sortOrder=desc`,
     { cache: "no-store" }
   );
 
