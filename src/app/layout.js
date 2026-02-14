@@ -15,6 +15,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="overflow-y-scroll">
         <Providers>
+
           {children}
           <Toaster />
         </Providers>
