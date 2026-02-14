@@ -12,7 +12,7 @@ export default function TopBar() {
         <header className="h-14 w-full bg-white border-b flex items-center justify-between px-6">
             <Link href="/" className="flex items-center">
                 <Image
-                    src="/logo.png"
+                    src="/Logo.png"
                     alt="StudyNest Logo"
                     unoptimized
                     width={140}

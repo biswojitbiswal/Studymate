@@ -48,7 +48,7 @@ export default function FloatingNavbar() {
       <>
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          <Image src="/logo.png" alt="StudyNest" width={130} height={60} />
+          <Image src="/Logo.png" alt="StudyNest" width={130} height={60} />
         </Link>
 
         {/* Center Navigation */}
@@ -80,7 +80,7 @@ export default function FloatingNavbar() {
 
         {/* Logo */}
         <Link href="/">
-          <Image src="/logo.png" alt="StudyNest" width={110} height={32} />
+          <Image src="/Logo.png" alt="StudyNest" width={110} height={32} />
         </Link>
 
         <div className="flex items-center gap-3">
@@ -97,7 +97,7 @@ export default function FloatingNavbar() {
 
               <SheetTitle>
                 <Link href="/">
-                  <Image src="/logo.png" alt="StudyNest" width={140} height={100} />
+                  <Image src="/Logo.png" alt="StudyNest" width={140} height={100} />
                 </Link>
               </SheetTitle>
               <MobileNavLinks />

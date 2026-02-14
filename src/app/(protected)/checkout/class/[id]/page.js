@@ -160,7 +160,7 @@ const CheckoutPage = () => {
                 currency: paymentData.currency,
                 order_id: paymentData.razorpayOrderId,
 
-                image: "/logo.png",
+                image: "/Logo.png",
 
                 theme: { color: "#2563eb" },
 

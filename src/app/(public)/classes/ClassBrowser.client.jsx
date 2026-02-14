@@ -397,7 +397,7 @@ const ClassBrowser = ({ initialData }) => {
                                     {/* Thumbnail */}
                                     <div className="relative shrink-0 w-full sm:w-48 h-44 bg-amber-500 rounded-sm overflow-hidden">
                                         <Image
-                                            src={classItem?.previewImg || "/logo.png"}
+                                            src={classItem?.previewImg || "/Logo.png"}
                                             alt={classItem.title}
                                             fill
                                             className="object-cover"
@@ -538,7 +538,7 @@ const ClassBrowser = ({ initialData }) => {
                                                 />
                                             ) : (
                                                 <img
-                                                    src={hoveredClass?.previewImg || "/logo.png"}
+                                                    src={hoveredClass?.previewImg || "/Logo.png"}
                                                     alt={hoveredClass?.title}
                                                     className="w-full h-full object-cover"
                                                 />
@@ -732,7 +732,7 @@ const ClassBrowser = ({ initialData }) => {
                                 />
                             ) : (
                                 <img
-                                    src={previewClass.previewImg || "/logo.png"}
+                                    src={previewClass.previewImg || "/Logo.png"}
                                     alt={previewClass.title}
                                     className="w-full h-full object-contain"
                                 />

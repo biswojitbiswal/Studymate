@@ -21,7 +21,7 @@ export default function AdminSidebar() {
             <div className="h-14 bg-white flex items-center px-6 font-semibold border-b border-white/10">
                 <Link href="/" className="flex items-center">
                     <Image
-                        src="/logo.png"
+                        src="/Logo.png"
                         alt="StudyNest Logo"
                         unoptimized
                         width={140}
