@@ -77,7 +77,6 @@ export const useAuthStore = create(
       },
 
       /* ================= SIGNUP ================= */
-
       signup: async (payload) => {
         const res = await fetch(`/api/v1${API.AUTH_SIGNUP}`, {
           method: "POST",
@@ -88,16 +87,17 @@ export const useAuthStore = create(
 
         const data = await res.json();
 
+        // 🔥 MOST IMPORTANT CHANGE
         if (!res.ok) {
-          toast.error(data?.message || "Signup failed");
+          // do NOT toast here
+          throw new Error(data?.message || "Signup failed");
         }
 
         const user = data?.user ?? data?.data?.user;
-        return {user};
+        return { user };
       },
 
       /* ================= REFRESH (FIXED) ================= */
-
       tryRefresh: async () => {
         console.log("🔥 tryRefresh CALLED", new Date().toISOString());
         // 🔒 DEDUPE: only one refresh at a time

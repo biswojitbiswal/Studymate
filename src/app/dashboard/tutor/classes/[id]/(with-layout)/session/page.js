@@ -1,47 +1,38 @@
 "use client";
 
-import { CalendarDays, Users, Clock } from "lucide-react";
+import { CalendarDays, Users, Clock, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useClassSessions } from "@/hooks/public/useSession";
+import { useClassContext } from "../ClassContext";
+import { useEffect, useState } from "react";
+import SessionCardSkeleton from "@/components/skeleton/SessionCardSkeleton";
 
-const sessions = [
-    {
-        id: 1,
-        date: "24",
-        day: "Wed",
-        month: "Apr",
-        title: "Quadratic Equations",
-        time: "4:00 PM – 5:00 PM",
-        students: 18,
-        status: "Scheduled",
-        type: "REGULAR",
-    },
-    {
-        id: 2,
-        date: "26",
-        day: "Fri",
-        month: "Apr",
-        title: "Triangles and Their Properties",
-        time: "4:00 PM – 5:00 PM",
-        students: 18,
-        status: "Scheduled",
-        type: "REGULAR",
-    },
-    {
-        id: 3,
-        date: "29",
-        day: "Mon",
-        month: "Apr",
-        title: "Exam Preparation",
-        time: "4:00 PM – 5:00 PM",
-        students: 12,
-        status: "Extra Session",
-        type: "EXTRA",
-    },
-];
 
 export default function SessionsPage() {
+    const { klass } = useClassContext()
+    const [page, setPage] = useState(1);
+    const limit = 10;
+
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    }, [page]);
+
+    const { data, isLoading } = useClassSessions({
+        classId: klass.id,
+        page,
+        limit,
+    });
+
+    const sessions = data?.data?.data || [];
+    const totalPages = data?.data?.totalPages || 1;
+
+
+
     return (
-        <div className="space-y-6">
+        <div className="space-y-3">
 
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -49,23 +40,92 @@ export default function SessionsPage() {
                     Sessions
                 </h2>
 
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white hover:cursor-pointer">
                     + Doubt Session
                 </Button>
             </div>
 
             {/* Sessions List */}
-            <div className="space-y-4">
-                {sessions.map((session) => (
-                    <SessionCard key={session.id} session={session} />
+            <div className="space-y-2">
+                {isLoading &&
+                    Array.from({ length: 10 }).map((_, i) => (
+                        <SessionCardSkeleton key={i} />
+                    ))
+                }
+
+                {!isLoading && sessions.length <= 0 ? (
+                    <div className="py-14 flex flex-col items-center justify-center text-center bg-gray-50">
+
+                        <div className="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center mb-3">
+                            <Video className="w-7 h-7 text-blue-600" />
+                        </div>
+
+                        <h3 className="text-sm font-semibold text-gray-800">
+                            No sessions found
+                        </h3>
+
+                        {/* <p className="text-xs text-gray-500 mt-1">
+                            you have not scheduled any classes yet.
+                        </p> */}
+                    </div>
+
+                ) : sessions?.map((session) => (
+                    <SessionCard key={session?.id} session={session} />
                 ))}
             </div>
 
+            {/* Pagination */}
+            {!isLoading && totalPages > 1 && (
+                <div className="flex items-center justify-between pt-3">
+
+                    <button
+                        onClick={() => setPage(p => Math.max(p - 1, 1))}
+                        disabled={page === 1}
+                        className="px-3 py-1.5 text-sm rounded-md border disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50"
+                    >
+                        ← Previous
+                    </button>
+
+                    <div className="text-sm text-gray-600">
+                        Page <span className="font-medium">{page}</span> of{" "}
+                        <span className="font-medium">{totalPages}</span>
+                    </div>
+
+                    <button
+                        onClick={() => setPage(p => Math.min(p + 1, totalPages))}
+                        disabled={page === totalPages}
+                        className="px-3 py-1.5 text-sm rounded-md border disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50"
+                    >
+                        Next →
+                    </button>
+
+                </div>
+            )}
         </div>
     );
 }
 
-/* ---------------- Session Card ---------------- */
+
+function formatTimeRange(startTime) {
+    if (!startTime) return null;
+
+    const [h, m] = startTime.split(":").map(Number);
+
+    const start = new Date();
+    start.setHours(h, m, 0, 0);
+
+    // const end = new Date(start.getTime() + durationMin * 60 * 1000);
+
+    const format = (date) =>
+        date.toLocaleTimeString("en-IN", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+        });
+
+    return `${format(start)}`;
+}
+
 
 function SessionCard({ session }) {
     return (
@@ -74,13 +134,10 @@ function SessionCard({ session }) {
             {/* Date Box */}
             <div className="w-14 shrink-0 rounded-md bg-blue-50 text-blue-600 text-center py-2">
                 <div className="text-xs uppercase font-medium">
-                    {session.month}
+                    {session?.monthLabel}
                 </div>
-                <div className="text-lg font-bold leading-tight">
-                    {session.date}
-                </div>
-                <div className="text-[11px] font-medium">
-                    {session.day}
+                <div className="text-md font-bold leading-tight">
+                    {session?.dateLabel}
                 </div>
             </div>
 
@@ -88,44 +145,46 @@ function SessionCard({ session }) {
             <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                     <h3 className="font-medium text-gray-900 truncate">
-                        {session.title}
+                        {session?.klass?.title}
                     </h3>
 
                     {/* Session Type */}
-                    <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-gray-700">
-                        {session.sessionType}
+                    <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-blue-600 font-medium">
+                        {session?.sessionType}
+                    </span>
+
+                    <span className="text-sm px-2 rounded bg-gray-100 text-blue-600 font-medium">
+                        {formatTimeRange(session?.klass?.startTime)}
                     </span>
                 </div>
 
-                <div className="mt-1 flex items-center gap-4 text-sm text-gray-600">
-                    <span>
-                        60 min
+                <div className="mt-1 flex items-center gap-2 flex-wrap">
+                    <span className="text-xs px-2 py-0.5 rounded-sm bg-blue-100 text-blue-700 font-medium">
+                        {session?.dayLabel}
                     </span>
                     <span>
-                        {session.students} students
+                        ⏱ {session?.klass?.durationMin} min
                     </span>
-                    {/* {session.meetingLink && ( */}
-                        <span className="text-blue-600 font-medium">
-                            {session.sessionType}
-                        </span>
-                    {/* )} */}
+                    <span>
+                        👥 {session?.totalEnrollment} students
+                    </span>
                 </div>
             </div>
 
             {/* Right Side */}
             <div className="flex items-center gap-3">
                 <span
-                    className={`text-xs font-medium px-2 py-1 rounded-full
-            ${session.status === "SCHEDULED"
+                    className={`text-xs font-medium px-2 py-1 rounded-sm
+            ${session?.status === "SCHEDULED"
                             ? "bg-green-100 text-green-700"
-                            : session.status === "COMPLETED"
+                            : session?.status === "COMPLETED"
                                 ? "bg-blue-100 text-blue-700"
-                                : session.status.includes("CANCELLED")
+                                : session?.status?.includes("CANCELLED")
                                     ? "bg-red-100 text-red-700"
                                     : "bg-yellow-100 text-yellow-700"
                         }`}
                 >
-                    {session.status.replaceAll("_", " ")}
+                    {session?.status?.replaceAll("_", " ")}
                 </span>
 
                 <button className="text-sm bg-blue-600 px-4 py-1.5 rounded-md cursor-pointer text-white hover:bg-blue-700">

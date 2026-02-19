@@ -95,18 +95,23 @@ export default function CreateClassPage() {
     const parseSyllabus = () => {
         if (!syllabusText.trim()) return [];
 
-        // If valid JSON, use it
+        // try JSON first
         try {
             const parsed = JSON.parse(syllabusText);
             if (Array.isArray(parsed)) return parsed;
         } catch { }
 
-        // Otherwise, treat as newline list
-        return syllabusText
+        // remove brackets if user typed them
+        const cleaned = syllabusText
+            .replace(/^\s*\[\s*/, "")
+            .replace(/\s*\]\s*$/, "");
+
+        return cleaned
             .split("\n")
             .map((line) => line.trim())
             .filter(Boolean);
     };
+
 
 
     const validateForm = () => {
@@ -214,7 +219,7 @@ export default function CreateClassPage() {
         }
 
         // Syllabus (JSON)
-        formData.append("syllabus", parseSyllabus());
+        formData.append("syllabus", JSON.stringify(parseSyllabus()));
 
         // Files
         if (previewImg) formData.append("previewImg", previewImg);

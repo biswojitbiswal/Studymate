@@ -492,7 +492,7 @@ const ClassBrowser = ({ initialData }) => {
                                                 </div>
 
                                                 <button
-                                                    onClick={() => router.push(`/classes/${classItem.id}`)}
+                                                    onClick={() => router.push(`/classes/${classItem?.seo_name}`)}
                                                     className="
         w-full sm:w-auto
         px-4 sm:px-6
@@ -749,7 +749,7 @@ const ClassBrowser = ({ initialData }) => {
                                 <button
                                     onClick={() => {
                                         setShowPreviewModal(false);
-                                        router.push(`/classes/${previewClass.id}`);
+                                        router.push(`/classes/${previewClass?.seo_name}`);
                                     }}
                                     className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg hover:cursor-pointer"
                                 >

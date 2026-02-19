@@ -24,8 +24,13 @@ export const navItems = [
     icon: ListTodo,
   },
   {
-    label: "My Classes",
-    href: "/dashboard/student/classes",
+    label: "My Learning",
+    href: "/dashboard/student/learning",
+    icon: Presentation,
+  },
+  {
+    label: "Billing & Purchases",
+    href: "/dashboard/student/purchases",
     icon: Presentation,
   },
   {

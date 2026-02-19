@@ -1,5 +1,4 @@
-// // export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4040/api/v1";
-// export const BACKEND_URL = "";
+
 
 
 
@@ -22,7 +21,23 @@ export const API = {
   //Checkout
   GET_CHECKOUT_DETAILS: `/order/checkout`,
   CREATE_ORDER: `/order`,
+  GET_ORDER_STATUS: '/order',
+
+
   VERIFY_PAYMENT: `/payments/verify`,
+
+
+  SESSION: {
+    CREATE_PRIVATE: `/sessions/private/request`,
+    GET_BY_ID: `/sessions/class`,
+    CANCELLATION: `/sessions/cancel`,
+    RESCHEDULE: `/sessions/reschedule`,
+    APPROVE: `/sessions/approve`,
+    REJECT: `/sessions/reject`,
+    CREATE_DBOUT: `/sessions/group/dbout`,
+    CREATE_EXTRA: `/sessions/group/extra`,
+    GET_UPCOMING: `/sessions/upcoming`,
+  },
 
 
   ADMIN: {
@@ -112,6 +127,11 @@ export const API = {
       DELETE: `/task`,
       UPDATE: `/task`,
       COMPLETE: `/task/status`
+    },
+
+
+    CLASSES: {
+      GET_ALL_ENROLLED: `/class-enrollments`
     }
   },
 
@@ -159,6 +179,8 @@ export const API = {
       CREATE: `/schedule/leave`,
       GET: `/schedule/leave`,
       DELETE: `/schedule/leave`,
-    }
+    },
+
+
   }
 };

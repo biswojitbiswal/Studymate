@@ -38,18 +38,19 @@ export const SignupForm = ({ type }) => {
     setErr(null);
 
     try {
-      const { user } = await signup(formData);
-      console.log(user);
-      
-      toast.success("Signup Successful, Please verify your email.")
+      await signup(formData);
+
+      toast.success("Signup Successful, Please verify your email.");
       router.push("/signin");
-    } catch (err) {
-      console.error(err);
-      setErr(err?.message ?? "Signup failed");
+    } catch (error) {
+      const message = error?.message || "Signup failed";
+      setErr(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
   }
+
 
   return (
     <div className="w-full max-w-md space-y-2">

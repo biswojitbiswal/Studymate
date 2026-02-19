@@ -27,7 +27,7 @@ const statusStyles = {
 };
 
 
-export default function ClassTable({ data, isLoading, isError, page, setPage, onPublish }) {
+export default function ClassTable({ data, isLoading, isError, page, setPage }) {
   const [open, setOpen] = useState(false);
   const [selectedClassId, setSelectedClassId] = useState(null);
 
@@ -62,100 +62,64 @@ export default function ClassTable({ data, isLoading, isError, page, setPage, on
           <TableHeader>
             <TableRow className="bg-gray-50">
               <TableHead>Class Title</TableHead>
-              <TableHead className="text-center">Type</TableHead>
-              <TableHead className="text-center">Visibility</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Visibility</TableHead>
               <TableHead className="text-center">Status</TableHead>
-              <TableHead className="text-center">Joining Date</TableHead>
-              <TableHead className="text-center">Start / End Date</TableHead>
+              <TableHead>Start Date</TableHead>
+              <TableHead>End Date</TableHead>
               <TableHead className="text-center">Price</TableHead>
-              <TableHead className="text-center">Publish</TableHead>
+              {/* <TableHead>Publish</TableHead> */}
               <TableHead className="text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {data.length === 0 ? (
+            {data?.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} className="text-center py-6">
                   No class found
                 </TableCell>
               </TableRow>
-            ) : (data?.data?.map((cls) => (
+            ) : (data?.map((cls) => (
               <TableRow
-                key={cls.id}
-                className="hover:bg-gray-50 transition text-center"
+                key={cls?.id}
+                className="hover:bg-gray-50 transition"
               >
-                <TableCell className="font-medium text-gray-900 text-start">
-                  {cls.title}
+                <TableCell className="font-medium text-gray-900">
+                  {cls?.title}
                 </TableCell>
 
                 <TableCell className="text-gray-700">
-                  {cls.type}
+                  {cls?.type}
                 </TableCell>
 
                 <TableCell className="text-gray-700">
-                  {cls.visibility}
+                  {cls?.visibility}
                 </TableCell>
 
-                <TableCell>
+                <TableCell className="text-center">
                   <Badge
-                    className={`text-xs ${statusStyles[cls.status]}`}
+                    className={`text-xs ${statusStyles[cls?.status]}`}
                   >
-                    {cls.status}
+                    {cls?.status}
                   </Badge>
                 </TableCell>
 
                 <TableCell className="text-gray-700">
-                  {cls.joiningStartDate.split("T")[0]}
-                  <br />
-                  {cls.joiningEndDate.split("T")[0]}
+                  {cls?.startDate.split("T")[0]}
                 </TableCell>
 
                 <TableCell className="text-gray-700">
-                  {cls.startDate.split("T")[0]}
-                  <br />
-                  {cls.endDate.split("T")[0]}
+                  {cls?.endDate.split("T")[0]}
                 </TableCell>
 
-                <TableCell className="font-medium">
-                  ₹{cls.price.toFixed(2)}
+                <TableCell className="text-center text-md font-bold text-green-600">
+                  ₹{cls?.paidAmount.toFixed(2)}
                 </TableCell>
 
-                <TableCell>
-                  <Switch
-                    checked={cls.status !== 'DRAFT'}
-                    onCheckedChange={() => onPublish(cls.id)}
-                    className="data-[state=checked]:bg-blue-600 hover:cursor-pointer"
-                  />
-                </TableCell>
 
                 <TableCell>
                   <div className="flex items-center justify-center gap-2">
-                    {/* Edit */}
-                    <Button
-                      size="icon"
-                      title="Edit"
-                      onClick={() =>
-                        router.push(
-                          `/dashboard/tutor/classes/${cls.id}/edit`
-                        )
-                      }
-                      className="bg-blue-600 hover:bg-blue-700 text-white hover:cursor-pointer"
-                    >
-                      <Pencil size={16} />
-                    </Button>
-
-                    {/* Delete */}
-                    {cls.status !== "ARCHIVED" && (
-                      <Button
-                        size="icon"
-                        title="Delete"
-                        onClick={() => handleDeleteClick(cls.id)}
-                        className="bg-red-500 hover:bg-red-600 text-white hover:cursor-pointer"
-                      >
-                        <Trash2 size={16} />
-                      </Button>
-                    )}
 
                     {/* View */}
                     <Button
@@ -164,10 +128,10 @@ export default function ClassTable({ data, isLoading, isError, page, setPage, on
                       title="View"
                       onClick={() =>
                         router.push(
-                          `/dashboard/tutor/classes/${cls.id}/overview`
+                          `/dashboard/tutor/classes/${cls?.id}/overview`
                         )
                       }
-                      className="border-blue-600 text-blue-600 hover:bg-blue-50 hover:cursor-pointer"
+                      className="border-blue-600 text-blue-600 hover:bg-blue-50"
                     >
                       <Eye size={16} />
                     </Button>

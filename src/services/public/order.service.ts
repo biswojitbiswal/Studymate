@@ -10,4 +10,7 @@ export const orderService = {
 
   verify: (data) => 
     api.post(API.VERIFY_PAYMENT, data),
+
+  getStatus: (orderId) => 
+    api.get(`${API.GET_ORDER_STATUS}/${orderId}/status`)
 };

@@ -7,9 +7,12 @@ import {
     IndianRupee,
     Eye,
     Layers,
+    EyeOff,
+    X,
 } from "lucide-react";
 import { useClassContext } from "../ClassContext";
 import Image from "next/image";
+import { useState } from "react";
 
 
 const DAY_LABELS = {
@@ -25,7 +28,13 @@ const DAY_LABELS = {
 
 
 export default function ClassOverviewPage() {
+    const [preview, setPreview] = useState(null);
     const { klass } = useClassContext();
+
+    const format2Digit = (num) => {
+        return String(num ?? 0).padStart(2, "0");
+    };
+
 
     function formatTimeRange(startTime, durationMin) {
         if (!startTime || !durationMin) return null;
@@ -62,31 +71,83 @@ export default function ClassOverviewPage() {
 
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4">
 
             {/* Description + Preview */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Description */}
+                {/* Schedule & Joining Window */}
                 <div className="lg:col-span-2 bg-white border rounded-xl p-5">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-2">
-                        Class Description
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                        Schedule & Availability
                     </h2>
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                        {klass?.description}
-                    </p>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray-700">
+
+                        {/* Class Schedule */}
+                        <div className="space-y-2">
+                            <p className="font-medium text-gray-900">Class Schedule</p>
+                            <div className="flex items-center gap-2">
+                                <span className="text-blue-600">📅</span>
+                                {klass?.daysOfWeek?.length
+                                    ? klass.daysOfWeek.map(d => DAY_LABELS[d]).join(", ")
+                                    : "No schedule"}
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-blue-600">⏰</span>
+                                <span className="text-gray-700">
+                                    {klass?.startTime && klass?.durationMin
+                                        ? formatTimeRange(klass.startTime, klass.durationMin)
+                                        : "Time not set"}
+
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-blue-600">⏳</span>
+                                Duration: {klass?.durationMin && `${klass?.durationMin} min`}
+                            </div>
+                        </div>
+
+                        {/* Joining Window */}
+                        <div className="space-y-2">
+                            <p className="font-medium text-gray-900">Joining Window</p>
+                            <div>
+                                <span className="font-medium">Start:</span> {formatDate(klass?.joiningStartDate)}
+                            </div>
+                            <div>
+                                <span className="font-medium">End:</span> {formatDate(klass?.joiningEndDate)}
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <p className="font-medium text-gray-900">Class Window</p>
+                            <div>
+                                <span className="font-medium">Start:</span> {formatDate(klass?.startDate)}
+                            </div>
+                            <div>
+                                <span className="font-medium">End:</span> {formatDate(klass?.endDate)}
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
 
-                {/* Preview */}
                 {/* Class Preview */}
                 <div className="bg-white border rounded-xl p-5">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                    {/* <h2 className="text-lg font-semibold text-gray-900 mb-4">
                         Class Preview
-                    </h2>
+                    </h2> */}
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
                         {/* Preview Image */}
-                        <div className="relative h-44 w-full rounded-lg border bg-blue-50 overflow-hidden">
+                        <div
+                            onClick={() =>
+                                klass?.previewImg &&
+                                setPreview({ type: "image", url: klass.previewImg })
+                            }
+                            className="relative h-44 w-full rounded-lg border bg-blue-50 overflow-hidden cursor-pointer hover:scale-[1.02] transition"
+                        >
+
                             <span className="absolute top-2 left-2 z-10 text-xs bg-blue-600 text-white px-2 py-0.5 rounded">
                                 Image
                             </span>
@@ -108,7 +169,14 @@ export default function ClassOverviewPage() {
                         </div>
 
                         {/* Preview Video */}
-                        <div className="relative h-44 w-full rounded-lg border bg-blue-50 overflow-hidden">
+                        <div
+                            onClick={() =>
+                                klass?.previewVdo &&
+                                setPreview({ type: "video", url: klass.previewVdo })
+                            }
+                            className="relative h-44 w-full rounded-lg border bg-blue-50 overflow-hidden cursor-pointer hover:scale-[1.02] transition"
+                        >
+
                             <span className="absolute top-2 left-2 z-10 text-xs bg-blue-600 text-white px-2 py-0.5 rounded">
                                 Video
                             </span>
@@ -130,6 +198,42 @@ export default function ClassOverviewPage() {
 
 
                     </div>
+                    {preview && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+
+                            {/* Close button */}
+                            <button
+                                onClick={() => setPreview(null)}
+                                className="absolute top-6 right-6 text-white hover:scale-110 transition hover:cursor-pointer"
+                            >
+                                <X size={32} />
+                            </button>
+
+                            {/* Content */}
+                            <div className="relative w-[90%] max-w-4xl max-h-[85vh]">
+
+                                {preview.type === "image" ? (
+                                    <Image
+                                        src={preview.url}
+                                        alt="Preview"
+                                        width={1200}
+                                        height={800}
+                                        className="w-full h-auto max-h-[85vh] object-contain rounded-lg"
+                                        unoptimized
+                                    />
+                                ) : (
+                                    <video
+                                        src={preview.url}
+                                        controls
+                                        autoPlay
+                                        className="w-full max-h-[85vh] rounded-lg bg-black"
+                                    />
+                                )}
+
+                            </div>
+                        </div>
+                    )}
+
                 </div>
 
             </div>
@@ -139,12 +243,12 @@ export default function ClassOverviewPage() {
                 <StatCard
                     icon={<Users size={18} />}
                     label="Enrolled Students"
-                    value="24"
+                    value={format2Digit(klass?.totalEnrollment)}
                 />
                 <StatCard
                     icon={<Layers size={18} />}
                     label="Capacity"
-                    value={klass?.capacity}
+                    value={format2Digit(klass?.capacity)}
                 />
                 <StatCard
                     icon={<IndianRupee size={18} />}
@@ -152,67 +256,23 @@ export default function ClassOverviewPage() {
                     value={`₹${klass?.price.toFixed(2)}`}
                 />
                 <StatCard
-                    icon={<Eye size={18} />}
+                    icon={klass?.visibility === 'PUBLIC' ? <Eye size={18} /> : <EyeOff size={18} />}
                     label="Visibility"
                     value={klass?.visibility}
                 />
             </div>
 
-            {/* Schedule & Joining Window */}
+            {/* Description */}
             <div className="bg-white border rounded-xl p-5">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                    Schedule & Availability
+                <h2 className="text-lg font-semibold text-gray-900 mb-2">
+                    Class Description
                 </h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray-700">
-
-                    {/* Class Schedule */}
-                    <div className="space-y-2">
-                        <p className="font-medium text-gray-900">Class Schedule</p>
-                        <div className="flex items-center gap-2">
-                            <span className="text-blue-600">📅</span>
-                            {klass?.daysOfWeek?.length
-                                ? klass.daysOfWeek.map(d => DAY_LABELS[d]).join(", ")
-                                : "No schedule"}
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="text-blue-600">⏰</span>
-                            <span className="text-gray-700">
-                                {klass?.startTime && klass?.durationMin
-                                    ? formatTimeRange(klass.startTime, klass.durationMin)
-                                    : "Time not set"}
-
-                            </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="text-blue-600">⏳</span>
-                            Duration: {klass?.durationMin && `${klass?.durationMin} min`}
-                        </div>
-                    </div>
-
-                    {/* Joining Window */}
-                    <div className="space-y-2">
-                        <p className="font-medium text-gray-900">Joining Window</p>
-                        <div>
-                            <span className="font-medium">Start:</span> {formatDate(klass?.joiningStartDate)}
-                        </div>
-                        <div>
-                            <span className="font-medium">End:</span> {formatDate(klass?.joiningEndDate)}
-                        </div>
-                    </div>
-
-                    <div className="space-y-2">
-                        <p className="font-medium text-gray-900">Class Window</p>
-                        <div>
-                            <span className="font-medium">Start:</span> {formatDate(klass?.startDate)}
-                        </div>
-                        <div>
-                            <span className="font-medium">End:</span> {formatDate(klass?.endDate)}
-                        </div>
-                    </div>
-
-                </div>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                    {klass?.description}
+                </p>
             </div>
+
+
 
 
             {/* Syllabus */}
@@ -243,7 +303,7 @@ function StatCard({ icon, label, value }) {
             </div>
             <div>
                 <p className="text-xs text-gray-500">{label}</p>
-                <p className="text-sm font-semibold text-gray-900">
+                <p className="text-sm font-semibold text-blue-600">
                     {value}
                 </p>
             </div>

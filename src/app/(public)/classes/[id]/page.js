@@ -443,8 +443,8 @@ export default function ClassDetailsPage() {
                                             Enrollment Period
                                         </p>
                                         <p className="text-sm text-amber-700">
-                                            {formatDate(data.data.joiningStartDate)} –{" "}
-                                            {formatDate(data.data.joiningEndDate)}
+                                            {formatDate(data?.data?.joiningStartDate)} –{" "}
+                                            {formatDate(data?.data?.joiningEndDate)}
                                         </p>
                                     </div>
                                 )}
@@ -470,7 +470,7 @@ export default function ClassDetailsPage() {
                                 {/* CTA Buttons - Hidden on mobile, shown on larger screens */}
                                 <div className="hidden lg:flex lg:flex-col space-y-3">
                                     <button
-                                        onClick={() => router.push(`/checkout/class/${param.id}`)}
+                                        onClick={() => router.push(`/checkout/class/${data?.data?.id}`)}
                                         className="w-full py-3.5 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/30 transition-all transform hover:scale-105 hover:cursor-pointer"
                                     >
                                         Enroll Now
@@ -509,7 +509,7 @@ export default function ClassDetailsPage() {
 
                     {/* Enroll Button - Takes remaining space */}
                     <button
-                        onClick={() => router.push(`/checkout/class/${param.id}`)}
+                        onClick={() => router.push(`/checkout/class/${data?.data?.id}`)}
                         className="flex-1 py-3 bg-gradient-to-r hover:cursor-pointer from-blue-600 to-indigo-600 active:from-blue-700 active:to-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/30 transition-all"
                     >
                         Enroll Now

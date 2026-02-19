@@ -38,3 +38,38 @@ export function useVerifyPayment(options = {}) {
     ...options,
   });
 }
+
+
+
+export function useOrderStatus(orderId, options = {}) {
+  return useQuery({
+    queryKey: ["order-status", orderId],
+
+    queryFn: async () => {
+      const res = await orderService.getStatus(orderId);
+      return res?.data;
+    },
+
+    enabled: !!orderId, // only run if orderId exists
+
+    refetchInterval: (data) => {
+      // stop polling if payment finished
+      if (!data) return 2000;
+
+      if (data.status === "PAID" || data.status === "FAILED" || data.status === "CANCELLED") {
+        return false;
+      }
+
+      return 2000; // poll every 2 seconds
+    },
+
+    refetchIntervalInBackground: true,
+
+    staleTime: 0, // never trust cache
+    cacheTime: 0, // remove cache completely
+
+    retry: false, // don't retry automatically (webhook delay is not an error)
+
+    ...options,
+  });
+}

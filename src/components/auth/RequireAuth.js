@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
+import LoadingScreen from "../common/LoadingScreen";
 
 /**
  * RequireAuth:
@@ -61,7 +62,9 @@ export default function RequireAuth({ children, role = null }) {
   }, [user, tryRefresh, router, role]);
 
   if (checking) {
-    return <div className="min-h-[200px] flex items-center justify-center">Loading...</div>;
+    return <div className="min-h-[200px] flex items-center justify-center">
+      <LoadingScreen />
+    </div>;
   }
 
   return <>{children}</>;

@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { BookOpenText, CheckCircle, Users } from "lucide-react";
+import { ArrowLeft, BookOpenText, CheckCircle, Users } from "lucide-react";
 import { useClass } from "@/hooks/tutor/useClass";
 import LoadingScreen from "@/components/common/LoadingScreen";
 import { ClassProvider } from "./ClassContext";
@@ -34,9 +34,11 @@ export const STATUS_STYLES = {
 export default function ClassLayout({ children }) {
     const { id } = useParams();
     const pathname = usePathname();
+    const router = useRouter()
 
     const { data, isLoading } = useClass(id);
     const klass = data?.data;
+
 
     const contextValue = useMemo(() => ({
         klass,
@@ -49,15 +51,33 @@ export default function ClassLayout({ children }) {
     if (isLoading) return <LoadingScreen />;
     return (
         <ClassProvider value={contextValue}>
-            <div className="space-y-6">
+            <div className="space-y-4">
+
                 {/* Header */}
-                <div className="bg-gradient-to-r from-blue-600 to-blue-500 p-6 rounded-xl text-white">
-                    <h1 className="text-2xl font-semibold">
-                        {klass?.title || "Tuition Class"}
-                    </h1>
-                    <p className="text-sm opacity-90">
-                        {`${klass?.subject?.name}-${klass?.level?.name}`}
-                    </p>
+                <div className="bg-gradient-to-r from-blue-600 to-blue-500 p-4 rounded-xl text-white">
+                    <div className="flex items-center gap-2">
+
+                        {/* Back Button */}
+                        <button
+                            onClick={() => router.back()}
+                            className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg backdrop-blur-sm transition shrink-0 hover:cursor-pointer"
+                        >
+                            <ArrowLeft size={18} />
+                            <span className="text-sm font-medium">Back</span>
+                        </button>
+
+                        {/* Title + Description */}
+                        <div className="flex flex-col">
+                            <h1 className="text-2xl font-semibold leading-tight">
+                                {klass?.title || "Tuition Class"}
+                            </h1>
+
+                            <p className="text-sm opacity-90">
+                                {`${klass?.subject?.name}-${klass?.level?.name}`}
+                            </p>
+                        </div>
+
+                    </div>
                 </div>
 
                 <div className="flex flex-wrap gap-3 mt-3">

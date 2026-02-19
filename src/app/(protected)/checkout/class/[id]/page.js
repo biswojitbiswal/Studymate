@@ -183,7 +183,7 @@ const CheckoutPage = () => {
                     });
 
                     // redirect to waiting screen
-                    router.push(`/dashboard/student/order/${paymentData.orderId}`);
+                    router.push(`/payment/verify?orderId=${paymentData.orderId}`);
                 },
 
                 modal: {
@@ -534,7 +534,7 @@ const CheckoutPage = () => {
                                 )}
                             </div>
 
-                            <button onClick={handlePayment} disabled={isPending} className="hidden lg:block w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:cursor-pointer hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                            <button onClick={handlePayment} disabled={isPending} className={`hidden lg:block w-full ${isPending ? 'bg-gray-300 text-black' : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white'} py-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:cursor-pointer hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5`}>
                                 Pay ₹{selectedCoupon?.pricing?.totalAmount ?? data?.pricing?.totalAmount?.toFixed(2)}
                             </button>
 
