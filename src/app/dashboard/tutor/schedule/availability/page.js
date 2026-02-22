@@ -15,7 +15,7 @@ export default function AvailabilityPage() {
     const [open, setOpen] = useState(false);
     const [editRow, setEditRow] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
-    const [dayOfWeek, setDayOfWeek] = useState("ALL");
+    const [dayOfWeek, setDayOfWeek] = useState("");
 
 
 
@@ -25,7 +25,7 @@ export default function AvailabilityPage() {
         page: safePage,
         limit: 10,
         search,
-        dayOfWeek: dayOfWeek !== "ALL" ? dayOfWeek : undefined,
+        dayOfWeek: dayOfWeek && dayOfWeek !== "ALL" ? dayOfWeek : undefined,
     });
 
     const { mutate: toggleAvailability } = useToggleAvailability();
@@ -48,29 +48,31 @@ export default function AvailabilityPage() {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div>
-                <h1 className="text-2xl font-semibold text-gray-900">
-                    Availability
-                </h1>
-                <p className="text-sm text-gray-500">
-                    Manage your weekly availability slots
-                </p>
-            </div>
+            <div className="flex flex-col lg:flex-row item-center justify-between gap-2">
+                <div>
+                    <h1 className="text-2xl font-semibold text-gray-900">
+                        Availability
+                    </h1>
+                    <p className="text-sm text-gray-500">
+                        Manage your weekly availability slots
+                    </p>
+                </div>
 
-            {/* Toolbar */}
-            <AvailabilityToolbar
-                search={search}
-                onSearchChange={(v) => {
-                    setSearch(v);
-                    setPage(1);
-                }}
-                onAdd={() => setOpen(true)}
-                day={dayOfWeek}
-                onDayChange={(day) => {
-                    setPage(1); // reset pagination
-                    setDayOfWeek(day);
-                }}
-            />
+                {/* Toolbar */}
+                <AvailabilityToolbar
+                    search={search}
+                    onSearchChange={(v) => {
+                        setSearch(v);
+                        setPage(1);
+                    }}
+                    onAdd={() => setOpen(true)}
+                    day={dayOfWeek}
+                    onDayChange={(day) => {
+                        setPage(1); // reset pagination
+                        setDayOfWeek(day);
+                    }}
+                />
+            </div>
 
             {/* Table */}
             <AvailabilityTable

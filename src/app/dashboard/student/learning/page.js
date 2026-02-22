@@ -62,6 +62,7 @@ export default function StudentClassesPage() {
           isLoading={isLoading}
           isError={isError}
           page={page}
+          totalPages={data?.data?.totalPages}
           setPage={setPage}
         />
       </div>

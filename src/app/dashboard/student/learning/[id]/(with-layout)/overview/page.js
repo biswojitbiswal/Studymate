@@ -10,7 +10,7 @@ import {
     EyeOff,
     X,
 } from "lucide-react";
-import { useClassContext } from "../ClassContext";
+import { useEnrolledClassContext } from "../EnrolledClassContext";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -29,7 +29,7 @@ const DAY_LABELS = {
 
 export default function ClassOverviewPage() {
     const [preview, setPreview] = useState(null);
-    const { klass } = useClassContext();
+    const { klass } = useEnrolledClassContext();
 
     const format2Digit = (num) => {
         return String(num ?? 0).padStart(2, "0");
@@ -68,6 +68,7 @@ export default function ClassOverviewPage() {
             year: "numeric",
         });
     }
+
 
     return (
         <div className="space-y-4">
@@ -131,7 +132,7 @@ export default function ClassOverviewPage() {
                 </div>
 
                 {/* Class Preview */}
-                <div className="bg-white border rounded-xl p-2 lg:p-5">
+                <div className="bg-white border rounded-xl p-5">
                     {/* <h2 className="text-lg font-semibold text-gray-900 mb-4">
                         Class Preview
                     </h2> */}

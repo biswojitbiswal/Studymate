@@ -48,28 +48,30 @@ export default function TimeOffPage() {
   };
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold text-gray-900">
-          Time Off
-        </h1>
-        <p className="text-sm text-gray-500">
-          Add partial breaks for specific dates and time ranges.
-        </p>
-      </div>
+      <div className="flex flex-col lg:flex-row items-start justify-between gap-3">
+        <div className="">
+          <h1 className="text-2xl font-semibold text-gray-900">
+            Time Off
+          </h1>
+          <p className="text-sm text-gray-500">
+            Add partial breaks for specific dates and time ranges.
+          </p>
+        </div>
 
-      <TimeoffToolbar
-        fromDate={fromDate}
-        toDate={toDate}
-        onFromDateChange={(val) => {
-          setPage(1);
-          setFromDate(val);
-        }}
-        onToDateChange={(val) => {
-          setPage(1);
-          setToDate(val);
-        }}
-        onAdd={() => setOpenCreate(true)}
-      />
+        <TimeoffToolbar
+          fromDate={fromDate}
+          toDate={toDate}
+          onFromDateChange={(val) => {
+            setPage(1);
+            setFromDate(val);
+          }}
+          onToDateChange={(val) => {
+            setPage(1);
+            setToDate(val);
+          }}
+          onAdd={() => setOpenCreate(true)}
+        />
+      </div>
 
       <TimeoffTable
         loading={isLoading}

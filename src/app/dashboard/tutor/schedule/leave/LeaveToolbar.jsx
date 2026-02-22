@@ -6,7 +6,7 @@ export default function LeaveToolbar({
   onAdd
 }) {
   return (
-    <div className="flex items-center justify-end">
+    <div className="grid grid-cols-3 gap-2 lg:flex lg:items-center lg:justify-between">
       {/* <div>
         <p className="text-sm text-gray-500">
           Full-day or multi-day leave blocks

@@ -18,6 +18,7 @@ import {
 
 import { useClass, useUpdateClass } from "@/hooks/tutor/useClass";
 import LoadingScreen from "@/components/common/LoadingScreen";
+import { ArrowLeft } from "lucide-react";
 
 const DAYS = [
   { label: "Sun", value: "SUN" },
@@ -160,13 +161,20 @@ export default function EditClassPage() {
 
   /* ------------------ UI ------------------ */
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8">
+    <div className="max-w-4xl mx-auto lg:p-6 space-y-4 lg:space-y-8">
       <div>
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition cursor-pointer mb-2"
+        >
+          <ArrowLeft size={18} />
+          <span className="text-sm font-medium">Back</span>
+        </button>
         <h1 className="text-2xl font-semibold">Edit Class</h1>
         <p className="text-sm text-gray-500">Edit you class details before you publish it.</p>
       </div>
 
-      <div className="bg-white border rounded-xl p-6 space-y-6">
+      <div className="bg-white border rounded-xl px-2 py-4 lg:p-6 space-y-6">
         <div>
           <label className="text-sm font-medium">
             Class Title <span className="text-red-500">*</span>

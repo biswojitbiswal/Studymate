@@ -8,6 +8,7 @@ import { useClasses, usePublishClass } from "@/hooks/tutor/useClass";
 import { useDebounce } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { ArrowLeft } from "lucide-react";
 
 
 export default function TutorClassesPage() {
@@ -53,8 +54,14 @@ export default function TutorClassesPage() {
 
 
   return (
-    <div className="p-6 space-y-6">
-
+    <div className="pb-6 space-y-4">
+      <button
+        onClick={() => router.back()}
+        className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition cursor-pointer mb-2"
+      >
+        <ArrowLeft size={18} />
+        <span className="text-sm font-medium">Back</span>
+      </button>
       {/* Row 1: Title */}
       <div>
         <h1 className="text-2xl font-semibold text-gray-900">
@@ -66,10 +73,11 @@ export default function TutorClassesPage() {
       </div>
 
       {/* Row 2: Search + Action */}
-      <div className="flex items-center justify-between gap-4">
+      {/* <div className="flex items-center justify-between gap-4"> */}
+      <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4">
 
         {/* Search Bar */}
-        <div className="w-full flex-1">
+        <div className="w-full lg:flex-1">
           <Input
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search classes..."
@@ -79,7 +87,7 @@ export default function TutorClassesPage() {
 
         {/* Status Filter */}
         <Select value={status} onValueChange={setStatus}>
-          <SelectTrigger className="w-30">
+          <SelectTrigger className="w-full lg:w-30">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -94,7 +102,7 @@ export default function TutorClassesPage() {
 
         {/* Type Filter */}
         <Select value={type} onValueChange={setType}>
-          <SelectTrigger className="w-24">
+          <SelectTrigger className="w-full lg:w-24">
             <SelectValue placeholder="Type" />
           </SelectTrigger>
           <SelectContent>
@@ -106,7 +114,7 @@ export default function TutorClassesPage() {
 
         {/* Visibility Filter */}
         <Select value={visibility} onValueChange={setVisibility}>
-          <SelectTrigger className="w-24">
+          <SelectTrigger className="w-full lg:w-24">
             <SelectValue placeholder="Visibility" />
           </SelectTrigger>
           <SelectContent>

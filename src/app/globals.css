@@ -218,3 +218,12 @@ body {
   display: none;
   /* Chrome, Safari */
 }
+/* Hide horizontal scrollbar for tabs */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

@@ -114,7 +114,7 @@ export function TutorStatusCard({ tutor, onEdit, onDashboard }) {
 
             {status === "APPROVED" && (
               <Button
-                className="flex-1 bg-blue-600 hover:bg-blue-700"
+                className="flex-1 bg-blue-600 hover:bg-blue-700 hover:cursor-pointer"
                 onClick={onDashboard}
               >
                 Go to Dashboard

@@ -27,7 +27,7 @@ const statusStyles = {
 };
 
 
-export default function ClassTable({ data, isLoading, isError, page, setPage }) {
+export default function ClassTable({ data, isLoading, isError, page, totalPages, setPage }) {
   const [open, setOpen] = useState(false);
   const [selectedClassId, setSelectedClassId] = useState(null);
 
@@ -128,10 +128,10 @@ export default function ClassTable({ data, isLoading, isError, page, setPage }) 
                       title="View"
                       onClick={() =>
                         router.push(
-                          `/dashboard/tutor/classes/${cls?.id}/overview`
+                          `/dashboard/student/learning/${cls?.id}/overview`
                         )
                       }
-                      className="border-blue-600 text-blue-600 hover:bg-blue-50"
+                      className="border-blue-600 text-blue-600 hover:cursor-pointer hover:bg-blue-50"
                     >
                       <Eye size={16} />
                     </Button>
@@ -146,7 +146,7 @@ export default function ClassTable({ data, isLoading, isError, page, setPage }) 
         {/* Pagination */}
         <div className="flex items-center justify-between p-3 border-t text-sm">
           <span className="text-slate-500">
-            Page {page} of {data.totalPages}
+            Page {page} of {totalPages}
           </span>
 
           <div className="flex gap-2">
@@ -159,7 +159,7 @@ export default function ClassTable({ data, isLoading, isError, page, setPage }) 
             </button>
 
             <button
-              disabled={page === data?.totalPages}
+              disabled={page === totalPages}
               onClick={() => setPage(page + 1)}
               className="px-3 py-1 border rounded disabled:opacity-50"
             >

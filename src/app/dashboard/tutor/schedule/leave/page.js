@@ -15,8 +15,8 @@ export default function LeavePage() {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
-  const { data, isLoading } = useLeave({ 
-    page, 
+  const { data, isLoading } = useLeave({
+    page,
     limit: 10,
     fromDate: fromDate || undefined,
     toDate: toDate || undefined,
@@ -45,27 +45,29 @@ export default function LeavePage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Leave</h1>
-        <p className="text-sm text-gray-500">
-          Manage full-day and multi-day leaves
-        </p>
-      </div>
+    <div className="space-y-3">
+      <div className="flex flex-col lg:flex-row items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold text-gray-900">Leave</h1>
+          <p className="text-sm text-gray-500">
+            Manage full-day and multi-day leaves
+          </p>
+        </div>
 
-      <LeaveToolbar
-        fromDate={fromDate}
-        toDate={toDate}
-        onFromDateChange={(val) => {
-          setPage(1);
-          setFromDate(val);
-        }}
-        onToDateChange={(val) => {
-          setPage(1);
-          setToDate(val);
-        }}
-        onAdd={() => setOpenCreate(true)}
-      />
+        <LeaveToolbar
+          fromDate={fromDate}
+          toDate={toDate}
+          onFromDateChange={(val) => {
+            setPage(1);
+            setFromDate(val);
+          }}
+          onToDateChange={(val) => {
+            setPage(1);
+            setToDate(val);
+          }}
+          onAdd={() => setOpenCreate(true)}
+        />
+      </div>
 
       <LeaveTable
         loading={isLoading}

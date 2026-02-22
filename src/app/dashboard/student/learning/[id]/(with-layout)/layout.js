@@ -6,9 +6,8 @@ import { cn } from "@/lib/utils";
 import { ArrowLeft, BookOpenText, CheckCircle, Users } from "lucide-react";
 import { useClass } from "@/hooks/tutor/useClass";
 import LoadingScreen from "@/components/common/LoadingScreen";
-import { ClassProvider } from "./ClassContext";
+import { EnrolledClassProvider } from "./EnrolledClassContext";
 import { useMemo } from "react";
-import ClassLayoutSkeleton from "@/components/skeleton/tutor/ClassLayout";
 
 
 const tabs = [
@@ -49,9 +48,9 @@ export default function ClassLayout({ children }) {
     }), [klass, id]);
 
 
-    if (isLoading) return <ClassLayoutSkeleton />;
+    if (isLoading) return <LoadingScreen />;
     return (
-        <ClassProvider value={contextValue}>
+        <EnrolledClassProvider value={contextValue}>
             <div className="space-y-4">
 
                 {/* Header */}
@@ -68,13 +67,13 @@ export default function ClassLayout({ children }) {
                         </button>
 
                         {/* Title + Description */}
-                        <div className="flex flex-col min-w-0">
-                            <h1 className="text-2xl font-semibold leading-tight truncate">
+                        <div className="flex flex-col">
+                            <h1 className="text-2xl font-semibold leading-tight">
                                 {klass?.title || "Tuition Class"}
                             </h1>
 
-                            <p className="text-sm opacity-90 truncate">
-                                {`${klass?.subject?.name} | ${klass?.level?.name}`}
+                            <p className="text-sm opacity-90">
+                                {`${klass?.subject?.name}-${klass?.level?.name}`}
                             </p>
                         </div>
 
@@ -110,33 +109,31 @@ export default function ClassLayout({ children }) {
 
 
                 {/* Tabs */}
-                <div className="border-b overflow-hidden">
-                    <div className="flex gap-1 overflow-x-auto scrollbar-none -mb-px px-1">
-                        {tabs.map((tab) => {
-                            const href = `/dashboard/tutor/classes/${id}/${tab.href}`;
-                            const isActive = pathname === href || (tab.href === "" && pathname.endsWith(id));
+                <div className="flex gap-2 border-b">
+                    {tabs.map((tab) => {
+                        const href = `/dashboard/student/learning/${id}/${tab.href}`;
+                        const isActive = pathname === href || (tab.href === "" && pathname.endsWith(id));
 
-                            return (
-                                <Link
-                                    key={tab.name}
-                                    href={href}
-                                    className={cn(
-                                        "whitespace-nowrap px-3 lg:px-6 py-2 text-sm font-semibold border-b-2 transition-colors flex-shrink-0",
-                                        isActive
-                                            ? "text-blue-600 border-blue-600"
-                                            : "text-gray-600 border-transparent hover:text-blue-600"
-                                    )}
-                                >
-                                    {tab.name}
-                                </Link>
-                            );
-                        })}
-                    </div>
+                        return (
+                            <Link
+                                key={tab.name}
+                                href={href}
+                                className={cn(
+                                    "px-6 py-1.5 text-sm font-semibold rounded-t-sm",
+                                    isActive
+                                        ? "text-blue-600 border-b-2 border-blue-600"
+                                        : "text-gray-600 hover:text-blue-600"
+                                )}
+                            >
+                                {tab.name}
+                            </Link>
+                        );
+                    })}
                 </div>
 
                 {/* Tab Content */}
                 <div>{children}</div>
             </div>
-        </ClassProvider>
+        </EnrolledClassProvider>
     );
 }

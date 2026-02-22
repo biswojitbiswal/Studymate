@@ -21,6 +21,7 @@ import { usePublicSubjects } from "@/hooks/admin/useSubject";
 import { useCreateClass } from "@/hooks/tutor/useClass";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 
 
 const DAYS = [
@@ -274,7 +275,14 @@ export default function CreateClassPage() {
 
 
     return (
-        <div className="max-w-4xl mx-auto p-6 space-y-8">
+        <div className="max-w-4xl mx-auto lg:px-8 py-2 space-y-6 sm:space-y-8">
+            <button
+                onClick={() => router.back()}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition cursor-pointer mb-2"
+            >
+                <ArrowLeft size={18} />
+                <span className="text-sm font-medium">Back</span>
+            </button>
             {/* Header */}
             <div>
                 <h1 className="text-2xl font-semibold">Create New Class</h1>
@@ -284,7 +292,7 @@ export default function CreateClassPage() {
             </div>
 
             {/* Form Card */}
-            <div className="bg-white border rounded-xl p-6 space-y-6">
+            <div className="bg-white border rounded-xl px-3 py-4 sm:p-6 space-y-5 sm:space-y-6">
 
                 {/* ───────── Title ───────── */}
                 <div>
@@ -320,7 +328,7 @@ export default function CreateClassPage() {
                 </div>
 
                 {/* Preview Media */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Preview Image */}
                     <div>
                         <label className="text-sm font-medium">
@@ -364,13 +372,13 @@ export default function CreateClassPage() {
                         value={syllabusText}
                         onChange={(e) => setSyllabusText(e.target.value)}
                         placeholder={`Example:
-[
-  Number System,
-  Linear Equation,
-  Trigonometry,
-  Statitics,
-  Probability,
-]`}
+                        [
+                          Number System,
+                          Linear Equation,
+                          Trigonometry,
+                          Statitics,
+                          Probability,
+                        ]`}
                         className={errors.syllabus ? "border-red-500 focus:ring-red-500" : ""}
                     />
 
@@ -385,7 +393,7 @@ export default function CreateClassPage() {
 
 
                 {/* ───────── Academic Info ───────── */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Subject */}
                     <div>
                         <label className="text-sm font-medium">
@@ -442,7 +450,7 @@ export default function CreateClassPage() {
                 </div>
 
                 {/* ───────── Type & Visibility ───────── */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label className="text-sm font-medium">Class Type</label>
                         <Select value={type} onValueChange={setType}>
@@ -467,7 +475,7 @@ export default function CreateClassPage() {
                 </div>
 
                 {/* ───────── Dates ───────── */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label className="text-sm font-medium">
                             Class Start Date <span className="text-red-500">*</span>
@@ -508,7 +516,7 @@ export default function CreateClassPage() {
                             <label className="text-sm font-medium">
                                 Class Days <span className="text-red-500">*</span>
                             </label>
-                            <div className="flex flex-wrap gap-4 mt-2">
+                            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3 mt-2">
                                 {DAYS.map((d) => (
                                     <label key={d.value} className="flex items-center gap-2 cursor-pointer">
                                         <Checkbox
@@ -529,7 +537,7 @@ export default function CreateClassPage() {
                             )}
                         </div>
 
-                        <div className="grid grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div>
                                 <label className="text-sm font-medium">Start Time <span className="text-red-500">*</span></label>
                                 <Input type="time" value={startTime ?? ""} onChange={(e) => setStartTime(e.target.value)} />
@@ -571,9 +579,10 @@ export default function CreateClassPage() {
                         </label>
                         <Input
                             type="number"
+                            inputMode="numeric"
                             value={price ?? ""}
                             onChange={(e) => setPrice(Number(e.target.value))}
-                            className={errors.price ? "border-red-500 focus:ring-red-500" : ""}
+                            className={errors.price ? "border-red-500 focus:ring-red-500" : "text-base"}
                         />
                         {errors.price && (
                             <p className="text-sm text-red-500 mt-1">{errors.price}</p>

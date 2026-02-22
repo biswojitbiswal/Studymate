@@ -1,15 +1,14 @@
 "use client";
 
-import { CalendarDays, Users, Clock, Video, VideoIcon } from "lucide-react";
+import { CalendarDays, Users, Clock, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useApproveSession, useCancelSession, useClassSessions, useCreateExtraSession, useRejectSession } from "@/hooks/public/useSession";
-import { useClassContext } from "../ClassContext";
+import { useCancelSession, useClassSessions } from "@/hooks/public/useSession";
+import { useEnrolledClassContext } from "../EnrolledClassContext";
 import { useEffect, useRef, useState } from "react";
 import SessionCardSkeleton from "@/components/skeleton/SessionCardSkeleton";
-import CreateSessionModal from "@/components/tutor/CreateSessionModal";
-import TutorRescheduleModal from "@/components/tutor/TutorRescheduleModal";
+import CreateSessionModal from "@/components/student/CreateSessionModal";
+import StudentRescheduleModal from "@/components/student/StudentRescheduleModal";
 import { useAuthStore } from "@/store/auth";
-import { toast } from "sonner";
 import ConfirmDialog from "@/components/common/ConfirmDialog";
 
 
@@ -24,7 +23,7 @@ export default function SessionsPage() {
     const [page, setPage] = useState(1);
     const limit = 10;
 
-    const { klass } = useClassContext()
+    const { klass } = useEnrolledClassContext()
 
     useEffect(() => {
         window.scrollTo({
@@ -50,55 +49,21 @@ export default function SessionsPage() {
         <div className="space-y-3">
 
             {/* Header */}
-            <div className="flex items-center justify-between gap-2">
-
-                {/* TITLE */}
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-900 whitespace-nowrap">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <h2 className="text-xl font-semibold text-gray-900">
                     Sessions
                 </h2>
 
-                {/* ACTION BUTTONS */}
-                <div className="flex items-center gap-2 shrink-0">
-
-                    {klass?.type === "GROUP" ? (
-                        <>
-                            <Button
-                                onClick={() => {
-                                    setSessionType("EXTRA");
-                                    setModalOpen(true);
-                                }}
-                                className="bg-blue-600 hover:bg-blue-700 text-white h-9 px-3 sm:px-4 text-xs sm:text-sm whitespace-nowrap"
-                            >
-                                <span className="hidden xs:inline">+ Extra</span>
-                                <span className="xs:hidden">+ Extra</span>
-                                <span className="hidden sm:inline"> Session</span>
-                            </Button>
-
-                            <Button
-                                onClick={() => {
-                                    setSessionType("DOUBT");
-                                    setModalOpen(true);
-                                }}
-                                className="bg-blue-600 hover:bg-blue-700 text-white h-9 px-3 sm:px-4 text-xs sm:text-sm whitespace-nowrap"
-                            >
-                                <span className="hidden xs:inline">+ Doubt</span>
-                                <span className="xs:hidden">+ Doubt</span>
-                                <span className="hidden sm:inline"> Session</span>
-                            </Button>
-                        </>
-                    ) : (
-                        <Button
-                            onClick={() => {
-                                setSessionType("REGULAR");
-                                setModalOpen(true);
-                            }}
-                            className="bg-blue-600 hover:bg-blue-700 text-white h-9 px-3 sm:px-4 text-xs sm:text-sm whitespace-nowrap"
-                        >
-                            <span className="sm:hidden">+ Schedule</span>
-                            <span className="hidden sm:inline">+ Schedule Session</span>
-                        </Button>
-                    )}
-                </div>
+                {
+                    klass?.type === 'PRIVATE' && (<Button
+                        onClick={() => {
+                            setSessionType("REGULAR");
+                            setModalOpen(true);
+                        }}
+                        className="bg-blue-600 hover:bg-blue-700 text-white hover:cursor-pointer">
+                        + Scheddule Session
+                    </Button>)
+                }
             </div>
 
             {/* Sessions List */}
@@ -176,9 +141,9 @@ export default function SessionsPage() {
                 type={sessionType}
             />
 
-            <TutorRescheduleModal
-                open={tutorRescheduleOpen}
-                onClose={() => setTutorRescheduleOpen(false)}
+            <StudentRescheduleModal
+                open={studentRescheduleOpen}
+                onClose={() => setStudentRescheduleOpen(false)}
                 session={selectedSession}
             />
         </div>
@@ -214,26 +179,9 @@ function getTutorActions(session) {
     // ---------- PRIVATE ----------
     if (type === "PRIVATE") {
 
-        if (status === "PENDING_TUTOR_APPROVAL") {
-            actions.push(
-                { key: "approve", label: "Approve Session" },
-                { key: "reject", label: "Reject Session" },
-                // { key: "reschedule", label: "Propose New Time" }
-            );
-        }
-
         if (status === "SCHEDULED") {
             actions.push(
                 { key: "reschedule", label: "Reschedule Session" },
-                { key: "cancel", label: "Cancel Session" }
-            );
-        }
-    }
-
-    // ---------- GROUP ----------
-    if (type === "GROUP") {
-        if (status === "SCHEDULED") {
-            actions.push(
                 { key: "cancel", label: "Cancel Session" }
             );
         }
@@ -250,8 +198,6 @@ function SessionCard({ session, onRescheduleStudent, onRescheduleTutor }) {
     const [targetSessionId, setTargetSessionId] = useState(null);
     const menuRef = useRef(null);
 
-    const approveMutation = useApproveSession();
-    const rejectMutation = useRejectSession();
     const cancelMutation = useCancelSession();
 
     useEffect(() => {
@@ -265,26 +211,6 @@ function SessionCard({ session, onRescheduleStudent, onRescheduleTutor }) {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-
-    const handleApprove = (sessionId) => {
-        approveMutation.mutate(sessionId, {
-            onSuccess: () => toast.success("Session approved successfully"),
-            onError: (error) => {
-                const msg = error?.response?.data?.message || "Failed to approve session";
-                toast.error(Array.isArray(msg) ? msg[0] : msg);
-            },
-        });
-    };
-
-    const handleReject = (sessionId) => {
-        rejectMutation.mutate(sessionId, {
-            onSuccess: () => toast.success("Session rejected"),
-            onError: (error) => {
-                const msg = error?.response?.data?.message || "Failed to reject session";
-                toast.error(Array.isArray(msg) ? msg[0] : msg);
-            },
-        });
-    };
 
     const handleCancel = () => {
         if (!targetSessionId) return;
@@ -301,75 +227,69 @@ function SessionCard({ session, onRescheduleStudent, onRescheduleTutor }) {
             },
         });
     };
+
     return (
-        <div className="relative bg-white border rounded-xl px-2 py-3 lg:px-4 sm:py-2 flex flex-col lg:flex-row gap-3 sm:gap-4 items-start sm:items-center justify-between">
-            <div className="flex items-center gap-2">
-                {/* Date Box */}
-                <div className="w-14 shrink-0 rounded-md bg-blue-50 text-blue-600 text-center py-3 lg:py-2">
-                    <div className="text-xs uppercase font-medium">
-                        {session?.monthLabel}
-                    </div>
-                    <div className="text-md font-bold leading-tight">
-                        {session?.dateLabel}
-                    </div>
+        <div className="bg-white border rounded-lg px-4 py-2 flex items-center gap-4">
+
+            {/* Date Box */}
+            <div className="w-14 shrink-0 rounded-md bg-blue-50 text-blue-600 text-center py-2">
+                <div className="text-xs uppercase font-medium">
+                    {session?.monthLabel}
+                </div>
+                <div className="text-md font-bold leading-tight">
+                    {session?.dateLabel}
+                </div>
+            </div>
+
+            {/* Main Info */}
+            <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-medium text-gray-900 truncate">
+                        {session?.klass?.title}
+                    </h3>
+
+                    {/* Session Type */}
+                    <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-blue-600 font-medium">
+                        {session?.sessionType}
+                    </span>
+
+                    <span className="text-sm px-2 rounded bg-gray-100 text-blue-600 font-medium">
+                        {formatTimeRange(session?.startTime) || formatTimeRange(session?.klass?.startTime)}
+                    </span>
                 </div>
 
-                {/* Main Info */}
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                        <h3 className="font-medium text-gray-900 truncate">
-                            {session?.klass?.title}
-                        </h3>
-
-                        {/* Session Type */}
-                        <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-blue-600 font-medium">
-                            {session?.sessionType}
-                        </span>
-
-                        <span className="w-18 text-center text-sm px-1 rounded bg-gray-100 text-blue-600 font-medium">
-                            {formatTimeRange(session?.startTime) || formatTimeRange(session?.klass?.startTime)}
-                        </span>
-                    </div>
-
-                    <div className="mt-1 flex items-center gap-2">
-                        <span className="text-xs px-3 lg:px-2 py-0.5 rounded-sm bg-blue-100 text-blue-700 font-medium">
-                            {session?.dayLabel}
-                        </span>
-                        <span className="w-22 text-center">
-                            ⏱ {session?.klass?.durationMin || session?.durationMin} min
-                        </span>
-                        <span className="w-26 text-center">
-                            👥 {session?.totalEnrollment} students
-                        </span>
-                    </div>
+                <div className="mt-1 flex items-center gap-2 flex-wrap">
+                    <span className="text-xs px-2 py-0.5 rounded-sm bg-blue-100 text-blue-700 font-medium">
+                        {session?.dayLabel}
+                    </span>
+                    <span>
+                        ⏱ {session?.klass?.durationMin || session?.durationMin} min
+                    </span>
+                    <span>
+                        👥 {session?.totalEnrollment} students
+                    </span>
                 </div>
             </div>
 
             {/* Right Side */}
-            <div className="flex items-center w-full gap-2 sm:justify-end">
+            <div className="flex items-center gap-3">
                 <span
-                    className={`w-full sm:w-auto flex-1 sm:flex-none text-center text-sm font-medium px-2 py-2.5 rounded-md whitespace-nowrap ${session?.status === "SCHEDULED"
-                        ? "bg-green-200 text-green-700"
-                        : session?.status === "COMPLETED"
-                            ? "bg-blue-200 text-blue-700"
-                            : session?.status?.includes("CANCELLED")
-                                ? "bg-red-200 text-red-700"
-                                : "bg-yellow-200 text-yellow-700"
+                    className={`text-xs font-medium px-2 py-1 rounded-sm
+            ${session?.status === "SCHEDULED"
+                            ? "bg-green-100 text-green-700"
+                            : session?.status === "COMPLETED"
+                                ? "bg-blue-100 text-blue-700"
+                                : session?.status?.includes("CANCELLED")
+                                    ? "bg-red-100 text-red-700"
+                                    : "bg-yellow-100 text-yellow-700"
                         }`}
                 >
                     {session?.status?.replaceAll("_", " ")}
                 </span>
 
                 {session?.status === "SCHEDULED" && session?.meetingLink ? (
-                    <button
-                        className="w-full sm:w-auto
-                            flex-1 sm:flex-none
-                            flex items-center justify-center
-                            text-sm bg-blue-600 px-3 py-2 rounded-md
-                            text-white gap-2 hover:bg-blue-700 hover:cursor-pointer
-                            whitespace-nowrap">
-                        <VideoIcon />
-                        <span className="font-semibold">Join</span>
+                    <button className="text-sm bg-blue-600 px-4 py-1 rounded-md cursor-pointer text-white hover:bg-blue-700  hover:cursor-pointer">
+                        Join
                     </button>
                 ) : (
                     session?.status === "PENDING_TUTOR_APPROVAL" && (
@@ -380,30 +300,22 @@ function SessionCard({ session, onRescheduleStudent, onRescheduleTutor }) {
                 )
                 }
 
-                {getTutorActions(session).length > 0 && (
-                    <div ref={menuRef} className="relative shrink-0">
+                {
+                    session.klass.type === 'PRIVATE' && session.status === 'SCHEDULED' && getTutorActions(session).length > 0 && <div ref={menuRef} className="relative">
                         <button
                             onClick={() => setOpenMenu(prev => !prev)}
-                            className="w-8 h-10 flex items-center justify-center rounded-md hover:bg-blue-700 hover:cursor-pointer bg-blue-600 text-white text-lg"
+                            className="px-1 py-0.5 rounded text-blue-600 hover:bg-blue-100 font-bold cursor-pointer"
                         >
                             ⋯
                         </button>
 
                         {openMenu && (
-                            <div className="absolute right-0 mt-2 w-44 bg-white border rounded-md shadow-lg z-10">
+                            <div className="absolute right-0 mt-2 w-44 bg-white border rounded-md shadow-lg z-10 hover:cursor-pointer">
                                 {getTutorActions(session).map(action => (
                                     <button
                                         key={action.key}
                                         onClick={() => {
                                             switch (action.key) {
-                                                case "approve":
-                                                    handleApprove(session.id);
-                                                    break;
-
-                                                case "reject":
-                                                    handleReject(session.id);
-                                                    break;
-
                                                 case "cancel":
                                                     setOpenMenu(false);
                                                     setTargetSessionId(session.id);
@@ -411,7 +323,7 @@ function SessionCard({ session, onRescheduleStudent, onRescheduleTutor }) {
                                                     break;
 
                                                 case "reschedule":
-                                                    onRescheduleTutor(session);
+                                                    onRescheduleStudent(session);
                                                     break;
                                             }
 
@@ -425,7 +337,7 @@ function SessionCard({ session, onRescheduleStudent, onRescheduleTutor }) {
                             </div>
                         )}
                     </div>
-                )}
+                }
             </div>
 
             <ConfirmDialog
@@ -439,7 +351,6 @@ function SessionCard({ session, onRescheduleStudent, onRescheduleTutor }) {
                 onConfirm={handleCancel}
                 confirmLoading={cancelMutation.isPending}
             />
-
         </div>
     );
 }

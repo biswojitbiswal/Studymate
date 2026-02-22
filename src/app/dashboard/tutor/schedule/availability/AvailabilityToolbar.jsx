@@ -18,25 +18,19 @@ export default function AvailabilityToolbar({
   onDayChange
 }) {
   return (
-    <div className="flex items-center justify-end gap-4">
-      {/* Search */}
-      {/* <input
-        type="text"
-        placeholder="Search by day or time..."
-        value={search}
-        onChange={(e) => onSearchChange(e.target.value)}
-        className="w-full flex-1 rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
-      /> */}
+    <div className="flex items-center justify-between lg:justify-end gap-2 flex-1">
 
       {/* Filter Dropdown */}
-      <div className="flex items-center gap-2">
-        {/* <label className="text-sm text-gray-600">Day</label> */}
-
+      <div className="flex items-center gap-2 w-1/2 lg:w-auto">
         <select
           value={day}
           onChange={(e) => onDayChange(e.target.value)}
-          className="rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+          className="w-full rounded-md border px-4 lg:px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
         >
+          <option value="" disabled hidden>
+            Select Day
+          </option>
+
           {DAYS.map((d) => (
             <option key={d.value} value={d.value}>
               {d.label}
@@ -44,13 +38,15 @@ export default function AvailabilityToolbar({
           ))}
         </select>
       </div>
+
       {/* Add Button */}
       <button
         onClick={onAdd}
-        className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+        className="w-1/2 lg:w-auto inline-flex items-center justify-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:cursor-pointer hover:bg-blue-700"
       >
         + Add Availability
       </button>
+
     </div>
   );
 }

@@ -58,9 +58,14 @@ export function useCancelSession() {
 
         return {
           ...old,
-          data: old.data.map((s) =>
-            s.id === sessionId ? { ...s, status: "CANCELLED" } : s
-          ),
+          data: {
+            ...old.data,
+            data: old.data.data.map((s) =>
+              s.id === sessionId
+                ? { ...s, status: "CANCELLED_BY_TUTOR" }
+                : s
+            ),
+          },
         };
       });
 
@@ -125,28 +130,29 @@ export function useRescheduleSession() {
 }
 
 
-export function useCreateExtraSession() {
+export function useCreateSession() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: sessionService.createExtra,
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["class-sessions"] });
-      qc.invalidateQueries({ queryKey: ["upcoming-sessions"] });
+    mutationFn: (data) => {
+
+      // PRIVATE CLASS (regular session)
+      if (data.sessionType === "REGULAR") {
+        return sessionService.createPrivateRequest(data);
+      }
+
+      // GROUP DOUBT
+      if (data.sessionType === "DBOUT") {
+        return sessionService.createDbout(data);
+      }
+
+      // GROUP EXTRA
+      return sessionService.createExtra(data);
     },
-  });
-}
 
-
-
-export function useCreateDboutSession() {
-  const qc = useQueryClient();
-
-  return useMutation({
-    mutationFn: sessionService.createDbout,
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["class-sessions"] });
-      qc.invalidateQueries({ queryKey: ["upcoming-sessions"] });
+      qc.invalidateQueries({ queryKey: ["class-sessions"], exact: false });
+      qc.invalidateQueries({ queryKey: ["upcoming-sessions"], exact: false });
     },
   });
 }
