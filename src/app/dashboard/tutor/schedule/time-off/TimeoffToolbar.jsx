@@ -6,7 +6,7 @@ export default function TimeoffToolbar({
   onAdd,
 }) {
   return (
-    <div className="w-full flex gap-2 items-center justify-between">
+    <div className="w-full flex gap-2 items-center">
       {/* From Date */}
       <input
         type="date"

@@ -6,9 +6,7 @@ export default function LeaveToolbar({
   onAdd
 }) {
   return (
-    <div className="w-full flex gap-2 items-center justify-between">
-
-
+    <div className="w-full flex gap-2 items-center">
       {/* From Date */}
       <input
         type="date"
@@ -23,6 +21,7 @@ export default function LeaveToolbar({
         onChange={(e) => onToDateChange(e.target.value)}
         className="flex-1 min-w-0 rounded-md border px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
       />
+
       <button
         onClick={onAdd}
         className="whitespace-nowrap rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
