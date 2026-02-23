@@ -227,3 +227,9 @@ body {
   scrollbar-width: none;
 }
 
+
+input[type="date"]{
+  width:100%;
+  min-width:0;
+}
+
