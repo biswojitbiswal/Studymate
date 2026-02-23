@@ -20,8 +20,8 @@ export default function BottomNav() {
             className={`flex flex-col items-center justify-center text-xs transition
               ${active ? "text-blue-600" : "text-slate-500"}`}
           >
-            <Icon size={22} />
-            <span className="mt-0.5">{item.label}</span>
+            <Icon size={28} />
+            <span className="hidden md:block mt-0.5">{item.label}</span>
           </Link>
         );
       })}

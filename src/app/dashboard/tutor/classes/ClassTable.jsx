@@ -17,6 +17,7 @@ import DeleteClassDialog from "./DeleteDialog";
 import { useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import ClassCardSkeleton from "@/components/skeleton/tutor/TutorClassCardSkeleton";
+import MobilePagination from "@/components/common/MobilePagination";
 
 
 const statusStyles = {
@@ -179,6 +180,32 @@ export default function ClassTable({ data, isLoading, isError, page, setPage, on
             </div>
           );
         })}
+
+        {/* MOBILE PAGINATION */}
+        <div className="flex items-center justify-between gap-2 p-3 border-t text-sm">
+          <span className="text-slate-500">
+            Page {page} of {data.totalPages}
+          </span>
+
+          <div className="flex gap-2">
+            <button
+              disabled={page === 1}
+              onClick={() => setPage(page - 1)}
+              className="px-3 py-1 border rounded disabled:opacity-50"
+            >
+              Prev
+            </button>
+
+            <button
+              disabled={page === data?.totalPages}
+              onClick={() => setPage(page + 1)}
+              className="px-3 py-1 border rounded disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+
       </div>
 
       <div className="hidden md:block bg-white rounded-xl border border-gray-200 overflow-hidden">

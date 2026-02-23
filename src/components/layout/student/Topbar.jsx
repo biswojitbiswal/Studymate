@@ -22,7 +22,7 @@ export default function TopBar() {
             </Link>
 
             {/* Right */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
 
                 {/* Logout */}
                 <button
