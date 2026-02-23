@@ -29,7 +29,7 @@ export const navItems = [
   },
   {
     label: "My Schedule",
-    href: "/dashboard/tutor/schedule",
+    href: "/dashboard/tutor/schedule/availability",
     icon: AlarmClock,
   },
   {

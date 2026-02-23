@@ -9,7 +9,9 @@ import {
   School,
   Presentation,
   Brain,
-  BrainIcon
+  BrainIcon,
+  Wallet,
+  Send
 } from "lucide-react";
 
 export const navItems = [
@@ -29,18 +31,19 @@ export const navItems = [
     icon: Presentation,
   },
   {
-    label: "Billing & Purchases",
-    href: "/dashboard/student/purchases",
-    icon: Presentation,
-  },
-  {
     label: "My Chats",
     href: "/dashboard/student/chats",
-    icon: MessagesSquare,
+    icon: Send,
   },
   {
-    label: "Knowledge Vault",
-    href: "/dashboard/student/knowledge-vault",
-    icon: BrainIcon,
-  }
+    label: "Billing & Purchases",
+    href: "/dashboard/student/purchases",
+    icon: Wallet,
+  },
+  
+  // {
+  //   label: "Knowledge Vault",
+  //   href: "/dashboard/student/knowledge-vault",
+  //   icon: BrainIcon,
+  // }
 ];

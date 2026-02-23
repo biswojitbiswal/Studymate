@@ -11,13 +11,10 @@ export default function BottomNav() {
     <nav
       className="
         fixed bottom-0 left-0 right-0
-        h-14
         pb-[env(safe-area-inset-bottom)]
-        bg-white border-t
+        h-16 bg-blue-600  border-t
         flex justify-around items-center
-        z-[100]
-        md:hidden
-      "
+        z-100 md:hidden"
     >
       {navItems.map((item) => {
         const Icon = item.icon;
@@ -27,12 +24,11 @@ export default function BottomNav() {
           <Link
             key={item.href}
             href={item.href}
-            className={`flex flex-col items-center justify-center text-xs transition ${
-              active ? "text-blue-600" : "text-slate-500"
-            }`}
+            className={`flex flex-col items-center justify-center text-xs transition rounded-full p-2.5
+              ${active ? "bg-white text-blue-600" : "text-white"}`}
           >
-            <Icon size={22} />
-            <span className="mt-0.5">{item.label}</span>
+            <Icon size={30} />
+            <span className="hidden md:block mt-0.5">{item.label}</span>
           </Link>
         );
       })}
