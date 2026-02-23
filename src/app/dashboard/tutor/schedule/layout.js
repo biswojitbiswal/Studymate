@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
+import { ArrowLeft } from 'lucide-react';
 
 const tabs = [
   { label: 'Availability', href: '/dashboard/tutor/schedule/availability' },
@@ -15,6 +16,13 @@ export default function ScheduleLayout({ children }) {
 
   return (
     <div className="space-y-6">
+      <button
+        onClick={() => router.back()}
+        className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition cursor-pointer mb-2"
+      >
+        <ArrowLeft size={18} />
+        <span className="text-sm font-medium">Back</span>
+      </button>
       {/* Header */}
       <div>
         <h1 className="text-2xl font-semibold text-gray-900">
