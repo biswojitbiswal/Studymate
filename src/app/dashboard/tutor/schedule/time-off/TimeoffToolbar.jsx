@@ -6,35 +6,28 @@ export default function TimeoffToolbar({
   onAdd,
 }) {
   return (
-    <div className="grid grid-cols-3 gap-2 lg:flex lg:items-center lg:justify-between">
+    <div className="w-full flex gap-2 items-center justify-between">
       {/* From Date */}
       <input
         type="date"
         value={fromDate || ""}
         onChange={(e) => onFromDateChange(e.target.value)}
-        className="
-        w-full
-        rounded-md border px-1.5 lg:px-3 py-2 text-sm
-        focus:outline-none focus:ring-2 focus:ring-blue-600"/>
+        className="flex-1 min-w-0 rounded-md border px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"/>
 
       {/* To Date */}
       <input
         type="date"
         value={toDate || ""}
         onChange={(e) => onToDateChange(e.target.value)}
-        className="
-    w-full
-    rounded-md border px-1.5 lg:px-3 py-2 text-sm
-    focus:outline-none focus:ring-2 focus:ring-blue-600"/>
+        className="flex-1 min-w-0 rounded-md border px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"/>
 
       {/* Add Button */}
       <button
         onClick={onAdd}
-        className="bg-blue-600 hover:bg-blue-700 text-white h-9 px-3 sm:px-4 text-xs sm:text-sm whitespace-nowrap rounded-md"
+        className="whitespace-nowrap rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
       >
-        <span className="hidden xs:inline">+ Add</span>
-        <span className="xs:hidden">+ Add</span>
-        <span className="hidden sm:inline"> Timeoff</span>
+        <span className="sm:hidden">+ Add</span>
+        <span className="hidden sm:inline">+ Add Timeoff</span>
       </button>
     </div>
   );
