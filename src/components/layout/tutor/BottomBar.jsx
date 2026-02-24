@@ -27,7 +27,7 @@ export default function BottomNav() {
             className={`flex flex-col items-center justify-center text-xs transition
               ${active ? "text-blue-600" : "text-slate-600"}`}
           >
-            <Icon size={26} />
+            <Icon size={24} />
             <span className="hidden md:block mt-0.5">{item.label}</span>
           </Link>
         );

@@ -10,23 +10,21 @@ export default function StudentLayout({ children }) {
   return (
     <RequireAuth role="STUDENT">
       <TooltipProvider delayDuration={200}>
-      <div className="h-screen flex flex-col overflow-hidden bg-slate-50">
-        <TopBar />
+        <div className="h-dvh flex flex-col bg-slate-50 overflow-hidden">
+          <TopBar />
 
-        <div className="flex flex-1 h-full overflow-hidden">
-          <div className="hidden md:block">
-            <Sidebar />
+          <div className="flex flex-1 overflow-hidden">
+            <div className="hidden md:block">
+              <Sidebar />
+            </div>
+
+            <main className="flex-1 overflow-y-auto p-4 md:p-6 pb-24">
+              {children}
+            </main>
           </div>
 
-          <main className="flex-1 overflow-y-auto p-4 md:p-6">
-            {children}
-          </main>
-        </div>
-
-        <div className="md:hidden">
           <BottomNav />
         </div>
-      </div>
       </TooltipProvider>
     </RequireAuth>
   );
