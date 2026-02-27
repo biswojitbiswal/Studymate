@@ -9,7 +9,7 @@ export default function TopBar() {
     const { user, logout } = useAuthStore();
 
     return (
-        <header className="h-14 w-full bg-white border-b flex items-center justify-between px-6">
+        <header className="h-14 w-full bg-white border-b flex items-center justify-between px-2 lg:px-6">
             <Link href="/" className="flex items-center">
                 <Image
                     src="/Logo.png"
@@ -22,7 +22,7 @@ export default function TopBar() {
             </Link>
 
             {/* Right */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2.5 lg:gap-4">
 
                 {/* Logout */}
                 <button
@@ -33,7 +33,7 @@ export default function TopBar() {
                     {/* Logout */}
                 </button>
 
-                <div className="relative me-3">
+                <div className="relative me-2">
                     <Bell className="w-5 h-5 text-slate-500 cursor-pointer" />
                     <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
                         2

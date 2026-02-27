@@ -11,15 +11,13 @@ import {
   Brain,
   BrainIcon,
   Wallet,
-  Send
+  Send,
+  Settings,
+  Compass
 } from "lucide-react";
 
 export const navItems = [
-  {
-    label: "Dashboard",
-    href: "/dashboard/student",
-    icon: LayoutDashboard,
-  },
+
   {
     label: "My Task",
     href: "/dashboard/student/tasks/my",
@@ -31,16 +29,26 @@ export const navItems = [
     icon: Presentation,
   },
   {
+    label: "Dashboard",
+    href: "/dashboard/student",
+    icon: LayoutDashboard,
+  },
+  // {
+  //   label: "Explore",
+  //   href: "/classes",
+  //   icon: Compass,
+  // },
+  {
     label: "My Chats",
     href: "/dashboard/student/chats",
     icon: Send,
   },
   {
-    label: "Billing & Purchases",
-    href: "/dashboard/student/purchases",
-    icon: Wallet,
+    label: "Settings",
+    href: "/dashboard/student/settings",
+    icon: Settings,
   },
-  
+
   // {
   //   label: "Knowledge Vault",
   //   href: "/dashboard/student/knowledge-vault",

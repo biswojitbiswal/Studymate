@@ -13,7 +13,7 @@ export default function BottomNav() {
         fixed bottom-0 left-0 right-0
         pb-[env(safe-area-inset-bottom)]
         h-14 bg-white border-t
-        flex justify-around items-center
+        flex justify-around items-stretch
         z-100 md:hidden"
     >
       {navItems.map((item) => {
@@ -24,11 +24,14 @@ export default function BottomNav() {
           <Link
             key={item.href}
             href={item.href}
-            className={`flex flex-col items-center justify-center text-xs transition
+            className={`relative flex flex-col items-center justify-center text-xs transition
               ${active ? "text-blue-600" : "text-slate-600"}`}
           >
+            {active && (
+              <span className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1.5 rounded-b-md bg-blue-600" />
+            )}
             <Icon size={24} />
-            <span className="hidden md:block mt-0.5">{item.label}</span>
+            {/* <span className="hidden md:block mt-0.5">{item.label}</span> */}
           </Link>
         );
       })}

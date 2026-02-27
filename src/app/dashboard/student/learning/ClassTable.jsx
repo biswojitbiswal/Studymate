@@ -64,10 +64,11 @@ export default function ClassTable({ data, isLoading, isError, page, totalPages,
               <TableHead>Class Title</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Visibility</TableHead>
-              <TableHead className="text-center">Status</TableHead>
+               <TableHead>Tutor</TableHead>
+              {/* <TableHead className="text-center">Status</TableHead> */}
               <TableHead>Start Date</TableHead>
               <TableHead>End Date</TableHead>
-              <TableHead className="text-center">Price</TableHead>
+              {/* <TableHead className="text-center">Price</TableHead> */}
               {/* <TableHead>Publish</TableHead> */}
               <TableHead className="text-center">Actions</TableHead>
             </TableRow>
@@ -97,25 +98,29 @@ export default function ClassTable({ data, isLoading, isError, page, totalPages,
                   {cls?.visibility}
                 </TableCell>
 
-                <TableCell className="text-center">
+                <TableCell className="text-gray-700">
+                  {cls?.tutor?.user?.name}
+                </TableCell>
+
+                {/* <TableCell className="text-center">
                   <Badge
                     className={`text-xs ${statusStyles[cls?.status]}`}
                   >
                     {cls?.status}
                   </Badge>
+                </TableCell> */}
+
+                <TableCell className="text-gray-700">
+                  {cls?.startDate?.split("T")[0]}
                 </TableCell>
 
                 <TableCell className="text-gray-700">
-                  {cls?.startDate.split("T")[0]}
+                  {cls?.endDate?.split("T")[0]}
                 </TableCell>
 
-                <TableCell className="text-gray-700">
-                  {cls?.endDate.split("T")[0]}
-                </TableCell>
-
-                <TableCell className="text-center text-md font-bold text-green-600">
+                {/* <TableCell className="text-center text-md font-bold text-green-600">
                   ₹{cls?.paidAmount.toFixed(2)}
-                </TableCell>
+                </TableCell> */}
 
 
                 <TableCell>
