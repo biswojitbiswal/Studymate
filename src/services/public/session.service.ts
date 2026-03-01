@@ -36,6 +36,6 @@ export const sessionService = {
     api.post(API.SESSION.CREATE_DBOUT, data),
 
   // 9️⃣ Dashboard upcoming sessions
-  getUpcoming: () =>
-    api.get(API.SESSION.GET_UPCOMING),
+  getUpcoming: (params) =>
+    api.get(API.SESSION.GET_UPCOMING, {params}),
 };

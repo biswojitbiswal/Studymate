@@ -121,6 +121,8 @@ export default function CreateClassPage() {
         if (!title.trim()) e.title = "Title is required";
         if (!description.trim()) e.description = "Description is required";
 
+        if (!previewImg) e.previewImg = "Preview Image is required";
+
         if (!subjectId) e.subjectId = "Subject is required";
         if (!levelId) e.levelId = "Level is required";
 
@@ -332,7 +334,7 @@ export default function CreateClassPage() {
                     {/* Preview Image */}
                     <div>
                         <label className="text-sm font-medium">
-                            Preview Image <span className="text-gray-400">(optional)</span>
+                            Preview Image <span className="text-red-500">*</span>
                         </label>
                         <Input
                             type="file"
@@ -342,6 +344,9 @@ export default function CreateClassPage() {
                         <p className="text-xs text-gray-500 mt-1">
                             JPG / PNG (recommended)
                         </p>
+                        {errors.previewImg && (
+                        <p className="text-sm text-red-500 mt-1">{errors.previewImg}</p>
+                    )}
                     </div>
 
                     {/* Preview Video */}

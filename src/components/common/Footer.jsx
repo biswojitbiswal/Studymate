@@ -22,40 +22,44 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* PRODUCT */}
-          <div className="text-center sm:text-left">
-            <h4 className="text-sm font-semibold text-gray-900">Product</h4>
-            <ul className="mt-4 space-y-2 text-sm text-gray-600">
-              <li><a href="#" className="hover:text-blue-600 transition">Features</a></li>
-              <li><a href="#" className="hover:text-blue-600 transition">How It Works</a></li>
-              <li><a href="#" className="hover:text-blue-600 transition">Pricing</a></li>
-            </ul>
-          </div>
+          <div className="flex items-center justify-between">
+            {/* PRODUCT */}
+            <div className="text-start sm:text-left">
+              <h4 className="text-sm font-semibold text-gray-900">Product</h4>
+              <ul className="mt-4 space-y-2 text-sm text-gray-600">
+                <li><a href="#" className="hover:text-blue-600 transition">Features</a></li>
+                <li><a href="#" className="hover:text-blue-600 transition">How It Works</a></li>
+                <li><a href="#" className="hover:text-blue-600 transition">Pricing</a></li>
+              </ul>
+            </div>
 
-          {/* FOR USERS */}
-          <div className="text-center sm:text-left">
-            <h4 className="text-sm font-semibold text-gray-900">For Users</h4>
-            <ul className="mt-4 space-y-2 text-sm text-gray-600">
-              <li><a href="#" className="hover:text-blue-600 transition">Students</a></li>
-              <li><a href="#" className="hover:text-blue-600 transition">Tutors</a></li>
-              <li><a href="#" className="hover:text-blue-600 transition">Sign In</a></li>
-            </ul>
-          </div>
+            {/* FOR USERS */}
+            <div className="text-start sm:text-left">
+              <h4 className="text-sm font-semibold text-gray-900">For Users</h4>
+              <ul className="mt-4 space-y-2 text-sm text-gray-600">
+                <li><a href="#" className="hover:text-blue-600 transition">Students</a></li>
+                <li><a href="#" className="hover:text-blue-600 transition">Tutors</a></li>
+                <li><a href="#" className="hover:text-blue-600 transition">Sign In</a></li>
+              </ul>
+            </div>
 
-          {/* LEGAL */}
-          <div className="text-center sm:text-left">
-            <h4 className="text-sm font-semibold text-gray-900">Legal</h4>
-            <ul className="mt-4 space-y-2 text-sm text-gray-600">
-              <li><a href="#" className="hover:text-blue-600 transition">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-blue-600 transition">Terms of Service</a></li>
-              <li><a href="#" className="hover:text-blue-600 transition">Contact</a></li>
-            </ul>
+            {/* LEGAL */}
+            <div className="text-start sm:text-left">
+              <h4 className="text-sm font-semibold text-gray-900">Legal</h4>
+              <ul className="mt-4 space-y-2 text-sm text-gray-600">
+                <li><a href="#" className="hover:text-blue-600 transition">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-blue-600 transition">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-blue-600 transition">Contact</a></li>
+              </ul>
+            </div>
           </div>
         </div>
 
         {/* BOTTOM */}
         <div className="mt-10 border-t pt-6 text-center text-xs text-gray-500">
           © {new Date().getFullYear()} StudyNest. All rights reserved.
+          <br />
+          Developed by <span className="text-blue-600">Biswojit</span>
         </div>
       </div>
     </footer>

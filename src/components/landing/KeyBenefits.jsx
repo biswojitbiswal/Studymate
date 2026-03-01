@@ -30,17 +30,17 @@ const BENEFITS = [
 
 export default function KeyBenefits() {
   return (
-    <section className="px-18 py-10">
-      <div className="mx-auto max-w-7xl px-6">
+    <section className="lg:px-18 py-6 lg:py-10">
+      <div className="mx-auto max-w-7xl px-4 lg:px-6">
         <div className="flex flex-col items-center justify-center gap-10">
 
           {/* HEADER */}
-          <div className="space-y-4 text-center animate-fade-up">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <div className="space-y-2 lg:space-y-4 text-center animate-fade-up">
+            <h2 className="text-4xl lg:text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               Why <span className="text-blue-600">StudyNest</span> Works Better
             </h2>
 
-            <p className="max-w-xl text-sm leading-relaxed text-gray-600">
+            <p className="max-w-xl text-xs lg:text-sm leading-relaxed text-gray-600">
               StudyNest isn’t just a collection of tools.
               It’s a thoughtfully connected learning system designed to make
               studying simpler, more engaging, and more effective for both

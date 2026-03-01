@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarDays, Users, Clock, Video } from "lucide-react";
+import { CalendarDays, Users, Clock, Video, VideoIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCancelSession, useClassSessions } from "@/hooks/public/useSession";
 import { useEnrolledClassContext } from "../EnrolledClassContext";
@@ -229,53 +229,55 @@ function SessionCard({ session, onRescheduleStudent, onRescheduleTutor }) {
     };
 
     return (
-        <div className="bg-white border rounded-lg px-4 py-2 flex items-center gap-4">
+        <div className="relative bg-white border rounded-lg px-2 py-3 lg:px-4 flex flex-col lg:flex-row gap-2 items-start sm:items-center justify-between">
+            <div className="flex items-center gap-2">
+                {/* Date Box */}
+                <div className="w-14 shrink-0 rounded-md bg-blue-50 text-blue-600 text-center py-3 lg:py-2">
+                    <div className="text-lg font-bold leading-tight">
+                        {session?.dateLabel}
+                    </div>
+                    <div className="text-xs uppercase font-medium">
+                        {session?.monthLabel}
+                    </div>
 
-            {/* Date Box */}
-            <div className="w-14 shrink-0 rounded-md bg-blue-50 text-blue-600 text-center py-2">
-                <div className="text-xs uppercase font-medium">
-                    {session?.monthLabel}
-                </div>
-                <div className="text-md font-bold leading-tight">
-                    {session?.dateLabel}
-                </div>
-            </div>
-
-            {/* Main Info */}
-            <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="font-medium text-gray-900 truncate">
-                        {session?.klass?.title}
-                    </h3>
-
-                    {/* Session Type */}
-                    <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-blue-600 font-medium">
-                        {session?.sessionType}
-                    </span>
-
-                    <span className="text-sm px-2 rounded bg-gray-100 text-blue-600 font-medium">
-                        {formatTimeRange(session?.startTime) || formatTimeRange(session?.klass?.startTime)}
-                    </span>
                 </div>
 
-                <div className="mt-1 flex items-center gap-2 flex-wrap">
-                    <span className="text-xs px-2 py-0.5 rounded-sm bg-blue-100 text-blue-700 font-medium">
-                        {session?.dayLabel}
-                    </span>
-                    <span>
-                        ⏱ {session?.klass?.durationMin || session?.durationMin} min
-                    </span>
-                    <span>
-                        👥 {session?.totalEnrollment} students
-                    </span>
+                {/* Main Info */}
+                <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                        <h3 className="font-medium text-gray-900 truncate">
+                            {session?.klass?.title}
+                        </h3>
+
+                        {/* Session Type */}
+                        <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-blue-600 font-medium">
+                            {session?.sessionType}
+                        </span>
+
+                        {/* <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-blue-600 font-medium shrink-0 whitespace-nowrap">
+                            {formatTimeRange(session?.startTime) || formatTimeRange(session?.klass?.startTime)}
+                        </span> */}
+                    </div>
+
+                    <div className="mt-1 flex items-center gap-2">
+                        <span className="text-xs px-3 lg:px-2 py-0.5 rounded-sm bg-blue-100 text-blue-700 font-medium">
+                            {session?.dayLabel}
+                        </span>
+                        <span className="w-22 text-center">
+                            ⏱ {session?.klass?.durationMin || session?.durationMin} min
+                        </span>
+                        <span className="text-xs px-3 lg:px-2 py-0.5 rounded-sm bg-gray-100 text-blue-600 font-medium shrink-0 whitespace-nowrap">
+                            {formatTimeRange(session?.startTime) || formatTimeRange(session?.klass?.startTime)}
+                        </span>
+                    </div>
                 </div>
             </div>
 
             {/* Right Side */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center w-full gap-2 sm:justify-end">
                 <span
-                    className={`text-xs font-medium px-2 py-1 rounded-sm
-            ${session?.status === "SCHEDULED"
+                    className={`w-full sm:w-auto flex-1 sm:flex-none text-center text-sm font-medium px-2 py-2.5 rounded-md whitespace-nowrap
+                    ${session?.status === "SCHEDULED"
                             ? "bg-green-100 text-green-700"
                             : session?.status === "COMPLETED"
                                 ? "bg-blue-100 text-blue-700"
@@ -288,8 +290,15 @@ function SessionCard({ session, onRescheduleStudent, onRescheduleTutor }) {
                 </span>
 
                 {session?.status === "SCHEDULED" && session?.meetingLink ? (
-                    <button className="text-sm bg-blue-600 px-4 py-1 rounded-md cursor-pointer text-white hover:bg-blue-700  hover:cursor-pointer">
-                        Join
+                    <button
+                        className="w-full sm:w-auto
+                            flex-1 sm:flex-none
+                            flex items-center justify-center
+                            text-sm bg-blue-600 px-3 py-2 rounded-md
+                            text-white gap-2 hover:bg-blue-700 hover:cursor-pointer
+                            whitespace-nowrap">
+                        <VideoIcon />
+                        <span className="font-semibold">Join</span>
                     </button>
                 ) : (
                     session?.status === "PENDING_TUTOR_APPROVAL" && (
@@ -301,10 +310,10 @@ function SessionCard({ session, onRescheduleStudent, onRescheduleTutor }) {
                 }
 
                 {
-                    session.klass.type === 'PRIVATE' && session.status === 'SCHEDULED' && getTutorActions(session).length > 0 && <div ref={menuRef} className="relative">
+                    session.klass.type === 'PRIVATE' && session.status === 'SCHEDULED' && getTutorActions(session).length > 0 && <div ref={menuRef} className="relative shrink-0">
                         <button
                             onClick={() => setOpenMenu(prev => !prev)}
-                            className="px-1 py-0.5 rounded text-blue-600 hover:bg-blue-100 font-bold cursor-pointer"
+                            className="w-8 h-10 flex items-center justify-center rounded-md hover:bg-blue-700 hover:cursor-pointer bg-blue-600 text-white text-lg"
                         >
                             ⋯
                         </button>

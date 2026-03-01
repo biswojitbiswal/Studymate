@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { navItems } from "./sidebarNav";
+import { useSelectedLayoutSegments } from "next/navigation";
+import { mobNavItems, navItems } from "./sidebarNav";
 
 export default function BottomNav() {
-  const pathname = usePathname();
+  const segments = useSelectedLayoutSegments();
+  const section = segments[0] ?? "dashboard";
 
   return (
     <nav className="fixed bottom-0 left-0 right-0
@@ -13,9 +14,9 @@ export default function BottomNav() {
         h-14 bg-white border-t
         flex justify-around items-stretch
         z-100 md:hidden">
-      {navItems.map((item) => {
+      {mobNavItems.map((item) => {
         const Icon = item.icon;
-        const active = pathname === item.href;
+        const active = section === item.key;
 
         return (
           <Link

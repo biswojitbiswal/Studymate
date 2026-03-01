@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useSelectedLayoutSegments } from "next/navigation";
 import { navItems } from "./sidebarNav";
 import { Settings } from "lucide-react";
 import {
@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/tooltip";
 
 export default function Sidebar() {
-  const pathname = usePathname();
+  const segments = useSelectedLayoutSegments();
+  const section = segments[0] ?? "dashboard";
 
   return (
     <aside className="w-16 h-full bg-blue-600 flex flex-col shadow-lg">
@@ -20,7 +21,7 @@ export default function Sidebar() {
       <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-2">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const active = pathname === item.href;
+          const active = section === item.key;
 
           return (
             <Tooltip key={item.href}>

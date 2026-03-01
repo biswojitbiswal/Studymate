@@ -9,6 +9,8 @@ import { ArrowLeft, Badge, Compass } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { MdExplore } from "react-icons/md";
+import ClassCardSkeleton from "@/components/skeleton/tutor/TutorClassCardSkeleton";
+import { ClassesMobileSkeleton } from "@/components/skeleton/student/ClassMobileSkeleton";
 
 
 const statusStyles = {
@@ -73,7 +75,7 @@ export default function StudentClassesPage() {
       </div>
 
       {/* MOBILE VIEW */}
-      <div className="md:hidden space-y-4">
+      {isLoading ? <ClassesMobileSkeleton /> : <div className="md:hidden space-y-4">
         {data?.data?.classes?.map((cls) => {
           const joiningStart = cls?.enrollments[0]?.enrolledAt?.split("T")[0];
           const startDate = cls?.startDate?.split("T")[0];
@@ -81,7 +83,7 @@ export default function StudentClassesPage() {
           return (
             <Link
               key={cls?.id}
-              href={`/dashboard/tutor/learning/${cls?.id}`}
+              href={`/dashboard/student/learning/${cls?.id}/overview`}
               className="block"
             >
               <div className="group relative bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5">
@@ -164,7 +166,7 @@ export default function StudentClassesPage() {
         })}
 
         {/* MOBILE PAGINATION */}
-        <div className="flex items-center justify-between gap-2 p-3 border-t text-sm">
+        {data?.data?.classes?.length > 0 && <div className="flex items-center justify-between gap-2 p-3 border-t text-sm">
           <span className="text-slate-500">
             Page {page} of {data?.data?.totalPages}
           </span>
@@ -186,9 +188,9 @@ export default function StudentClassesPage() {
               Next
             </button>
           </div>
-        </div>
+        </div>}
 
-      </div>
+      </div>}
 
       <div className="hidden md:block ">
         <ClassTable

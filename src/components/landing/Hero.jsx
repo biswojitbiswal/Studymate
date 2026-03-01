@@ -1,12 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import WorkflowDiagram from "./WorkFlowCard";
-import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Hero() {
+  const router = useRouter()
   return (
-    <section className="relative min-h-screen overflow-hidden px-18 bg-white pt-30 pb-10">
+    <section className="relative overflow-hidden lg:px-18 bg-white pt-26 md:pt-24 lg:pt-30 pb-10">
 
       {/* Soft background glow */}
       <div className="pointer-events-none absolute inset-0">
@@ -18,8 +19,8 @@ export default function Hero() {
         <div className="grid items-center gap-16 lg:grid-cols-2">
 
           {/* LEFT CONTENT */}
-          <div className="space-y-6">
-            <span className="inline-flex items-center px-4 text-md text-blue-600">
+          <div className="space-y-4 lg:space-y-6">
+            <span className="inline-flex items-center lg:px-2 text-md text-blue-600">
               Smart Learning Platform
             </span>
 
@@ -37,24 +38,27 @@ export default function Hero() {
               all in one powerful platform.
             </p>
 
-            <div className="flex flex-wrap gap-4">
-              <Button
-                size="lg"
-                className="rounded-xl bg-blue-600 text-white hover:bg-blue-700 hover:cursor-pointer"
-              >
-                Start Learning
-              </Button>
+            <div className="flex lg:flex-wrap gap-2 lg:gap-4">
+              <Link href="/classes">
+                <Button
+                  size="lg"
+                  className="rounded-xl bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+                >
+                  Start Learning
+                </Button>
+              </Link>
 
-              <Button
-                size="lg"
-                variant="outline"
-                className="rounded-xl border-blue-600 text-blue-600 hover:bg-blue-50 hover:cursor-pointer"
-              >
-                Become a Tutor
-              </Button>
+              <Link href="/signup">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="rounded-xl border-blue-600 text-blue-600 hover:bg-blue-50 hover:cursor-pointer"
+                >
+                  Become a Tutor
+                </Button>
+              </Link>
             </div>
 
-            {/* Stats */}
             <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-4">
               {[
                 ["10k+", "Students"],
@@ -62,7 +66,7 @@ export default function Hero() {
                 ["50k+", "Classes"],
                 ["98%", "Satisfaction"],
               ].map(([value, label]) => (
-                <div key={label}>
+                <div key={label} className="bg-blue-50 px-4 py-2 rounded-lg lg:bg-transparent">
                   <p className="text-2xl font-bold text-gray-900">{value}</p>
                   <p className="text-sm text-gray-500">{label}</p>
                 </div>

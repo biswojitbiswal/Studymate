@@ -8,14 +8,15 @@ import { useClass } from "@/hooks/tutor/useClass";
 import LoadingScreen from "@/components/common/LoadingScreen";
 import { EnrolledClassProvider } from "./EnrolledClassContext";
 import { useMemo } from "react";
+import StudentClassOverviewSkeleton from "@/components/skeleton/student/StudentClassOverviewSkeleton";
 
 
 const tabs = [
     { name: "Overview", href: "overview" },
     { name: "Sessions", href: "session" },
     { name: "Attendance", href: "attendance" },
-    { name: "Assignments", href: "assignment" },
-    { name: "Chat", href: "chat" },
+    { name: "Assignments", href: "assignments" },
+    { name: "Resources", href: "resources" },
 ];
 
 const STATUS_BASE =
@@ -48,13 +49,13 @@ export default function ClassLayout({ children }) {
     }), [klass, id]);
 
 
-    if (isLoading) return <LoadingScreen />;
+    if (isLoading) return <StudentClassOverviewSkeleton />;
     return (
         <EnrolledClassProvider value={contextValue}>
             <div className="space-y-4">
 
                 {/* Header */}
-                <div className="bg-gradient-to-r from-blue-600 to-blue-500 p-4 rounded-xl text-white">
+                <div className="bg-linear-to-r from-blue-600 to-blue-500 p-4 rounded-xl text-white">
                     <div className="flex items-center gap-2">
 
                         {/* Back Button */}
@@ -80,55 +81,32 @@ export default function ClassLayout({ children }) {
                     </div>
                 </div>
 
-                <div className="flex flex-wrap gap-3 mt-3">
-                    {/* Visibility */}
-                    <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-md px-3 py-1.5 text-sm font-medium">
-                        <BookOpenText size={14} />
-                        {/* <span>Visibility:</span> */}
-                        <span className="font-semibold">{klass?.visibility}</span>
-                    </div>
-
-                    {/* Class Type */}
-                    <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-md px-3 py-1.5 text-sm font-medium">
-                        <Users size={14} />
-                        {/* <span>Class Type:</span> */}
-                        <span className="font-semibold">{klass?.type}</span>
-                    </div>
-
-                    {/* Status */}
-                    <div
-                        className={`${STATUS_BASE} ${STATUS_STYLES[klass?.status] || "bg-gray-50 border-gray-200 text-gray-700"
-                            }`}
-                    >
-                        <CheckCircle size={14} />
-                        <span className="font-semibold">{klass?.status}</span>
-                    </div>
-
-
-                </div>
+                
 
 
                 {/* Tabs */}
-                <div className="flex gap-2 border-b">
-                    {tabs.map((tab) => {
-                        const href = `/dashboard/student/learning/${id}/${tab.href}`;
-                        const isActive = pathname === href || (tab.href === "" && pathname.endsWith(id));
+                <div className="border-b overflow-hidden">
+                    <div className="flex gap-1 overflow-x-auto scrollbar-none -mb-px px-1">
+                        {tabs.map((tab) => {
+                            const href = `/dashboard/student/learning/${id}/${tab.href}`;
+                            const isActive = pathname === href || (tab.href === "" && pathname.endsWith(id));
 
-                        return (
-                            <Link
-                                key={tab.name}
-                                href={href}
-                                className={cn(
-                                    "px-6 py-1.5 text-sm font-semibold rounded-t-sm",
-                                    isActive
-                                        ? "text-blue-600 border-b-2 border-blue-600"
-                                        : "text-gray-600 hover:text-blue-600"
-                                )}
-                            >
-                                {tab.name}
-                            </Link>
-                        );
-                    })}
+                            return (
+                                <Link
+                                    key={tab.name}
+                                    href={href}
+                                    className={cn(
+                                        "whitespace-nowrap px-3 lg:px-6 py-2 text-sm font-semibold border-b-2 transition-colors flex-shrink-0",
+                                        isActive
+                                            ? "text-blue-600 border-blue-600"
+                                            : "text-gray-600 border-transparent hover:text-blue-600"
+                                    )}
+                                >
+                                    {tab.name}
+                                </Link>
+                            );
+                        })}
+                    </div>
                 </div>
 
                 {/* Tab Content */}

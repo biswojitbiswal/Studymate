@@ -65,6 +65,7 @@ export default function ClassTable({ data, isLoading, isError, page, totalPages,
               <TableHead>Type</TableHead>
               <TableHead>Visibility</TableHead>
                <TableHead>Tutor</TableHead>
+               <TableHead className="text-center">Capacity</TableHead>
               {/* <TableHead className="text-center">Status</TableHead> */}
               <TableHead>Start Date</TableHead>
               <TableHead>End Date</TableHead>
@@ -100,6 +101,10 @@ export default function ClassTable({ data, isLoading, isError, page, totalPages,
 
                 <TableCell className="text-gray-700">
                   {cls?.tutor?.user?.name}
+                </TableCell>
+
+                <TableCell className="text-center text-gray-700">
+                  {cls?.capacity}
                 </TableCell>
 
                 {/* <TableCell className="text-center">

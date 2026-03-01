@@ -17,22 +17,25 @@ import {
 } from "lucide-react";
 
 export const navItems = [
-
+  {
+    label: "Dashboard",
+    href: "/dashboard/student",
+    icon: LayoutDashboard,
+    key: "dashboard",
+  },
   {
     label: "My Task",
     href: "/dashboard/student/tasks/my",
     icon: ListTodo,
+    key: "tasks",
   },
   {
     label: "My Learning",
     href: "/dashboard/student/learning",
     icon: Presentation,
+    key: "learning",
   },
-  {
-    label: "Dashboard",
-    href: "/dashboard/student",
-    icon: LayoutDashboard,
-  },
+
   // {
   //   label: "Explore",
   //   href: "/classes",
@@ -42,11 +45,13 @@ export const navItems = [
     label: "My Chats",
     href: "/dashboard/student/chats",
     icon: Send,
+    key: "chats",
   },
   {
     label: "Settings",
     href: "/dashboard/student/settings",
     icon: Settings,
+    key: "settings",
   },
 
   // {
@@ -54,4 +59,38 @@ export const navItems = [
   //   href: "/dashboard/student/knowledge-vault",
   //   icon: BrainIcon,
   // }
+];
+
+
+export const mobNavItems = [
+  {
+    label: "My Task",
+    href: "/dashboard/student/tasks/my",
+    icon: ListTodo,
+    key: "tasks",
+  },
+  {
+    label: "My Learning",
+    href: "/dashboard/student/learning",
+    icon: Presentation,
+    key: "learning",
+  },
+  {
+    label: "Dashboard",
+    href: "/dashboard/student",
+    icon: LayoutDashboard,
+    key: "dashboard",
+  },
+  {
+    label: "My Chats",
+    href: "/dashboard/student/chats",
+    icon: Send,
+    key: "chats",
+  },
+  {
+    label: "Settings",
+    href: "/dashboard/student/settings",
+    icon: Settings,
+    key: "settings",
+  },
 ];

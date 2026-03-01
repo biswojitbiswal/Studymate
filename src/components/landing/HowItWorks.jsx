@@ -14,7 +14,7 @@ export default function HowItWorks() {
   }, [])
 
   return (
-    <section className="bg-white py-12 px-18">
+    <section className="bg-white py-12 lg:px-18">
       <div className="mx-auto max-w-7xl w-full">
         <div className="flex flex-col items-center gap-8">
           {/* HEADER */}
@@ -22,11 +22,59 @@ export default function HowItWorks() {
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
               How <span className="text-blue-600">It Works</span>
             </h2>
-            <p className="mt-4 text-base text-gray-600">Get started in just three simple steps.</p>
+            <p className="mt-4 lg:text-sm text-base text-gray-600">Get started in just three simple steps.</p>
           </div>
 
+          {/* ================= MOBILE UI ================= */}
+      <div className="flex flex-col px-4 gap-6 w-full md:hidden">
+
+        {[
+          {
+            icon: UserPlus,
+            title: "Create Your Account",
+            desc: "Sign up as a student or tutor and set up your profile.",
+          },
+          {
+            icon: CalendarCheck,
+            title: "Join or Create Classes",
+            desc: "Enroll in classes or create sessions with smart scheduling.",
+          },
+          {
+            icon: TrendingUp,
+            title: "Learn & Track Progress",
+            desc: "Attend classes, collaborate, and track your learning growth.",
+          },
+        ].map((step, index) => {
+          const Icon = step.icon;
+          return (
+            <div
+              key={index}
+              className="flex items-start gap-4 rounded-xl border border-gray-200 p-5 shadow-sm"
+            >
+              {/* Number Circle */}
+              <div className="flex items-center justify-center h-10 w-10 rounded-full bg-blue-600 text-white font-semibold text-sm">
+                {index + 1}
+              </div>
+
+              <div>
+                <div className="flex items-center gap-2">
+                  <Icon className="h-5 w-5 text-blue-600" />
+                  <h3 className="font-semibold text-gray-900">
+                    {step.title}
+                  </h3>
+                </div>
+                <p className="mt-2 text-sm text-gray-600">
+                  {step.desc}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+
+      </div>
+
           {/* STEPS */}
-          <div className="relative w-full max-w-5xl">
+          <div className="relative w-full max-w-5xl hidden md:block">
             {/* CONNECTORS - Positioned exactly in the middle of icons */}
             <svg
               className="absolute left-0 top-7 w-full h-0.5 overflow-visible"

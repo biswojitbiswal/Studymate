@@ -1,14 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useSelectedLayoutSegments } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { adminNavItems } from "./sidebarNav";
 import Image from "next/image";
 
 export default function AdminSidebar() {
-    const pathname = usePathname();
+    const segments = useSelectedLayoutSegments();
+    const section = segments[0] ?? "dashboard";
     const [openGroup, setOpenGroup] = useState("Master");
 
     const baseItem = "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition";
@@ -37,7 +38,7 @@ export default function AdminSidebar() {
                     const Icon = item.icon;
 
                     if (!item.children) {
-                        const active = pathname === item.href;
+                        const active = section === item.key;
                         return (
                             <Link
                                 key={item.label}
@@ -75,7 +76,7 @@ export default function AdminSidebar() {
                                 <div className="ml-6 mt-1 space-y-1">
                                     {item.children.map((child) => {
                                         const ChildIcon = child.icon;
-                                        const active = pathname === child.href;
+                                        const active = section === child.key;
 
                                         return (
                                             <Link

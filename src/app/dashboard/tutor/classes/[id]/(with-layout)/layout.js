@@ -15,8 +15,9 @@ const tabs = [
     { name: "Overview", href: "overview" },
     { name: "Sessions", href: "session" },
     { name: "Attendance", href: "attendance" },
-    { name: "Assignments", href: "assignment" },
-    { name: "Chat", href: "chat" },
+    { name: "Assignments", href: "assignments" },
+    { name: "Resources", href: "resources" },
+    { name: "Students", href: "students" },
 ];
 
 const STATUS_BASE =

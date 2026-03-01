@@ -302,45 +302,53 @@ function SessionCard({ session, onRescheduleStudent, onRescheduleTutor }) {
         });
     };
     return (
-        <div className="relative bg-white border rounded-xl px-2 py-3 lg:px-4 sm:py-2 flex flex-col lg:flex-row gap-3 sm:gap-4 items-start sm:items-center justify-between">
+        <div className="relative bg-white border rounded-lg px-1.5 py-1.5 lg:py-3 lg:px-4 flex flex-col lg:flex-row gap-2 sm:gap-4 items-start sm:items-center justify-between">
             <div className="flex items-center gap-2">
                 {/* Date Box */}
                 <div className="w-14 shrink-0 rounded-md bg-blue-50 text-blue-600 text-center py-3 lg:py-2">
+                    <div className="text-lg font-bold leading-tight">
+                        {session?.dateLabel}
+                    </div>
                     <div className="text-xs uppercase font-medium">
                         {session?.monthLabel}
                     </div>
-                    <div className="text-md font-bold leading-tight">
-                        {session?.dateLabel}
-                    </div>
+
                 </div>
 
                 {/* Main Info */}
                 <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                        <h3 className="font-medium text-gray-900 truncate">
+                    <div className="flex items-center gap-2 w-full min-w-0">
+
+                        {/* Title */}
+                        <h3 className="flex-1 min-w-0 font-medium text-gray-900 truncate">
                             {session?.klass?.title}
                         </h3>
 
                         {/* Session Type */}
-                        <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-blue-600 font-medium">
+                        <span className="shrink-0 text-xs px-2 py-0.5 rounded bg-gray-100 text-blue-600 font-medium whitespace-nowrap">
                             {session?.sessionType}
                         </span>
 
-                        <span className="w-18 text-center text-sm px-1 rounded bg-gray-100 text-blue-600 font-medium">
-                            {formatTimeRange(session?.startTime) || formatTimeRange(session?.klass?.startTime)}
-                        </span>
-                    </div>
-
-                    <div className="mt-1 flex items-center gap-2">
-                        <span className="text-xs px-3 lg:px-2 py-0.5 rounded-sm bg-blue-100 text-blue-700 font-medium">
+                        <span className="text-xs px-3 lg:px-2 py-0.5 rounded-sm bg-blue-100 text-blue-700 font-medium shrink-0">
                             {session?.dayLabel}
                         </span>
-                        <span className="w-22 text-center">
+
+
+                    </div>
+
+                    <div className="mt-1 flex items-center gap-2 flex-wrap text-sm text-gray-600">
+                        <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-blue-600 font-medium whitespace-nowrap">
+                            {formatTimeRange(session?.startTime) || formatTimeRange(session?.klass?.startTime)}
+                        </span>
+
+                        <span className="shrink-0 whitespace-nowrap">
                             ⏱ {session?.klass?.durationMin || session?.durationMin} min
                         </span>
-                        <span className="w-26 text-center">
+
+                        <span className="shrink-0 whitespace-nowrap">
                             👥 {session?.totalEnrollment} students
                         </span>
+
                     </div>
                 </div>
             </div>
@@ -390,7 +398,7 @@ function SessionCard({ session, onRescheduleStudent, onRescheduleTutor }) {
                         </button>
 
                         {openMenu && (
-                            <div className="absolute right-0 mt-2 w-44 bg-white border rounded-md shadow-lg z-10">
+                            <div className="absolute right-0 mt-2 w-44 bg-white border rounded-md shadow-lg z-10 ">
                                 {getTutorActions(session).map(action => (
                                     <button
                                         key={action.key}

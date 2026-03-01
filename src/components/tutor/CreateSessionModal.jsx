@@ -48,7 +48,7 @@ export default function CreateSessionModal({ open, onClose, type }) {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
 
             {/* Modal */}
-            <div className="bg-white rounded-xl w-full max-w-md p-5 space-y-4">
+            <div className="bg-white rounded-xl w-[90%] lg:w-full max-w-md p-5 space-y-4">
 
                 {/* Header */}
                 <div className="flex items-center justify-between">

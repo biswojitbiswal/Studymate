@@ -126,9 +126,10 @@ export default function WorkflowDiagram() {
     }, []);
 
     return (
-        <div className="flex flex-col min-h-screen items-center justify-center p-8">
+        // <div className="flex flex-col min-h-screen items-center justify-center p-8">
+        <div className="hidden md:flex flex-col min-h-screen items-center justify-center p-8">
             <div className="text-center">
-                <h2 className="text-4xl font-bold text-gray-900">
+                <h2 className="text-3xl font-bold text-gray-900">
                     One Connected Learning <span className="text-blue-600">Workflow</span>
                 </h2>
                 <p className="mt-3 max-w-2xl mx-auto text-gray-600">

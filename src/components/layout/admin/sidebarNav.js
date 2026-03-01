@@ -24,6 +24,7 @@ export const adminNavItems = [
     label: "Dashboard",
     href: "/dashboard/admin",
     icon: LayoutDashboard,
+    key: 'dashboard'
   },
   {
     label: "Academic",
@@ -33,21 +34,25 @@ export const adminNavItems = [
         label: "Board",
         href: "/dashboard/admin/boards",
         icon: FaBookOpen,
+        key: 'boards'
       },
       {
         label: "Levels",
         href: "/dashboard/admin/levels",
         icon: FaChartBar,
+        key: 'levels'
       },
       {
         label: "Languages",
         href: "/dashboard/admin/languages",
         icon: Languages,
+        key: 'languages'
       },
       {
         label: "Subject",
         href: "/dashboard/admin/subjects",
         icon: NotebookPen,
+        key: 'subjects'
       },
     ],
   },
@@ -59,16 +64,19 @@ export const adminNavItems = [
         label: "Commissions",
         href: "/dashboard/admin/commissions",
         icon: HandCoins,
+        key: 'commissions'
       },
       {
         label: "Taxes",
         href: "/dashboard/admin/taxes",
         icon: Banknote,
+        key: 'taxes'
       },
       {
         label: "Coupons",
         href: "/dashboard/admin/coupons",
         icon: Ticket,
+        key: 'coupons'
       },
     ],
   },
@@ -76,30 +84,36 @@ export const adminNavItems = [
     label: "Tutor Requests",
     href: "/dashboard/admin/tutor-requests",
     icon: UserCheck,
+    key: 'tutor-requests'
   },
   {
     label: "Tutors",
     href: "/dashboard/admin/tutors",
     icon: FaChalkboardTeacher,
+    key: 'tutors'
   },
-{
+  {
     label: "Students",
     href: "/dashboard/admin/students",
     icon: GraduationCap,
+    key: 'students'
   },
   {
     label: "Tuition Classes",
     href: "/dashboard/admin/classes",
     icon: Presentation,
+    key: 'classes'
   },
   {
     label: "My Orders",
     href: "/dashboard/admin/orders",
     icon: ShoppingCart,
+    key: 'orders'
   },
   {
     label: "My Resources",
     href: "/dashboard/admin/resources",
     icon: Folder,
+    key: 'resources'
   }
 ];

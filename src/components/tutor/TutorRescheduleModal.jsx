@@ -36,7 +36,7 @@ export default function TutorRescheduleModal({ open, onClose, session }) {
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-5 w-full max-w-md space-y-4">
+      <div className="bg-white rounded-xl p-5 w-[90%] lg:w-full max-w-md space-y-4">
         <h2 className="text-lg font-semibold">Reschedule Session</h2>
 
         <input type="date" className="w-full border rounded-md px-3 py-2"

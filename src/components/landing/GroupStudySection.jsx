@@ -26,13 +26,13 @@ const GROUP_FEATURES = [
 export default function GroupStudySection() {
   return (
     <section className="py-4 bg-white">
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-6xl px-4 lg:px-6">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto">
-          <h2 className="text-4xl font-bold text-gray-900">
+          <h2 className="text-3xl font-bold text-gray-900">
             Mentored <span className="text-blue-600">Group Study</span> Rooms
           </h2>
-          <p className="mt-4 text-gray-600">
+          <p className="mt-4 text-xs lg:text-sm text-gray-600">
             Learn better together by joining guided study groups designed for
             collaboration, discussion, and focused learning.
           </p>
@@ -45,7 +45,7 @@ export default function GroupStudySection() {
               key={index}
               className="border-none shadow-sm hover:shadow-md transition"
             >
-              <CardContent className="p-6 text-center">
+              <CardContent className="p-4 lg:p-6 text-center">
                 <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-indigo-50">
                   <feature.icon className="h-6 w-6 text-indigo-600" />
                 </div>

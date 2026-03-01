@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const tabs = [
   { label: 'Availability', href: '/dashboard/tutor/schedule/availability' },
@@ -13,6 +14,7 @@ const tabs = [
 
 export default function ScheduleLayout({ children }) {
   const pathname = usePathname();
+  const router = useRouter()
 
   return (
     <div className="space-y-6">

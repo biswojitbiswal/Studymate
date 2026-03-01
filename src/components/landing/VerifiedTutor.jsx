@@ -37,20 +37,20 @@ const VERIFIED_POINTS = [
 export default function VerifiedTutorsSection() {
     return (
         <section className="py-10">
-            <div className="mx-auto max-w-6xl px-6">
+            <div className="mx-auto max-w-6xl px-4 lg:px-6">
                 {/* Header */}
                 <div className="text-center max-w-2xl mx-auto">
-                    <h2 className="text-4xl font-bold text-gray-900">
+                    <h2 className="text-3xl font-bold text-gray-900">
                         Learn from <span className="text-blue-600">Verified Tutors</span>
                     </h2>
-                    <p className="mt-4 text-gray-600">
+                    <p className="mt-4 text-xs lg:text-sm text-gray-600">
                         Every tutor on StudyNest goes through a verification process to
                         ensure quality, expertise, and trusted learning.
                     </p>
                 </div>
 
                 {/* Cards */}
-                <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="mt-12 grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                     {VERIFIED_POINTS.map((point, index) => (
                         <Card
                             key={index}

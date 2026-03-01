@@ -16,14 +16,15 @@ export function useClassSessions(params) {
 }
 
 
-export function useUpcomingSessions() {
+export function useUpcomingSessions(params) {
   return useQuery({
-    queryKey: ["upcoming-sessions"],
+    queryKey: ["upcoming-sessions", params?.classId ?? "all"],
     queryFn: async () => {
-      const res = await sessionService.getUpcoming();
+      const res = await sessionService.getUpcoming(params);
       return res.data;
     },
-    refetchInterval: 1000 * 60, // auto refresh every 1 min
+    keepPreviousData: true,
+    refetchInterval: 1000 * 60,
   });
 }
 

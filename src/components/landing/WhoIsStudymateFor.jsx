@@ -11,13 +11,13 @@ import {
 
 export default function WhoIsStudyMateFor() {
   return (
-    <section className="px-18">
-      <div className="mx-auto max-w-7xl px-6">
+    <section className="lg:px-18">
+      <div className="mx-auto max-w-7xl px-4 lg:px-6">
         <div className="flex flex-col items-center gap-8">
 
           {/* HEADER */}
           <div className="space-y-3 text-center animate-fade-up">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h2 className="text-3xl lg:text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               Who Is <span className="text-blue-600">StudyNest</span> For?
             </h2>
             <p className="max-w-xl text-sm leading-relaxed text-gray-600">
@@ -27,10 +27,10 @@ export default function WhoIsStudyMateFor() {
           </div>
 
           {/* SPLIT CARDS */}
-          <div className="grid w-full gap-8 lg:grid-cols-2">
+          <div className="grid w-full gap-2 lg:gap-8 lg:grid-cols-2">
 
             {/* STUDENTS */}
-            <div className="group relative rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+            <div className="group relative rounded-2xl border border-gray-200 bg-white p-4 lg:p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
               <div className="mb-6 flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white">
                   <GraduationCap className="h-5 w-5" />
@@ -57,7 +57,7 @@ export default function WhoIsStudyMateFor() {
             </div>
 
             {/* TUTORS */}
-            <div className="group relative rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+            <div className="group relative rounded-2xl border border-gray-200 bg-white p-4 lg:p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
               <div className="mb-6 flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white">
                   <Sparkles className="h-5 w-5" />

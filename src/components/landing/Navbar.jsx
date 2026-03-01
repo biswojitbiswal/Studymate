@@ -6,10 +6,13 @@ import NavAuthActions from "../auth/NavAuthActions";
 import Image from "next/image";
 import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { usePathname } from "next/navigation";
 
 
 export default function FloatingNavbar() {
   const [scrolled, setScrolled] = useState(false);
+
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -54,15 +57,23 @@ export default function FloatingNavbar() {
         {/* Center Navigation */}
         <div className="flex items-center gap-6 text-gray-600">
           {["Classes", "Groups", "Tutors", "Resources", "About", "Contact"].map(
-            (item) => (
-              <Link
-                key={item}
-                href={`/${item.toLowerCase()}`}
-                className="hover:text-blue-600 transition"
-              >
-                {item}
-              </Link>
-            )
+            (item) => {
+              const href = `/${item.toLowerCase()}`;
+              const isActive = pathname === href;
+
+              return (
+                <Link
+                  key={item}
+                  href={href}
+                  className={`transition ${isActive
+                    ? "text-blue-600 font-semibold"
+                    : "text-gray-600 hover:text-blue-600"
+                    }`}
+                >
+                  {item}
+                </Link>
+              );
+            }
           )}
         </div>
 
@@ -73,6 +84,7 @@ export default function FloatingNavbar() {
 
 
   function MobileNav() {
+    const [open, setOpen] = useState(false);
     return (
       <div className="flex items-center justify-between
       bg-white/90 backdrop-blur-xl
@@ -86,7 +98,7 @@ export default function FloatingNavbar() {
         <div className="flex items-center gap-3">
           <NavAuthActions />
 
-          <Sheet>
+          <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <button className="p-2 rounded-lg hover:bg-gray-100">
                 <Menu className="h-6 w-6" />
@@ -100,7 +112,7 @@ export default function FloatingNavbar() {
                   <Image src="/Logo.png" alt="StudyNest" width={140} height={100} />
                 </Link>
               </SheetTitle>
-              <MobileNavLinks />
+              <MobileNavLinks setOpen={setOpen} pathname={pathname} />
             </SheetContent>
           </Sheet>
         </div>
@@ -109,7 +121,7 @@ export default function FloatingNavbar() {
   }
 
 
-  function MobileNavLinks() {
+  function MobileNavLinks({ setOpen, pathname }) {
     return (
       <nav className="flex flex-col gap-4 mt-8 text-lg">
         {[
@@ -119,15 +131,24 @@ export default function FloatingNavbar() {
           "Resources",
           "About",
           "Contact",
-        ].map((item) => (
-          <Link
-            key={item}
-            href={`/${item.toLowerCase()}`}
-            className="hover:text-blue-600 transition"
-          >
-            {item}
-          </Link>
-        ))}
+        ].map((item) => {
+          const href = `/${item.toLowerCase()}`;
+          const isActive = pathname === href;
+
+          return (
+            <Link
+              key={item}
+              href={href}
+              onClick={() => setOpen(false)}
+              className={`transition ${isActive
+                  ? "text-blue-600 font-semibold"
+                  : "text-gray-700 hover:text-blue-600"
+                }`}
+            >
+              {item}
+            </Link>
+          );
+        })}
       </nav>
     );
   }

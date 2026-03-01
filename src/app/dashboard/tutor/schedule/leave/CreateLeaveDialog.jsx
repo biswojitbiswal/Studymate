@@ -32,7 +32,7 @@ export default function CreateLeaveDialog({ open, onClose, onSubmit, isPending }
                 sm:translate-x-[-50%] sm:translate-y-[-50%]
 
                 max-h-[90vh] overflow-y-auto
-                sm:max-w-sm sm:max-h-fit">
+                sm:max-w-sm sm:max-h-fit pb-18">
                 <DialogHeader>
                     <DialogTitle>Add Leave</DialogTitle>
                 </DialogHeader>

@@ -9,10 +9,15 @@ import {
     Layers,
     EyeOff,
     X,
+    MemoryStick,
 } from "lucide-react";
 import { useEnrolledClassContext } from "../EnrolledClassContext";
 import Image from "next/image";
 import { useState } from "react";
+import Link from "next/link";
+import { useUpcomingSessions } from "@/hooks/public/useSession";
+import { FileText, Video, Link2, Image as ImageIcon } from "lucide-react";
+import {SessionCardSkeleton} from '@/components/skeleton/student/StudentClassOverviewSkeleton'
 
 
 const DAY_LABELS = {
@@ -26,57 +31,245 @@ const DAY_LABELS = {
 };
 
 
+function formatTimeRange(startTime, durationMin) {
+    if (!startTime || !durationMin) return null;
+
+    const [h, m] = startTime.split(":").map(Number);
+
+    const start = new Date();
+    start.setHours(h, m, 0, 0);
+
+    const end = new Date(start.getTime() + durationMin * 60 * 1000);
+
+    const format = (date) =>
+        date.toLocaleTimeString("en-IN", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+        });
+
+    return `${format(start)} – ${format(end)}`;
+}
+
+
+function formatDate(dateString) {
+    if (!dateString) return "—";
+
+    const date = new Date(dateString);
+
+    return date.toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+    });
+}
+
+
+export const resources = [
+    {
+        id: "res_101",
+        title: "Algebra Formulas Cheat Sheet",
+        description: "All important algebra identities and shortcuts for quick revision before exams.",
+        fileType: "PDF",
+        fileUrl: "/dummy/algebra.pdf",
+        klassTitle: "Class 10 Mathematics",
+        createdAt: "2026-02-25T10:30:00Z",
+        size: "1.2 MB"
+    },
+    {
+        id: "res_102",
+        title: "Newton's Laws Explained",
+        description: "Conceptual explanation of Newton’s 3 laws of motion with real life examples.",
+        fileType: "VIDEO",
+        fileUrl: "https://youtube.com/watch?v=example",
+        klassTitle: "Physics - Mechanics",
+        createdAt: "2026-02-26T14:15:00Z",
+        size: "15 min"
+    },
+    {
+        id: "res_103",
+        title: "Periodic Table Chart",
+        description: "High resolution periodic table for memorization and daily practice.",
+        fileType: "IMAGE",
+        fileUrl: "/dummy/periodic-table.png",
+        klassTitle: "Chemistry Basics",
+        createdAt: "2026-02-27T09:00:00Z",
+        size: "800 KB"
+    },
+    {
+        id: "res_104",
+        title: "Essay Writing Format",
+        description: "Standard format for writing essays in English examinations.",
+        fileType: "DOC",
+        fileUrl: "/dummy/essay-format.docx",
+        klassTitle: "English Grammar",
+        createdAt: "2026-02-27T18:45:00Z",
+        size: "350 KB"
+    },
+    {
+        id: "res_105",
+        title: "Trigonometry Notes",
+        description: "Complete trigonometry notes including identities and solved examples.",
+        fileType: "PDF",
+        fileUrl: "/dummy/trigonometry.pdf",
+        klassTitle: "Class 11 Mathematics",
+        createdAt: "2026-02-28T11:20:00Z",
+        size: "2.4 MB"
+    }
+];
+
+
+export const assignments = [
+    {
+        id: "ass_201",
+        title: "Quadratic Equations Worksheet",
+        description: "Solve all 20 questions using factorization and quadratic formula.",
+        dueDate: "2026-03-03T23:59:00Z",
+        maxMarks: 20,
+        status: "NOT_SUBMITTED",
+        klassTitle: "Class 10 Mathematics",
+        submittedAt: null
+    },
+    {
+        id: "ass_202",
+        title: "Motion Numericals",
+        description: "Numerical problems based on velocity, acceleration and displacement.",
+        dueDate: "2026-03-02T23:59:00Z",
+        maxMarks: 25,
+        status: "SUBMITTED",
+        klassTitle: "Physics - Mechanics",
+        submittedAt: "2026-02-28T16:20:00Z"
+    },
+    {
+        id: "ass_203",
+        title: "Chemical Reactions Balancing",
+        description: "Balance the following chemical equations and write reaction types.",
+        dueDate: "2026-02-28T23:59:00Z",
+        maxMarks: 15,
+        status: "LATE",
+        klassTitle: "Chemistry Basics",
+        submittedAt: "2026-03-01T08:00:00Z"
+    },
+    {
+        id: "ass_204",
+        title: "Letter Writing",
+        description: "Write a formal letter to the principal requesting leave.",
+        dueDate: "2026-03-05T23:59:00Z",
+        maxMarks: 10,
+        status: "NOT_SUBMITTED",
+        klassTitle: "English Grammar",
+        submittedAt: null
+    },
+    {
+        id: "ass_205",
+        title: "Trigonometry Problems",
+        description: "Solve the identity based trigonometry questions.",
+        dueDate: "2026-02-27T23:59:00Z",
+        maxMarks: 20,
+        status: "GRADED",
+        klassTitle: "Class 11 Mathematics",
+        submittedAt: "2026-02-27T20:10:00Z",
+        marksObtained: 18
+    }
+];
+
 
 export default function ClassOverviewPage() {
     const [preview, setPreview] = useState(null);
     const { klass } = useEnrolledClassContext();
 
-    const format2Digit = (num) => {
-        return String(num ?? 0).padStart(2, "0");
-    };
+    const { data, isLoading, isError } = useUpcomingSessions({ classId: klass?.id });
+    // console.log(data?.data);
 
-
-    function formatTimeRange(startTime, durationMin) {
-        if (!startTime || !durationMin) return null;
-
-        const [h, m] = startTime.split(":").map(Number);
-
-        const start = new Date();
-        start.setHours(h, m, 0, 0);
-
-        const end = new Date(start.getTime() + durationMin * 60 * 1000);
-
-        const format = (date) =>
-            date.toLocaleTimeString("en-IN", {
-                hour: "numeric",
-                minute: "2-digit",
-                hour12: true,
-            });
-
-        return `${format(start)} – ${format(end)}`;
-    }
-
-
-    function formatDate(dateString) {
-        if (!dateString) return "—";
-
-        const date = new Date(dateString);
-
-        return date.toLocaleDateString("en-IN", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-        });
-    }
 
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-2">
+            {/* Upcoming Classes, Resources, Assignment */}
+            {isLoading ? <div className="bg-white border rounded-md shadow-sm">
+                <div className="px-3 py-2 bg-gray-100 border-b">
+                    <div className="h-4 w-40 bg-gray-200 rounded" />
+                    <div className="h-4 w-20 bg-gray-200 rounded" />
+                </div>
+
+                <div className="p-2 space-y-2">
+                    <SessionCardSkeleton />
+                    <SessionCardSkeleton />
+                    <SessionCardSkeleton />
+                </div>
+            </div>
+                : <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
+
+                    {/* Upcoming Sessions */}
+                    <div className="bg-white border border-gray-200 rounded-md shadow-sm">
+                        <div className="flex items-center justify-between px-3 py-2 bg-gray-100 border-b border-gray-100">
+                            <h2 className="text-md font-semibold text-gray-900">
+                                Upcoming Sessions
+                            </h2>
+                            <Link href="session" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                                View All →
+                            </Link>
+                        </div>
+
+                        <div className="flex flex-col item-center p-2 text-sm text-gray-500 gap-1">
+
+                            {data?.data?.length > 0 ? (data?.data?.slice(0, 3)?.map((session) => (
+                                <SessionCard key={session.id} session={session} />
+                            ))) : (<p>No upcoming session found</p>)
+                            }
+                        </div>
+                    </div>
+
+                    {/* Recent Resources */}
+                    <div href="/resources" className="bg-white border border-gray-200 rounded-md shadow-sm">
+                        <div className="flex items-center justify-between px-3 py-2 border-b bg-gray-100 ">
+                            <h2 className="text-md font-semibold text-gray-900">
+                                Recent Resources
+                            </h2>
+                            <button className="text-sm text-blue-600 hover:text-blue-700 font-medium hover:cursor-pointer">
+                                View All →
+                            </button>
+                        </div>
+
+                        <div className="flex flex-col item-center p-2 text-sm text-gray-500 gap-1">
+                            {resources?.length > 0 ? (
+                                resources.slice(0, 3).map((resource) => (
+                                    <ResourceCard key={resource.id} resource={resource} />
+                                ))
+                            ) : (
+                                <p>No recent resources found</p>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* New Assignments */}
+                    <div className="bg-white border border-gray-200 rounded-md shadow-sm">
+                        <div className="flex items-center justify-between px-3 py-2 border-b bg-gray-100">
+                            <h2 className="text-md font-semibold text-gray-900">
+                                New Assignments
+                            </h2>
+                            <Link href="/assignments" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                                View All →
+                            </Link>
+                        </div>
+
+                        <div className="flex flex-col item-center p-2 text-sm text-gray-500 gap-1">
+                            {assignments?.length > 0 ? (
+                                assignments.slice(0, 3).map((assignment) => (
+                                    <AssignmentCard key={assignment.id} assignment={assignment} />
+                                ))
+                            ) : (
+                                <p>No new assignments found</p>
+                            )}
+                        </div>
+                    </div>
+
+            </div>}
 
             {/* Description + Preview */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
                 {/* Schedule & Joining Window */}
-                <div className="lg:col-span-2 bg-white border rounded-xl p-5">
+                <div className="lg:col-span-2 bg-white border rounded-md p-5">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4">
                         Schedule & Availability
                     </h2>
@@ -105,6 +298,10 @@ export default function ClassOverviewPage() {
                                 <span className="text-blue-600">⏳</span>
                                 Duration: {klass?.durationMin && `${klass?.durationMin} min`}
                             </div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-blue-600"><MemoryStick size={20} /></span>
+                                Capacity: {klass?.capacity && `${klass?.capacity} students`}
+                            </div>
                         </div>
 
                         {/* Joining Window */}
@@ -132,7 +329,7 @@ export default function ClassOverviewPage() {
                 </div>
 
                 {/* Class Preview */}
-                <div className="bg-white border rounded-xl p-5">
+                <div className="bg-white border rounded-md p-5">
                     {/* <h2 className="text-lg font-semibold text-gray-900 mb-4">
                         Class Preview
                     </h2> */}
@@ -239,7 +436,7 @@ export default function ClassOverviewPage() {
             </div>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <StatCard
                     icon={<Users size={18} />}
                     label="Enrolled Students"
@@ -260,10 +457,10 @@ export default function ClassOverviewPage() {
                     label="Visibility"
                     value={klass?.visibility}
                 />
-            </div>
+            </div> */}
 
             {/* Description */}
-            <div className="bg-white border rounded-xl p-5">
+            <div className="bg-white border rounded-md p-5">
                 <h2 className="text-lg font-semibold text-gray-900 mb-2">
                     Class Description
                 </h2>
@@ -272,11 +469,8 @@ export default function ClassOverviewPage() {
                 </p>
             </div>
 
-
-
-
             {/* Syllabus */}
-            <div className="bg-white border rounded-xl p-5">
+            <div className="bg-white border rounded-md p-5">
                 <h2 className="text-lg font-semibold text-gray-900 mb-3">
                     Syllabus
                 </h2>
@@ -293,20 +487,216 @@ export default function ClassOverviewPage() {
     );
 }
 
-/* ---------- Reusable Stat Card ---------- */
 
-function StatCard({ icon, label, value }) {
+function SessionCard({ session }) {
     return (
-        <div className="bg-white border rounded-xl p-4 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-md bg-blue-100 text-blue-600 flex items-center justify-center">
-                {icon}
+        <div className="bg-white border rounded-md px-2 py-2  flex items-center gap-2 lg:gap-2">
+
+            {/* Date Box */}
+            <div className="w-14 shrink-0 rounded-md bg-blue-50 text-blue-600 text-center py-1">
+                <div className="text-lg font-bold leading-tight">
+                    {session?.dateLabel}
+                </div>
+                <div className="text-xs uppercase font-medium">
+                    {session?.monthLabel}
+                </div>
+
             </div>
-            <div>
-                <p className="text-xs text-gray-500">{label}</p>
-                <p className="text-sm font-semibold text-blue-600">
-                    {value}
+
+            {/* Main Info */}
+            <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                    <h3 className="font-medium text-gray-900 truncate">
+                        {session?.klass?.title}
+                    </h3>
+
+                    {/* Session Type */}
+                    <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-blue-600 font-medium">
+                        {session?.sessionType}
+                    </span>
+
+                    <span className="text-sm px-2 rounded bg-gray-100 text-blue-600 font-medium">
+                        {formatTimeRange(session?.startTime) || formatTimeRange(session?.klass?.startTime)}
+                    </span>
+                </div>
+
+                <div className="mt-1 flex items-center gap-2">
+                    <span className="text-xs px-2 py-0.5 rounded-sm bg-blue-100 text-blue-700 font-medium">
+                        {session?.dayLabel}
+                    </span>
+                    <span>
+                        ⏱ {session?.klass?.durationMin || session?.durationMin} min
+                    </span>
+                    <span
+                        className={`text-[.5rem] font-small px-1 py-1 rounded-sm
+                    ${session?.status === "SCHEDULED"
+                                ? "bg-green-100 text-green-700"
+                                : session?.status === "COMPLETED"
+                                    ? "bg-blue-100 text-blue-700"
+                                    : session?.status?.includes("CANCELLED")
+                                        ? "bg-red-100 text-red-700"
+                                        : "bg-yellow-100 text-yellow-700"
+                            }`}
+                    >
+                        {session?.status?.replaceAll("_", " ")}
+                    </span>
+                </div>
+            </div>
+
+            {/* Right Side */}
+            {/* <div className="flex items-center gap-3">
+                <span
+                    className={`text-xs font-medium px-2 py-1 rounded-sm
+                    ${session?.status === "SCHEDULED"
+                            ? "bg-green-100 text-green-700"
+                            : session?.status === "COMPLETED"
+                                ? "bg-blue-100 text-blue-700"
+                                : session?.status?.includes("CANCELLED")
+                                    ? "bg-red-100 text-red-700"
+                                    : "bg-yellow-100 text-yellow-700"
+                        }`}
+                >
+                    {session?.status?.replaceAll("_", " ")}
+                </span> */}
+
+            {session?.status === "SCHEDULED" && session?.meetingLink ? (
+                <button className="text-sm bg-blue-600 px-3 py-1 rounded-md cursor-pointer text-white hover:bg-blue-700  hover:cursor-pointer">
+                    {/* <Video /> */}
+                    Join
+                </button>
+            ) : (
+                session?.status === "PENDING_TUTOR_APPROVAL" && (
+                    <span className="text-xs text-orange-600 font-medium hidden">
+                        Student requested session
+                    </span>
+                )
+            )
+            }
+
+            {/* </div> */}
+
+        </div>
+    );
+}
+
+
+function getResourceIcon(type) {
+    switch (type) {
+        case "PDF":
+        case "DOC":
+            return <FileText size={18} />;
+        case "VIDEO":
+            return <Video size={18} />;
+        case "IMAGE":
+            return <ImageIcon size={18} />;
+        case "LINK":
+            return <Link2 size={18} />;
+        default:
+            return <FileText size={18} />;
+    }
+}
+
+function ResourceCard({ resource }) {
+    return (
+        <div className="bg-white border rounded-md px-2 py-2.5 flex items-center gap-2">
+
+            {/* Left Icon Box (replaces session date box) */}
+            <div className="w-10 h-10 shrink-0 rounded-md bg-blue-100 text-blue-600 flex items-center justify-center">
+                {getResourceIcon(resource?.fileType)}
+            </div>
+
+            {/* Main Info */}
+            <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                    <h3 className="font-medium text-gray-900 truncate">
+                        {resource?.title}
+                    </h3>
+
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-gray-100 text-blue-600 font-medium">
+                        {resource?.fileType}
+                    </span>
+                </div>
+
+                {/* Description */}
+                <p className="text-xs text-gray-500 truncate mt-0.5">
+                    {resource?.description || "No description provided"}
                 </p>
+
+                {/* Meta Info */}
+                <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
+                    {/* <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded">
+                        {resource?.klassTitle}
+                    </span> */}
+
+                    {/* <span>
+                        📅 {new Date(resource?.createdAt).toLocaleDateString()}
+                    </span> */}
+                </div>
             </div>
+
+            {/* Right Action */}
+            <Link
+                href={`/resources/${resource?.id}`}
+                className="text-sm bg-blue-600 px-2 py-1 rounded-md text-white hover:bg-blue-700"
+            >
+                View
+                {/* <Eye /> */}
+            </Link>
+
+        </div>
+    );
+}
+
+
+function AssignmentCard({ assignment }) {
+
+    const dueDate = new Date(assignment?.dueDate);
+    const today = new Date();
+
+    const isOverdue = today > dueDate && assignment?.status === "NOT_SUBMITTED";
+
+    return (
+        <div className="bg-white border rounded-md px-2 py-2 flex items-center gap-2">
+
+            {/* Due Date Box */}
+            <div className={`w-12 shrink-0 rounded-md text-center py-1 
+                ${isOverdue ? "bg-red-50 text-red-600" : "bg-yellow-50 text-yellow-700"}`}>
+
+                <div className="text-lg font-bold leading-tight">
+                    0{dueDate.getDate()}
+                </div>
+                <div className="text-xs uppercase font-medium">
+                    {dueDate.toLocaleString('default', { month: 'short' })}
+                </div>
+            </div>
+
+            {/* Main Info */}
+            <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 min-w-0">
+                    {/* Title (flexible element) */}
+                    <h3 className="font-medium text-gray-900 truncate flex-1 min-w-0">
+                        {assignment?.title}
+                    </h3>
+
+                    {/* Marks badge (fixed element) */}
+                    <span className="text-xs px-1 py-0.5 rounded bg-blue-100 text-blue-600 shrink-0">
+                        {assignment?.maxMarks} Marks
+                    </span>
+                </div>
+
+                <p className="text-xs text-gray-500 truncate mt-0.5">
+                    {assignment?.description}
+                </p>
+
+            </div>
+
+            {/* Action */}
+            <Link
+                href={`/assignments/${assignment?.id}`}
+                className="text-sm bg-blue-600 px-2 py-1 rounded-md text-white hover:bg-blue-700"
+            >
+                Open
+            </Link>
         </div>
     );
 }
