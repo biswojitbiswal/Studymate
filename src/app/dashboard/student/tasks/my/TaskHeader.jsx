@@ -22,7 +22,7 @@ export function TaskHeader({ taskType, onAddTask }) {
       {isPrivate && (
         <Button
           onClick={onAddTask}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-md text-sm font-medium transition"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-md text-sm font-medium transition hover:cursor-pointer"
         >
           <span className="font-bold">+</span>
           Add Task

@@ -14,7 +14,7 @@ export function TaskFilters({ search, onSearchChange, status, onStatusChange }) 
         value={search}
         onChange={(e) => onSearchChange(e.target.value)}
         placeholder="Search tasks..."
-        className="border rounded-md px-3 py-2 text-sm flex-1 focus:outline-none focus:ring-2 focus:ring-blue-600"
+        className="border rounded-md px-3 py-2 text-sm flex-1 focus:outline-none focus:ring-2 focus:ring-blue-600 hover:cursor-pointer"
       />
 
       {/* Status filters */}
@@ -23,7 +23,7 @@ export function TaskFilters({ search, onSearchChange, status, onStatusChange }) 
           <button
             key={s.value}
             onClick={() => onStatusChange(s.value)}
-            className={`px-3 py-1 rounded-md text-sm
+            className={`px-3 py-1 rounded-md text-sm hover:cursor-pointer
               ${status === s.value
                 ? "bg-blue-600 text-white"
                 : "border text-slate-600 hover:bg-blue-100"}`}

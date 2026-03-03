@@ -13,7 +13,6 @@ import { Badge } from "@/components/ui/badge";
 import { TableSkeleton } from "@/components/common/TableSkeleton";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import DeleteClassDialog from "./DeleteDialog";
 import { useState } from "react";
 import { Switch } from "@/components/ui/switch";
 
@@ -178,12 +177,6 @@ export default function ClassTable({ data, isLoading, isError, page, totalPages,
           </div>
         </div>
       </div>
-
-      <DeleteClassDialog
-        open={open}
-        setOpen={setOpen}
-        classId={selectedClassId}
-      />
     </>
   );
 }

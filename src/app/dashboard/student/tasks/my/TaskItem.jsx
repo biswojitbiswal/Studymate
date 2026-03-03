@@ -6,7 +6,7 @@ export function TaskItem({ task, onEdit, onDelete, onComplete, onView }) {
   const isPending = task.status === "COMPLETED";
   return (
     <div
-      className={`flex items-center justify-between rounded-lg px-4 py-3 border transition
+      className={`flex items-center justify-between rounded-lg px-2 lg:px-4 py-3 border transition gap-2
     ${isCompleted
           ? "bg-slate-50 border-slate-200 opacity-80"
           : "bg-white border-slate-100 shadow-sm"
@@ -14,7 +14,7 @@ export function TaskItem({ task, onEdit, onDelete, onComplete, onView }) {
     >
 
       {/* LEFT: Checkbox + Title */}
-      <div className="flex items-center gap-3 min-w-0">
+      <div className="flex items-center gap-1.5 lg:gap-3 min-w-0">
         <Checkbox
           checked={isCompleted}
           disabled={isCompleted || isPending}
@@ -49,11 +49,11 @@ export function TaskItem({ task, onEdit, onDelete, onComplete, onView }) {
       </div>
 
       {/* RIGHT: Status + Actions */}
-      <div className="flex items-center gap-5">
+      <div className="flex items-center gap-2 lg:gap-5">
 
         {/* Status Badge (fixed width) */}
         <span
-          className={`text-xs font-semibold px-3 py-1 rounded-sm text-center w-24
+          className={`text-xs font-semibold px-3 py-1 rounded-sm text-center
             ${task.status === "ONGOING"
               ? "bg-blue-100 text-blue-700"
               : task.status === "COMPLETED"
@@ -73,7 +73,7 @@ export function TaskItem({ task, onEdit, onDelete, onComplete, onView }) {
           <Pencil size={16} />
         </button>
 
-        <button onClick={() => onDelete(task.id)} className="p-1 rounded-sm text-slate-500 hover:bg-red-200 hover:text-red-600 cursor-pointer transition">
+        <button onClick={() => onDelete(task.id)} className="p-1 rounded-sm bg-red-200 text-red-600 cursor-pointer transition">
           <Trash2 size={16} />
         </button>
 
