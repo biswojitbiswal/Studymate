@@ -142,7 +142,7 @@ export default function SessionsPage() {
             </div>
 
             {/* Pagination */}
-            {!isLoading && totalPages > 1 && (
+            {!isLoading && totalPages > 0 && (
                 <div className="flex items-center justify-between pt-3">
 
                     <button

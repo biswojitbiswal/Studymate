@@ -13,6 +13,7 @@ import { DeleteTaskDialog } from "./DeleteTaskDialog";
 import { toast } from "sonner";
 import { TaskDetailsModal } from "./TaskDetails";
 import { TaskList } from "./TaskList";
+import { useDebounce } from "@/lib/utils";
 
 export default function TasksPage() {
   const [taskType, setTaskType] = useState("PRIVATE"); // PRIVATE | ASSIGNED
@@ -38,10 +39,12 @@ export default function TasksPage() {
     return () => clearTimeout(timer);
   }, [searchInput]);
 
+   const debouncedSearch = useDebounce(search, 400);
+
   const { data, isLoading, isError } = useTasks({
     page,
     limit: 10,
-    search,
+    search: debouncedSearch,
     status,
     range,
     date,
@@ -89,7 +92,6 @@ export default function TasksPage() {
 
 
   const handleComplete = (taskId, status) => {
-    console.log("Debugging");
 
     if (status === "COMPLETED") return;
 

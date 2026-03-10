@@ -182,5 +182,23 @@ export const API = {
     },
 
 
+    RESOURCES: {
+      CREATE: `/resources`,
+      UPDATE: `/resources`,
+      DELETE: `/resources`,
+      GET: `/resources/class`,
+      GET_FOR_STUDENT: `/resources/student`
+    },
+
+
+    ASSIGNMENTS: {
+      CREATE: `/assignments`,
+      UPDATE: `/assignments`,
+      DELETE: `/assignments`,
+      UPDATE_STATUS: `/assignments`,
+      GET_BY_ID: `/assignments`,
+      GET: `/assignments/class`,
+      GET_FOR_STUDENT: `/assignments/assigned`,
+    }
   }
 };

@@ -101,7 +101,7 @@ export default function EditAvailabilityDialog({ open, onClose, data }) {
     sm:translate-x-[-50%] sm:translate-y-[-50%]
 
     max-h-[90vh] overflow-y-auto
-    sm:max-w-sm sm:max-h-fit">
+    sm:max-w-sm sm:max-h-fit pb-18">
                 <DialogHeader>
                     <DialogTitle>Edit Availability</DialogTitle>
                 </DialogHeader>

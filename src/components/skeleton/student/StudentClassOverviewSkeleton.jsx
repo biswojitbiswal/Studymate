@@ -24,7 +24,6 @@ export default function StudentClassOverviewSkeleton() {
                 <div className="h-7 w-24 bg-gray-200 rounded" />
                 <div className="h-7 w-24 bg-gray-200 rounded" />
                 <div className="h-7 w-24 bg-gray-200 rounded" />
-                <div className="h-7 w-24 bg-gray-200 rounded" />
             </div>
 
             <div className="space-y-4 animate-pulse">

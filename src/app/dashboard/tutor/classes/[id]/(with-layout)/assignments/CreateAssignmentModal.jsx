@@ -1,0 +1,100 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { useClassContext } from "../ClassContext";
+
+export function CreateAssignmentModal({ open, onClose, onSubmit }) {
+  const {klass} = useClassContext()
+
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [dueDate, setDueDate] = useState("");
+
+  // 🔥 Reset form when modal closes
+  useEffect(() => {
+    if (!open) {
+      setTitle("");
+      setDescription("");
+      setDueDate("");
+    }
+  }, [open]);
+
+  const handleSubmit = () => {
+    if (!title.trim()) {
+      toast.error("Task title is required");
+      return;
+    }
+
+    onSubmit({
+      classId: klass?.id,
+      title,
+      description,
+      dueDate: dueDate ? new Date(dueDate) : null,
+    });
+  };
+
+
+
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="w-full max-w-none p-4 sm:p-6
+    rounded-t-2xl sm:rounded-lg top-auto left-0 right-0 bottom-0 translate-x-0 translate-y-0 sm:top-[50%] sm:left-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] max-h-[90vh] overflow-y-auto sm:max-w-sm sm:max-h-fit pb-18">
+        <DialogHeader>
+          <DialogTitle>Add Task</DialogTitle>
+          <DialogDescription>
+            Create a new personal task and optionally set a due date.
+          </DialogDescription>
+        </DialogHeader>
+
+        {/* Title */}
+        <input
+          type="text"
+          placeholder="Task title"
+          className="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+
+        {/* Description */}
+        <textarea
+          placeholder="Description (optional)"
+          rows={3}
+          className="w-full border rounded-md px-3 py-2 text-sm mt-3 focus:ring-2 focus:ring-blue-600 focus:outline-none"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+
+        {/* Due Date */}
+        <input
+          type="date"
+          className="w-full border rounded-md px-3 py-2 text-sm mt-3 focus:ring-2 focus:ring-blue-600 focus:outline-none"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+        />
+
+        {/* Actions */}
+        <div className="flex justify-end gap-3 mt-6">
+          <Button variant="ghost" className="hover:cursor-pointer" onClick={onClose}>
+            Cancel
+          </Button>
+
+          <Button
+            onClick={handleSubmit}
+            className="bg-blue-600 hover:bg-blue-700 hover:cursor-pointer"
+          >
+            Create
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}

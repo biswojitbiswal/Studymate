@@ -17,7 +17,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { useUpcomingSessions } from "@/hooks/public/useSession";
 import { FileText, Video, Link2, Image as ImageIcon } from "lucide-react";
-import {SessionCardSkeleton} from '@/components/skeleton/student/StudentClassOverviewSkeleton'
+import { AssignmentCardSkeleton, ResourceCardSkeleton, SessionCardSkeleton } from '@/components/skeleton/student/StudentClassOverviewSkeleton'
+import { useStudentResources } from "@/hooks/tutor/useResources";
+import { useStudentAssignments } from "@/hooks/tutor/useAssignments";
+import { Button } from "@/components/ui/button";
+import AssignmentDetailsModal from "../assignments/AssignmentDetails";
 
 
 const DAY_LABELS = {
@@ -176,95 +180,125 @@ export const assignments = [
 
 export default function ClassOverviewPage() {
     const [preview, setPreview] = useState(null);
+
     const { klass } = useEnrolledClassContext();
 
-    const { data, isLoading, isError } = useUpcomingSessions({ classId: klass?.id });
-    // console.log(data?.data);
+    const {
+        data: upcomingSessionsData,
+        isLoading: sessionsLoading,
+    } = useUpcomingSessions({ classId: klass?.id });
 
+    const {
+        data: resourcesData,
+        isLoading: resourcesLoading,
+    } = useStudentResources({
+        classId: klass?.id
+    });
+
+
+    const {
+        data: assignmentsData,
+        isLoading: assignmentsLoading,
+    } = useStudentAssignments({
+        page: 1,
+        limit: 3,
+        classId: klass?.id
+    });
+
+
+    const sessions = upcomingSessionsData?.data ?? [];
+    const resources = resourcesData?.data?.resources ?? [];
+    const assignments = assignmentsData?.data?.data?.tasks ?? [];
+
+    const handleView = (assignment) => {
+        setSelectedAssignment(assignment);
+        setOpenDetails(true);
+    };
 
 
     return (
         <div className="space-y-2">
             {/* Upcoming Classes, Resources, Assignment */}
-            {isLoading ? <div className="bg-white border rounded-md shadow-sm">
-                <div className="px-3 py-2 bg-gray-100 border-b">
-                    <div className="h-4 w-40 bg-gray-200 rounded" />
-                    <div className="h-4 w-20 bg-gray-200 rounded" />
-                </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
 
-                <div className="p-2 space-y-2">
-                    <SessionCardSkeleton />
-                    <SessionCardSkeleton />
-                    <SessionCardSkeleton />
-                </div>
-            </div>
-                : <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
+                {/* Upcoming Sessions */}
+                <div className="bg-white border border-gray-200 rounded-md shadow-sm">
+                    <div className="flex items-center justify-between px-3 py-2 bg-gray-100 border-b border-gray-100">
+                        <h2 className="text-md font-semibold text-gray-900">
+                            Upcoming Sessions
+                        </h2>
+                        <Link href="session" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                            View All →
+                        </Link>
+                    </div>
 
-                    {/* Upcoming Sessions */}
-                    <div className="bg-white border border-gray-200 rounded-md shadow-sm">
-                        <div className="flex items-center justify-between px-3 py-2 bg-gray-100 border-b border-gray-100">
-                            <h2 className="text-md font-semibold text-gray-900">
-                                Upcoming Sessions
-                            </h2>
-                            <Link href="session" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
-                                View All →
-                            </Link>
-                        </div>
+                    <div className="flex flex-col items-center justify-between gap-2 p-2 text-sm text-gray-500">
 
-                        <div className="flex flex-col item-center p-2 text-sm text-gray-500 gap-1">
-
-                            {data?.data?.length > 0 ? (data?.data?.slice(0, 3)?.map((session) => (
+                        {
+                            sessionsLoading ? <div className="p-2 space-y-2">
+                                <SessionCardSkeleton />
+                                <SessionCardSkeleton />
+                                <SessionCardSkeleton />
+                            </div> : sessions?.length > 0 ? (sessions?.slice(0, 3)?.map((session) => (
                                 <SessionCard key={session.id} session={session} />
                             ))) : (<p>No upcoming session found</p>)
-                            }
-                        </div>
+                        }
+                    </div>
+                </div>
+
+                {/* Recent Resources */}
+                <div className="bg-white border border-gray-200 rounded-md shadow-sm">
+                    <div className="flex items-center justify-between px-3 py-2 border-b bg-gray-100 ">
+                        <h2 className="text-md font-semibold text-gray-900">
+                            Recent Resources
+                        </h2>
+                        <button className="text-sm text-blue-600 hover:text-blue-700 font-medium hover:cursor-pointer">
+                            View All →
+                        </button>
                     </div>
 
-                    {/* Recent Resources */}
-                    <div href="/resources" className="bg-white border border-gray-200 rounded-md shadow-sm">
-                        <div className="flex items-center justify-between px-3 py-2 border-b bg-gray-100 ">
-                            <h2 className="text-md font-semibold text-gray-900">
-                                Recent Resources
-                            </h2>
-                            <button className="text-sm text-blue-600 hover:text-blue-700 font-medium hover:cursor-pointer">
-                                View All →
-                            </button>
-                        </div>
+                    <div className="flex flex-col item-center p-2 text-sm text-gray-500 gap-1">
+                        {resourcesLoading ? <div className="p-2 space-y-2">
+                            <ResourceCardSkeleton />
+                            <ResourceCardSkeleton />
+                            <ResourceCardSkeleton />
+                        </div> : resources?.length > 0 ? (
+                            resources.slice(0, 3).map((resource) => (
+                                <ResourceCard key={resource.id} resource={resource} />
+                            ))
+                        ) : (
+                            <p>No recent resources found</p>
+                        )}
+                    </div>
+                </div>
 
-                        <div className="flex flex-col item-center p-2 text-sm text-gray-500 gap-1">
-                            {resources?.length > 0 ? (
-                                resources.slice(0, 3).map((resource) => (
-                                    <ResourceCard key={resource.id} resource={resource} />
-                                ))
-                            ) : (
-                                <p>No recent resources found</p>
-                            )}
-                        </div>
+                {/* New Assignments */}
+                <div className="bg-white border border-gray-200 rounded-md shadow-sm">
+                    <div className="flex items-center justify-between px-3 py-2 border-b bg-gray-100">
+                        <h2 className="text-md font-semibold text-gray-900">
+                            New Assignments
+                        </h2>
+                        <Link href="/assignments" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                            View All →
+                        </Link>
                     </div>
 
-                    {/* New Assignments */}
-                    <div className="bg-white border border-gray-200 rounded-md shadow-sm">
-                        <div className="flex items-center justify-between px-3 py-2 border-b bg-gray-100">
-                            <h2 className="text-md font-semibold text-gray-900">
-                                New Assignments
-                            </h2>
-                            <Link href="/assignments" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
-                                View All →
-                            </Link>
-                        </div>
-
-                        <div className="flex flex-col item-center p-2 text-sm text-gray-500 gap-1">
-                            {assignments?.length > 0 ? (
-                                assignments.slice(0, 3).map((assignment) => (
-                                    <AssignmentCard key={assignment.id} assignment={assignment} />
-                                ))
-                            ) : (
-                                <p>No new assignments found</p>
-                            )}
-                        </div>
+                    <div className="flex flex-col item-center p-2 text-sm text-gray-500 gap-1">
+                        {assignmentsLoading ? <div className="p-2 space-y-2">
+                            <AssignmentCardSkeleton />
+                            <AssignmentCardSkeleton />
+                            <AssignmentCardSkeleton />
+                        </div> : assignments?.length > 0 ? (
+                            assignments.slice(0, 3).map((assignment) => (
+                                <AssignmentCard key={assignment.id} assignment={assignment} />
+                            ))
+                        ) : (
+                            <p>No new assignments found</p>
+                        )}
                     </div>
+                </div>
 
-            </div>}
+            </div>
 
             {/* Description + Preview */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
@@ -490,7 +524,7 @@ export default function ClassOverviewPage() {
 
 function SessionCard({ session }) {
     return (
-        <div className="bg-white border rounded-md px-2 py-2  flex items-center gap-2 lg:gap-2">
+        <div className="w-full bg-white border rounded-md px-2 py-2 flex items-center justify-between gap-2">
 
             {/* Date Box */}
             <div className="w-14 shrink-0 rounded-md bg-blue-50 text-blue-600 text-center py-1">
@@ -506,7 +540,7 @@ function SessionCard({ session }) {
             {/* Main Info */}
             <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                    <h3 className="font-medium text-gray-900 truncate">
+                    <h3 className="hidden md:block font-medium text-gray-900 truncate">
                         {session?.klass?.title}
                     </h3>
 
@@ -515,8 +549,18 @@ function SessionCard({ session }) {
                         {session?.sessionType}
                     </span>
 
-                    <span className="text-sm px-2 rounded bg-gray-100 text-blue-600 font-medium">
-                        {formatTimeRange(session?.startTime) || formatTimeRange(session?.klass?.startTime)}
+                    <span
+                        className={`md:hidden text-[.5rem] font-small px-1 py-1 rounded-sm
+                    ${session?.status === "SCHEDULED"
+                                ? "bg-green-100 text-green-700"
+                                : session?.status === "COMPLETED"
+                                    ? "bg-blue-100 text-blue-700"
+                                    : session?.status?.includes("CANCELLED")
+                                        ? "bg-red-100 text-red-700"
+                                        : "bg-yellow-100 text-yellow-700"
+                            }`}
+                    >
+                        {session?.status?.replaceAll("_", " ")}
                     </span>
                 </div>
 
@@ -528,7 +572,7 @@ function SessionCard({ session }) {
                         ⏱ {session?.klass?.durationMin || session?.durationMin} min
                     </span>
                     <span
-                        className={`text-[.5rem] font-small px-1 py-1 rounded-sm
+                        className={`hidden md:block text-[.5rem] font-small px-1 py-1 rounded-sm
                     ${session?.status === "SCHEDULED"
                                 ? "bg-green-100 text-green-700"
                                 : session?.status === "COMPLETED"
@@ -542,22 +586,6 @@ function SessionCard({ session }) {
                     </span>
                 </div>
             </div>
-
-            {/* Right Side */}
-            {/* <div className="flex items-center gap-3">
-                <span
-                    className={`text-xs font-medium px-2 py-1 rounded-sm
-                    ${session?.status === "SCHEDULED"
-                            ? "bg-green-100 text-green-700"
-                            : session?.status === "COMPLETED"
-                                ? "bg-blue-100 text-blue-700"
-                                : session?.status?.includes("CANCELLED")
-                                    ? "bg-red-100 text-red-700"
-                                    : "bg-yellow-100 text-yellow-700"
-                        }`}
-                >
-                    {session?.status?.replaceAll("_", " ")}
-                </span> */}
 
             {session?.status === "SCHEDULED" && session?.meetingLink ? (
                 <button className="text-sm bg-blue-600 px-3 py-1 rounded-md cursor-pointer text-white hover:bg-blue-700  hover:cursor-pointer">
@@ -573,7 +601,6 @@ function SessionCard({ session }) {
             )
             }
 
-            {/* </div> */}
 
         </div>
     );
@@ -621,22 +648,11 @@ function ResourceCard({ resource }) {
                 <p className="text-xs text-gray-500 truncate mt-0.5">
                     {resource?.description || "No description provided"}
                 </p>
-
-                {/* Meta Info */}
-                <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
-                    {/* <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded">
-                        {resource?.klassTitle}
-                    </span> */}
-
-                    {/* <span>
-                        📅 {new Date(resource?.createdAt).toLocaleDateString()}
-                    </span> */}
-                </div>
             </div>
 
             {/* Right Action */}
             <Link
-                href={`/resources/${resource?.id}`}
+                href={`/dashboard/student/resources/${resource?.seo_name}`}
                 className="text-sm bg-blue-600 px-2 py-1 rounded-md text-white hover:bg-blue-700"
             >
                 View
@@ -649,11 +665,18 @@ function ResourceCard({ resource }) {
 
 
 function AssignmentCard({ assignment }) {
+    const [openDetails, setOpenDetails] = useState(false);
+    const [selectedAssignment, setSelectedAssignment] = useState(null);
 
     const dueDate = new Date(assignment?.dueDate);
     const today = new Date();
 
     const isOverdue = today > dueDate && assignment?.status === "NOT_SUBMITTED";
+
+    const handleView = (assignment) => {
+        setSelectedAssignment(assignment);
+        setOpenDetails(true);
+    };
 
     return (
         <div className="bg-white border rounded-md px-2 py-2 flex items-center gap-2">
@@ -678,10 +701,12 @@ function AssignmentCard({ assignment }) {
                         {assignment?.title}
                     </h3>
 
-                    {/* Marks badge (fixed element) */}
-                    <span className="text-xs px-1 py-0.5 rounded bg-blue-100 text-blue-600 shrink-0">
-                        {assignment?.maxMarks} Marks
-                    </span>
+                    {/* {assignment.dueDate && (
+                        <div className="flex text-sm text-blue-600 px-2 bg-blue-100 rounded-sm">
+                            <span>{" "}{new Date(assignment.dueDate).toDateString()}
+                            </span>
+                        </div>
+                    )} */}
                 </div>
 
                 <p className="text-xs text-gray-500 truncate mt-0.5">
@@ -691,12 +716,18 @@ function AssignmentCard({ assignment }) {
             </div>
 
             {/* Action */}
-            <Link
-                href={`/assignments/${assignment?.id}`}
-                className="text-sm bg-blue-600 px-2 py-1 rounded-md text-white hover:bg-blue-700"
+            <button
+                onClick={() => handleView(assignment)}
+                className="text-sm bg-blue-600 px-2 py-1  rounded-md text-white hover:bg-blue-700 hover:cursor-pointer"
             >
-                Open
-            </Link>
+                View
+            </button>
+
+            {openDetails && <AssignmentDetailsModal
+                open={openDetails}
+                onClose={setOpenDetails}
+                assignment={selectedAssignment}
+            />}
         </div>
     );
 }

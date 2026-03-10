@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter, useSelectedLayoutSegments } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, BookOpenText, CheckCircle, Users } from "lucide-react";
 import { useClass } from "@/hooks/tutor/useClass";
@@ -12,12 +12,12 @@ import ClassLayoutSkeleton from "@/components/skeleton/tutor/ClassLayout";
 
 
 const tabs = [
-    { name: "Overview", href: "overview" },
-    { name: "Sessions", href: "session" },
-    { name: "Attendance", href: "attendance" },
-    { name: "Assignments", href: "assignments" },
-    { name: "Resources", href: "resources" },
-    { name: "Students", href: "students" },
+    { name: "Overview", href: "overview", key: "overview" },
+    { name: "Sessions", href: "session", key: "session" },
+    // { name: "Attendance", href: "attendance" },
+    { name: "Assignments", href: "assignments", key: "assignments" },
+    { name: "Resources", href: "resources", key: "resources" },
+    // { name: "Students", href: "students", key: "students" },
 ];
 
 const STATUS_BASE =
@@ -37,6 +37,9 @@ export default function ClassLayout({ children }) {
     const { id } = useParams();
     const pathname = usePathname();
     const router = useRouter()
+
+    const segments = useSelectedLayoutSegments();
+      const section = segments[0] ?? "dashboard";
 
     const { data, isLoading } = useClass(id);
     const klass = data?.data;
@@ -112,17 +115,18 @@ export default function ClassLayout({ children }) {
 
                 {/* Tabs */}
                 <div className="border-b overflow-hidden">
-                    <div className="flex gap-1 overflow-x-auto scrollbar-none -mb-px px-1">
+                    <div className="flex gap-7 lg:gap-8 overflow-x-auto scrollbar-none -mb-px px-1">
                         {tabs.map((tab) => {
                             const href = `/dashboard/tutor/classes/${id}/${tab.href}`;
-                            const isActive = pathname === href || (tab.href === "" && pathname.endsWith(id));
+                            // const isActive = pathname === href || (tab.href === "" && pathname.endsWith(id));
+                            const isActive = section === tab.key;
 
                             return (
                                 <Link
                                     key={tab.name}
                                     href={href}
                                     className={cn(
-                                        "whitespace-nowrap px-3 lg:px-6 py-2 text-sm font-semibold border-b-2 transition-colors flex-shrink-0",
+                                        "whitespace-nowrap py-2 text-sm font-semibold border-b-2 transition-colors flex-shrink-0",
                                         isActive
                                             ? "text-blue-600 border-blue-600"
                                             : "text-gray-600 border-transparent hover:text-blue-600"
