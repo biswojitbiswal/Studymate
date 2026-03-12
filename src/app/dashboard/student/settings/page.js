@@ -1,4 +1,4 @@
-import { ChevronRight, Icon } from "lucide-react";
+import { ChevronRight, Icon, Wallet } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import SettingItem from "./SettingItem";
 
@@ -13,6 +13,11 @@ export default function SettingsPage() {
         />
         <SettingItem
           title="Change Password"
+          action={<ChevronRight size={18} />}
+        />
+
+        <SettingItem
+          title="Billings & Purchased"
           action={<ChevronRight size={18} />}
         />
       </SettingSection>

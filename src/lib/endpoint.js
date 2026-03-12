@@ -37,6 +37,7 @@ export const API = {
     CREATE_DBOUT: `/sessions/group/dbout`,
     CREATE_EXTRA: `/sessions/group/extra`,
     GET_UPCOMING: `/sessions/upcoming`,
+    GET_MEETING_LINK: `/sessions`
   },
 
 
@@ -118,8 +119,6 @@ export const API = {
     GET_STUDENT_BY_ID: `/student`,
 
 
-
-
     TASK: {
       CREATE: `/task`,
       GET: `/task`,
@@ -132,6 +131,10 @@ export const API = {
 
     CLASSES: {
       GET_ALL_ENROLLED: `/class-enrollments`
+    },
+
+    ORDERS: {
+      GET_MY_ORDERS: `/order/my`
     }
   },
 
@@ -167,6 +170,7 @@ export const API = {
       DELETE: `/schedule/availibility`,
       UPDATE: `/schedule/availibility`,
       TOGGLE: `/schedule/availibility/toggle`,
+      GET_FREE_AVAILIBILITY: `/schedule/tutors/`
     },
 
     TIMEOFF: {

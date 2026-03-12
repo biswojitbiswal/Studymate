@@ -6,14 +6,19 @@ import { Button } from "@/components/ui/button";
 import { useCreateSession } from "@/hooks/public/useSession";
 import { toast } from "sonner";
 import { useEnrolledClassContext } from "@/app/dashboard/student/learning/[id]/(with-layout)/EnrolledClassContext";
+import { useFreeAvailability } from "@/hooks/tutor/useAvailability";
 
 export default function CreateSessionModal({ open, onClose, type }) {
-    const { klass } = useEnrolledClassContext();
-    const { mutate, isPending } = useCreateSession();
-
     const [date, setDate] = useState("");
     const [startTime, setStartTime] = useState("");
     const [durationMin, setDurationMin] = useState(60);
+
+    const { klass } = useEnrolledClassContext();
+    const tutorId = klass?.tutorId;
+
+    const { mutate, isPending } = useCreateSession();
+    const { data: freeSlots, isLoading } = useFreeAvailability(tutorId, date);
+
 
     if (!open) return null;
 
@@ -73,6 +78,37 @@ export default function CreateSessionModal({ open, onClose, type }) {
                         className="w-full border rounded-md px-3 py-2 text-sm"
                     />
                 </div>
+
+                {date && (
+                    <div className="space-y-1">
+                        <label className="text-sm text-gray-600">Available Slots</label>
+
+                        {isLoading ? (
+                            <div className="flex flex-wrap gap-2">
+                                {Array.from({ length: 4 }).map((_, i) => (
+                                    <div
+                                        key={i}
+                                        className="w-20 h-7 bg-gray-200 rounded-md animate-pulse"
+                                    />
+                                ))}
+                            </div>
+                        ) : freeSlots?.data?.slots?.length > 0 ? (
+                            <div className="flex flex-wrap gap-2">
+                                {freeSlots.data.slots.map((slot, i) => (
+                                    <button
+                                        key={i}
+                                        className="px-2 py-1 text-xs border rounded-md text-blue-600 font-medium border-blue-600 hover:bg-blue-600 hover:text-white"
+                                        onClick={() => setStartTime(slot.startTime)}
+                                    >
+                                        {slot.startTime} - {slot.endTime}
+                                    </button>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-xs text-gray-400">No available slots</p>
+                        )}
+                    </div>
+                )}
 
                 {/* Time */}
                 <div className="space-y-1">

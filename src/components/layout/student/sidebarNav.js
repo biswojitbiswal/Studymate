@@ -48,10 +48,10 @@ export const navItems = [
     key: "chats",
   },
   {
-    label: "Settings",
-    href: "/dashboard/student/settings",
-    icon: Settings,
-    key: "settings",
+    label: "Billings",
+    href: "/dashboard/student/billings",
+    icon: Wallet,
+    key: "billings",
   },
 
   // {

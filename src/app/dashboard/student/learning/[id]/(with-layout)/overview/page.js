@@ -15,13 +15,14 @@ import { useEnrolledClassContext } from "../EnrolledClassContext";
 import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
-import { useUpcomingSessions } from "@/hooks/public/useSession";
+import { useMeetingLink, useUpcomingSessions } from "@/hooks/public/useSession";
 import { FileText, Video, Link2, Image as ImageIcon } from "lucide-react";
 import { AssignmentCardSkeleton, ResourceCardSkeleton, SessionCardSkeleton } from '@/components/skeleton/student/StudentClassOverviewSkeleton'
 import { useStudentResources } from "@/hooks/tutor/useResources";
 import { useStudentAssignments } from "@/hooks/tutor/useAssignments";
 import { Button } from "@/components/ui/button";
 import AssignmentDetailsModal from "../assignments/AssignmentDetails";
+import { toast } from "sonner";
 
 
 const DAY_LABELS = {
@@ -523,6 +524,21 @@ export default function ClassOverviewPage() {
 
 
 function SessionCard({ session }) {
+    const { mutate: getMeetingLink, isPending } = useMeetingLink();
+
+    const handleJoin = () => {
+        getMeetingLink(session.id, {
+            onSuccess: (data) => {
+                // console.log(data?.data?.meetingLink);
+                window.open(data?.data?.meetingLink, "_blank");
+            },
+            onError: (err) => {
+                toast.error(
+                    err?.response?.data?.message || "Unable to join session"
+                );
+            },
+        });
+    };
     return (
         <div className="w-full bg-white border rounded-md px-2 py-2 flex items-center justify-between gap-2">
 
@@ -587,10 +603,10 @@ function SessionCard({ session }) {
                 </div>
             </div>
 
-            {session?.status === "SCHEDULED" && session?.meetingLink ? (
-                <button className="text-sm bg-blue-600 px-3 py-1 rounded-md cursor-pointer text-white hover:bg-blue-700  hover:cursor-pointer">
+            {session?.status === "SCHEDULED" ? (
+                <button onClick={handleJoin} disabled={isPending} className="text-sm bg-blue-600 px-3 py-1 rounded-md cursor-pointer text-white hover:bg-blue-700  hover:cursor-pointer">
                     {/* <Video /> */}
-                    Join
+                    {isPending ? 'Joining' : 'Join'}
                 </button>
             ) : (
                 session?.status === "PENDING_TUTOR_APPROVAL" && (

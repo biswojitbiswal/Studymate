@@ -11,6 +11,7 @@ import CreateResourceDialog from "./CreateResourceDialog";
 import { useClassContext } from "../ClassContext";
 import EditResourceDialog from "./EditResourceDialog";
 import DeleteResourceDialog from "./DeleteResourceDialog";
+import { useDebounce } from "@/lib/utils";
 
 export default function ResourcesPage() {
 

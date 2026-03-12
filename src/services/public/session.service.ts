@@ -37,5 +37,8 @@ export const sessionService = {
 
   // 9️⃣ Dashboard upcoming sessions
   getUpcoming: (params) =>
-    api.get(API.SESSION.GET_UPCOMING, {params}),
+    api.get(API.SESSION.GET_UPCOMING, { params }),
+
+  getMeetingLink: (id) =>
+    api.get(`${API.SESSION.GET_MEETING_LINK}/${id}/join`)
 };

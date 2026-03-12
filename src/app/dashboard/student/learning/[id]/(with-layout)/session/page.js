@@ -2,7 +2,7 @@
 
 import { CalendarDays, Users, Clock, Video, VideoIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCancelSession, useClassSessions } from "@/hooks/public/useSession";
+import { useCancelSession, useClassSessions, useMeetingLink } from "@/hooks/public/useSession";
 import { useEnrolledClassContext } from "../EnrolledClassContext";
 import { useEffect, useRef, useState } from "react";
 import SessionCardSkeleton from "@/components/skeleton/SessionCardSkeleton";
@@ -10,6 +10,7 @@ import CreateSessionModal from "@/components/student/CreateSessionModal";
 import StudentRescheduleModal from "@/components/student/StudentRescheduleModal";
 import { useAuthStore } from "@/store/auth";
 import ConfirmDialog from "@/components/common/ConfirmDialog";
+import { toast } from "sonner";
 
 
 export default function SessionsPage() {
@@ -61,7 +62,7 @@ export default function SessionsPage() {
                             setModalOpen(true);
                         }}
                         className="bg-blue-600 hover:bg-blue-700 text-white hover:cursor-pointer">
-                        + Scheddule Session
+                        + Schedule Session
                     </Button>)
                 }
             </div>
@@ -228,8 +229,25 @@ function SessionCard({ session, onRescheduleStudent, onRescheduleTutor }) {
         });
     };
 
+
+    const { mutate: getMeetingLink, isPending } = useMeetingLink();
+
+    const handleJoin = () => {
+        getMeetingLink(session.id, {
+            onSuccess: (data) => {
+                // console.log(data?.data?.meetingLink);
+                window.open(data?.data?.meetingLink, "_blank");
+            },
+            onError: (err) => {
+                toast.error(
+                    err?.response?.data?.message || "Unable to join session"
+                );
+            },
+        });
+    };
+
     return (
-        <div className="relative bg-white border rounded-lg px-2 py-3 lg:px-4 flex flex-col lg:flex-row gap-2 items-start sm:items-center justify-between">
+        <div className="relative bg-white border rounded-lg px-2 py-3 lg:px-4 flex flex-col md:flex-row gap-2 items-start md:items-center justify-between">
             <div className="flex items-center gap-2">
                 {/* Date Box */}
                 <div className="w-14 shrink-0 rounded-md bg-blue-50 text-blue-600 text-center py-3 lg:py-2">
@@ -274,7 +292,7 @@ function SessionCard({ session, onRescheduleStudent, onRescheduleTutor }) {
             </div>
 
             {/* Right Side */}
-            <div className="flex items-center w-full gap-2 sm:justify-end">
+            <div className="flex items-center w-full gap-2 md:justify-end">
                 <span
                     className={`w-full sm:w-auto flex-1 sm:flex-none text-center text-sm font-medium px-2 py-2.5 rounded-md whitespace-nowrap
                     ${session?.status === "SCHEDULED"
@@ -289,8 +307,10 @@ function SessionCard({ session, onRescheduleStudent, onRescheduleTutor }) {
                     {session?.status?.replaceAll("_", " ")}
                 </span>
 
-                {session?.status === "SCHEDULED" && session?.meetingLink ? (
+                {session?.status === "SCHEDULED" ? (
                     <button
+                        onClick={handleJoin}
+                        disabled={isPending}
                         className="w-full sm:w-auto
                             flex-1 sm:flex-none
                             flex items-center justify-center
@@ -298,7 +318,7 @@ function SessionCard({ session, onRescheduleStudent, onRescheduleTutor }) {
                             text-white gap-2 hover:bg-blue-700 hover:cursor-pointer
                             whitespace-nowrap">
                         <VideoIcon />
-                        <span className="font-semibold">Join</span>
+                        <span className="font-semibold">{isPending ? 'Joining' : 'Join'}</span>
                     </button>
                 ) : (
                     session?.status === "PENDING_TUTOR_APPROVAL" && (

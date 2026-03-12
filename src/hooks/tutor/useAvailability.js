@@ -91,3 +91,22 @@ export function useDeleteAvailability() {
         },
     });
 }
+
+
+/* =========================
+   GET FREE AVAILABILITY
+========================= */
+export function useFreeAvailability(tutorId, date) {
+  return useQuery({
+    queryKey: ["free-availability", tutorId, date],
+
+    queryFn: async () => {
+      const res = await availibilityService.getFreeAvailibility(tutorId, {
+        date,
+      });
+      return res.data;
+    },
+
+    enabled: !!tutorId && !!date,
+  });
+}

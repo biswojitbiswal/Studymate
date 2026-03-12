@@ -15,5 +15,8 @@ export const availibilityService = {
     api.delete(`${API.TUTOR.AVAILABILITY.DELETE}/${id}`),
 
   toggle: (id) => 
-    api.patch(`${API.TUTOR.AVAILABILITY.TOGGLE}/${id}`)
+    api.patch(`${API.TUTOR.AVAILABILITY.TOGGLE}/${id}`),
+
+  getFreeAvailibility: (id, params) =>
+    api.get(`${API.TUTOR.AVAILABILITY.GET_FREE_AVAILIBILITY}/${id}/availibility`, { params }),
 };

@@ -157,3 +157,13 @@ export function useCreateSession() {
     },
   });
 }
+
+
+export function useMeetingLink() {
+  return useMutation({
+    mutationFn: async (sessionId) => {
+      const res = await sessionService.getMeetingLink(sessionId);
+      return res?.data;
+    },
+  });
+}
