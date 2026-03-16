@@ -11,3 +11,16 @@ export const useMyOrders = (params = {}) => {
     keepPreviousData: true,
   });
 };
+
+
+
+export const useStudentOrder = (id) => {
+  return useQuery({
+    queryKey: ["my-order", id],
+    queryFn: async () => {
+      const res = await orderService.getById(id);
+      return res.data;
+    },
+    enabled: !!id,
+  });
+};

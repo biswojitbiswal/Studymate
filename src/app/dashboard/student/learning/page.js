@@ -43,13 +43,13 @@ export default function StudentClassesPage() {
 
   return (
     <div className="p-0 lg:px-6 space-y-3 lg:space-y-6">
-      <button
+      {/* <button
         onClick={() => router.back()}
         className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition cursor-pointer mb-2"
       >
         <ArrowLeft size={18} />
         <span className="text-sm font-medium">Back</span>
-      </button>
+      </button> */}
 
       {/* Row 1: Title */}
       <div>

@@ -109,6 +109,10 @@ export const API = {
       VALIDATE: `/coupon/validate`,
     },
 
+    ORDER: {
+      GET_ALL: `/order`,
+      GET_BY_ID: `/order`
+    }
   },
 
 
@@ -134,12 +138,10 @@ export const API = {
     },
 
     ORDERS: {
-      GET_MY_ORDERS: `/order/my`
+      GET_MY_ORDERS: `/order/my`,
+      GET_BY_ID: `order`
     }
   },
-
-
-
 
 
   TUTOR: {

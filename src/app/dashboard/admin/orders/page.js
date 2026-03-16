@@ -1,6 +1,5 @@
 "use client";
 
-import { useMyOrders } from "@/hooks/student/useOrder";
 import { useState } from "react";
 import {
   Table,
@@ -15,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Eye } from "lucide-react";
 import { TableSkeleton } from "@/components/common/TableSkeleton";
 import { useRouter } from "next/navigation";
+import { useOrders } from "@/hooks/admin/useOrder";
 
 export default function OrdersPage() {
   const [page, setPage] = useState(1);
@@ -23,12 +23,13 @@ export default function OrdersPage() {
 
   const router = useRouter()
 
-  const { data, isLoading } = useMyOrders({
+  const { data, isLoading } = useOrders({
     page,
     limit: 10,
     search,
     status,
   });
+
 
   const orders = data?.data?.orders || [];
 
@@ -36,9 +37,9 @@ export default function OrdersPage() {
     <div className="p-1 lg:p-6">
 
       <div className="mb-4">
-        <h1 className="text-2xl font-bold">My Billings</h1>
+        <h1 className="text-2xl font-bold">Order Management</h1>
         <p className="text-gray-500">
-          View and manage all your purchases
+          View and manage all orders
         </p>
       </div>
 
@@ -74,6 +75,7 @@ export default function OrdersPage() {
             <TableHeader>
               <TableRow className="bg-gray-50">
                 <TableHead>Order No</TableHead>
+                <TableHead>Customer</TableHead>
                 <TableHead className="text-center">Product Type</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-center">Amount</TableHead>
@@ -93,11 +95,16 @@ export default function OrdersPage() {
                 orders?.map((order) => (
                   <TableRow key={order.id} className="hover:bg-gray-50 transition">
                     <TableCell className="font-medium text-gray-900">
-                      {order.orderNo}
+                      {order?.orderNo}
+                    </TableCell>
+
+                    <TableCell>
+                      {order?.user?.name}
                     </TableCell>
 
                     <TableCell className="text-center">
-                      {order.productType}
+                      <p>{order?.productType}</p>
+                      <p>{order?.product?.title}</p>
                     </TableCell>
 
                     <TableCell>
@@ -126,9 +133,9 @@ export default function OrdersPage() {
                         <Button
                           size="icon"
                           variant="outline"
-                          className="border-blue-600 text-blue-600 hover:bg-blue-50"
+                          className="border-blue-600 text-blue-600 hover:bg-blue-50 hover:cursor-pointer"
                           onClick={() =>
-                            router.push(`/dashboard/student/billings/${order.id}`)
+                            router.push(`/dashboard/admin/orders/${order.id}`)
                           }
                         >
                           <Eye size={16} />
@@ -163,10 +170,10 @@ export default function OrdersPage() {
 
               <Badge
                 className={`text-xs ${order.status === "PAID"
-                  ? "bg-green-100 text-green-700"
-                  : order.status === "PENDING"
-                    ? "bg-yellow-100 text-yellow-700"
-                    : "bg-red-100 text-red-700"
+                    ? "bg-green-100 text-green-700"
+                    : order.status === "PENDING"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : "bg-red-100 text-red-700"
                   }`}
               >
                 {order.status}
@@ -193,7 +200,7 @@ export default function OrdersPage() {
             <Button
               className="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white"
               onClick={() =>
-                router.push(`/dashboard/student/billings/${order.id}`)
+                router.push(`/dashboard/admin/orders/${order.id}`)
               }
             >
               View Order
