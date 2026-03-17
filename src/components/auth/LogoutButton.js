@@ -14,6 +14,8 @@ export default function LogoutButton() {
                 method: "POST",
                 credentials: "include",
             });
+
+            queryClient.clear();
         } catch (e) { }
 
         logout();

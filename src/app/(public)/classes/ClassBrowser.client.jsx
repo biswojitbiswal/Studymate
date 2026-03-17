@@ -440,7 +440,7 @@ const ClassBrowser = ({ initialData }) => {
                                                 className="p-2 hover:bg-blue-100 rounded-full transition-colors hover:cursor-pointer"
                                             >
                                                 <Heart
-                                                    className={`w-5 h-5 hover:text-blue-600 ${classItem.isWishlisted
+                                                    className={`w-5 h-5 hover:text-red-600 ${classItem.isWishlisted
                                                         ? "fill-red-500 text-red-500"
                                                         : "text-blue-500"
                                                         }`}
@@ -504,14 +504,12 @@ const ClassBrowser = ({ initialData }) => {
 
                                                 <button
                                                     onClick={() => router.push(`/classes/${classItem?.seo_name}`)}
-                                                    className="
-        w-full sm:w-auto
-        px-4 sm:px-6
-        py-2.5
-        bg-blue-600 hover:bg-blue-700
-        text-white font-semibold
-        rounded-md transition-colors hover:cursor-pointer
-      "
+                                                    className=" w-full sm:w-auto
+                                                        px-4 sm:px-6
+                                                        py-2.5
+                                                        bg-blue-600 hover:bg-blue-700
+                                                        text-white font-semibold
+                                                        rounded-md transition-colors hover:cursor-pointer"
                                                 >
                                                     Buy Now
                                                 </button>
@@ -622,8 +620,13 @@ const ClassBrowser = ({ initialData }) => {
                                             <span>Watch Preview</span>
                                         </button>
 
-                                        <button className="flex items-center justify-center gap-2 w-full mt-2 py-2.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold rounded-lg hover:cursor-pointer">
-                                            <Heart className="w-5 h-5" /> <span>Add to Wishlist</span>
+                                        <button onClick={() => toggleWishlist(hoveredClass.id)} className="flex items-center justify-center gap-2 w-full mt-2 py-2.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold rounded-lg hover:cursor-pointer">
+                                            <Heart
+                                                className={`w-5 h-5 hover:text-red-600 ${hoveredClass.isWishlisted
+                                                    ? "fill-red-500 text-red-500"
+                                                    : "text-blue-500"
+                                                    }`}
+                                            /> <span>{hoveredClass.isWishlisted ? 'Added to Wishlist' : 'Add to Wishlist'}</span>
                                         </button>
                                     </div>
                                 ) : (
@@ -673,12 +676,11 @@ const ClassBrowser = ({ initialData }) => {
                                 <button
                                     key={pageNumber}
                                     onClick={() => setPage(pageNumber)}
-                                    className={`
-            px-3 py-1.5 rounded-md text-sm
-            ${page === pageNumber
+                                    className={` px-3 py-1.5 rounded-md text-sm
+                                        ${page === pageNumber
                                             ? "bg-blue-600 text-white"
                                             : "border hover:bg-gray-100"}
-          `}
+                                    `}
                                 >
                                     {pageNumber}
                                 </button>
@@ -767,8 +769,13 @@ const ClassBrowser = ({ initialData }) => {
                                     View Class Details
                                 </button>
 
-                                <button className="flex items-center gap-2 px-5 py-2.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold rounded-lg hover:cursor-pointer">
-                                    <Heart className="w-5 h-5" />
+                                <button onClick={() => toggleWishlist(previewClass.id)} className="flex items-center gap-2 px-5 py-2.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold rounded-lg hover:cursor-pointer">
+                                    <Heart
+                                        className={`w-5 h-5 hover:text-red-600 ${previewClass.isWishlisted
+                                            ? "fill-red-500 text-red-500"
+                                            : "text-blue-500"
+                                            }`}
+                                    />
                                     <span>Wishlist</span>
                                 </button>
                             </div>

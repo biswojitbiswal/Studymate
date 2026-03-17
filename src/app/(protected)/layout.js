@@ -9,6 +9,7 @@ import { useEffect } from "react";
 export default function ProtectedLayout({ children }) {
     const user = useAuthStore((s) => s.user);
     const router = useRouter();
+    
 
     useEffect(() => {
         if (!user) router.replace("/signin");

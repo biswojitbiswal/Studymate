@@ -2,6 +2,7 @@
 
 import ClassDetailsSkeleton from "@/components/skeleton/ClassDetailsSkeleton";
 import { useBrowseClass } from "@/hooks/public/useClass";
+import { useToggleWishlist } from "@/hooks/public/useWishlist";
 import { usePublishClass } from "@/hooks/tutor/useClass";
 import { useAuthStore } from "@/store/auth";
 import {
@@ -22,16 +23,31 @@ import {
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function ClassDetailsPage() {
-    const [isWishlisted, setIsWishlisted] = useState(false);
+    // const [isWishlisted, setIsWishlisted] = useState(false);
 
     const param = useParams();
     const router = useRouter();
-
+    console.log(param.id);
+    
     const user = useAuthStore((s) => s.user);
     const { data, isLoading } = useBrowseClass(param.id);
+    const { mutate, isPending } = useToggleWishlist();
 
+    const toggleWishlist = (classId) => {
+        mutate(classId, {
+            onSuccess: (res) => {
+                toast.success(res?.data?.data?.message);
+            },
+            onError: (err) => {
+                toast.error(
+                    err?.response?.data?.message || "Something went wrong"
+                );
+            },
+        });
+    };
 
 
     function formatDuration(startDate, endDate) {
@@ -477,14 +493,16 @@ export default function ClassDetailsPage() {
                                     </button>
 
                                     <button
-                                        onClick={() => setIsWishlisted(!isWishlisted)}
-                                        className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-semibold transition-all hover:cursor-pointer ${isWishlisted
-                                            ? 'border-red-500 text-red-600 bg-red-50'
-                                            : 'border-gray-300 text-gray-700 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50'
-                                            }`}
+                                        onClick={() => toggleWishlist(data?.data?.id)}
+                                        className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-semibold transition-all hover:cursor-pointer border-gray-300 text-gray-700 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50`}
                                     >
-                                        <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-red-500' : ''}`} />
-                                        {isWishlisted ? 'Added to Wishlist' : 'Add to Wishlist'}
+                                        <Heart
+                                            className={`w-5 h-5 hover:text-red-600 ${data?.data?.isWishlisted
+                                                ? "fill-red-500 text-red-500"
+                                                : "text-blue-500"
+                                                }`}
+                                        />
+                                        {data?.data?.isWishlisted ? 'Added to Wishlist' : 'Add to Wishlist'}
                                     </button>
                                 </div>
                             </div>
@@ -497,14 +515,16 @@ export default function ClassDetailsPage() {
                 <div className="flex gap-3 max-w-7xl mx-auto">
                     {/* Wishlist Button */}
                     <button
-                        onClick={() => setIsWishlisted(!isWishlisted)}
-                        className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 font-semibold transition-all hover:cursor-pointer ${isWishlisted
-                            ? 'border-red-500 text-red-600 bg-red-50'
-                            : 'border-gray-300 text-gray-700 active:border-blue-500 active:text-blue-600 active:bg-blue-50'
-                            }`}
+                        onClick={() => toggleWishlist(data?.data?.id)}
+                        className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 font-semibold transition-all hover:cursor-pointer border-gray-300 text-gray-700 active:border-blue-500 active:text-blue-600 active:bg-blue-50`}
                     >
-                        <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-red-500' : ''}`} />
-                        <span className="hidden sm:inline">{isWishlisted ? 'Saved' : 'Save'}</span>
+                        <Heart
+                            className={`w-5 h-5 hover:text-red-600 ${data?.data?.isWishlisted
+                                ? "fill-red-500 text-red-500"
+                                : "text-blue-500"
+                                }`}
+                        />
+                        <span className="hidden sm:inline">{data?.data?.isWishlisted ? 'Saved' : 'Save'}</span>
                     </button>
 
                     {/* Enroll Button - Takes remaining space */}

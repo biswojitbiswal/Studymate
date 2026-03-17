@@ -4,7 +4,16 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 export const useWishlist = (params) => {
     return useQuery({
         queryKey: ["wishlist", params],
-        queryFn: () => wishlistService.getAll(params),
+        queryFn: async () => {
+            const res = await wishlistService.getAll(params);
+
+            return {
+                items: res?.data?.data || [],   // 👈 normalize here
+                total: res?.data?.total || 0,
+                page: res?.data?.page || 1,
+                limit: res?.data?.limit || 10,
+            };
+        },
         keepPreviousData: true,
     });
 };
@@ -19,13 +28,6 @@ export const useToggleWishlist = () => {
 
         // 🔥 OPTIMISTIC UPDATE
         onMutate: async (id) => {
-            // cancel both queries
-            await Promise.all([
-                queryClient.cancelQueries({ queryKey: ["wishlist"] }),
-                queryClient.cancelQueries({ queryKey: ["browse-classes"] }),
-            ]);
-
-            // snapshot previous data
             const previousWishlist = queryClient.getQueriesData({
                 queryKey: ["wishlist"],
             });
@@ -34,27 +36,38 @@ export const useToggleWishlist = () => {
                 queryKey: ["browse-classes"],
             });
 
-            // 🟢 1. Update wishlist (remove only - safe)
+            const previousSingleClasses = queryClient.getQueriesData({
+                queryKey: ["browse-class"],
+            });
+
+            // ✅ helper to safely extract array
+            const getItems = (oldData) => {
+                return (
+                    oldData?.items ||            // new structure
+                    oldData?.data?.data ||       // old structure
+                    []
+                );
+            };
+
+            // 🟢 1. Wishlist
             previousWishlist.forEach(([key, oldData]) => {
-                if (!oldData?.data) return;
+                const items = getItems(oldData);
+                if (!Array.isArray(items)) return;
 
-                const exists = oldData.data.some((item) => item.id === id);
-
-                if (!exists) return;
-
-                const updated = oldData.data.filter((item) => item.id !== id);
+                const updated = items.filter((item) => item.id !== id);
 
                 queryClient.setQueryData(key, {
                     ...oldData,
-                    data: updated,
+                    items: updated, // normalize forward
                 });
             });
 
-            // 🟢 2. Update browse classes (IMPORTANT)
+            // 🟢 2. Browse classes
             previousClasses.forEach(([key, oldData]) => {
-                if (!oldData?.data) return;
+                const items = getItems(oldData);
+                if (!Array.isArray(items)) return;
 
-                const updated = oldData.data.map((item) =>
+                const updatedItems = items.map((item) =>
                     item.id === id
                         ? { ...item, isWishlisted: !item.isWishlisted }
                         : item
@@ -62,14 +75,30 @@ export const useToggleWishlist = () => {
 
                 queryClient.setQueryData(key, {
                     ...oldData,
-                    data: updated,
+                    items: updatedItems,
                 });
             });
 
-            return { previousWishlist, previousClasses };
+            // 🟢 3. Single class
+            previousSingleClasses.forEach(([key, oldData]) => {
+                if (!oldData || typeof oldData !== "object") return;
+
+                if (oldData.id === id) {
+                    queryClient.setQueryData(key, {
+                        ...oldData,
+                        isWishlisted: !oldData.isWishlisted,
+                    });
+                }
+            });
+
+            return {
+                previousWishlist,
+                previousClasses,
+                previousSingleClasses,
+            };
         },
 
-        // 🔴 rollback on error
+        // 🔴 rollback
         onError: (err, id, context) => {
             context?.previousWishlist?.forEach(([key, data]) => {
                 queryClient.setQueryData(key, data);
@@ -78,12 +107,19 @@ export const useToggleWishlist = () => {
             context?.previousClasses?.forEach(([key, data]) => {
                 queryClient.setQueryData(key, data);
             });
+
+            context?.previousSingleClasses?.forEach(([key, data]) => {
+                queryClient.setQueryData(key, data);
+            });
         },
 
-        // 🔄 sync with server
+        // 🔄 sync with server (safe mode)
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: ["wishlist"] });
+
+            // ⚠️ optional (can remove later for better UX)
             queryClient.invalidateQueries({ queryKey: ["browse-classes"] });
+            queryClient.invalidateQueries({ queryKey: ["browse-class"] });
         },
     });
 };
