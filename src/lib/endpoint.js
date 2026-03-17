@@ -17,6 +17,12 @@ export const API = {
   BROWSE_CLASSES_BY_ID: `/public/classes`,
 
 
+  WISHLIST: {
+    TOGGLE: `/wishlists`,
+    GET_ALL: `/wishlists`
+  },
+
+
 
   //Checkout
   GET_CHECKOUT_DETAILS: `/order/checkout`,
@@ -112,7 +118,9 @@ export const API = {
     ORDER: {
       GET_ALL: `/order`,
       GET_BY_ID: `/order`
-    }
+    },
+
+
   },
 
 

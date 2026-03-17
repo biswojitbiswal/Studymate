@@ -9,29 +9,6 @@ import { commonClassService } from "@/services/public/class.service";
    GET Classes (LIST)
 ========================= */
 export function useBrowseClasses(params = {}, options = {},) {
-    // const filters = {
-    //     page: params.page ?? 1,
-    //     limit: params.limit ?? 10,
-
-    //     search: params.search ?? "",
-    //     sortBy: params.sortBy ?? "createdAt",
-    //     sortOrder: params.sortOrder ?? "desc",
-
-    //     subjectIds: params.subjectIds ?? [],
-    //     boardIds: params.boardIds ?? [],
-    //     levelIds: params.levelIds ?? [],
-    //     languageIds: params.languageIds ?? [],
-
-    //     type: params.type ?? null,
-
-    //     maxPrice: params.maxPrice ?? null,
-    //     paid: params.paid ?? null,
-
-    //     minRating: Array.isArray(params.ratings) && params.ratings.length
-    //         ? Math.max(...params.ratings)
-    //         : null,
-    // };
-
     return useQuery({
         queryKey: ["browse-classes", params],
         queryFn: async () => {
@@ -40,7 +17,7 @@ export function useBrowseClasses(params = {}, options = {},) {
         },
         initialData: options.initialData,
         keepPreviousData: true,
-        staleTime: 0, // ✅ REQUIRED
+        staleTime: 0,
     });
 }
 

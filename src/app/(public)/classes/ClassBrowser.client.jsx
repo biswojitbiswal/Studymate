@@ -13,6 +13,8 @@ import { useBrowseClasses } from "@/hooks/public/useClass";
 import { StarRating } from "@/components/common/StarRating";
 import { PreviewSkeleton } from "../../../components/skeleton/PreviewSkeleton";
 import { ClassCardSkeleton } from "../../../components/skeleton/ClassCardSkeleton";
+import { useToggleWishlist } from "@/hooks/public/useWishlist";
+import { toast } from "sonner";
 
 
 const SORT_LABEL_MAP = {
@@ -103,6 +105,7 @@ const ClassBrowser = ({ initialData }) => {
     };
 
 
+    const { mutate, isPending } = useToggleWishlist();
     const {
         data,
         isLoading,
@@ -124,10 +127,17 @@ const ClassBrowser = ({ initialData }) => {
 
 
 
-    const toggleWishlist = (id) => {
-        setWishlist((prev) =>
-            prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-        );
+    const toggleWishlist = (classId) => {
+        mutate(classId, {
+            onSuccess: (res) => {
+                toast.success(res?.data?.data?.message);
+            },
+            onError: (err) => {
+                toast.error(
+                    err?.response?.data?.message || "Something went wrong"
+                );
+            },
+        });
     };
 
 
@@ -430,11 +440,12 @@ const ClassBrowser = ({ initialData }) => {
                                                 className="p-2 hover:bg-blue-100 rounded-full transition-colors hover:cursor-pointer"
                                             >
                                                 <Heart
-                                                    className={`w-5 h-5 hover:text-blue-600 ${wishlist.includes(classItem.id)
+                                                    className={`w-5 h-5 hover:text-blue-600 ${classItem.isWishlisted
                                                         ? "fill-red-500 text-red-500"
                                                         : "text-blue-500"
                                                         }`}
                                                 />
+
                                             </button>
                                         </div>
 

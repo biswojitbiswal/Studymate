@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, LayoutDashboard, User, Power, Bell } from "lucide-react";
+import { LogOut, LayoutDashboard, User, Power, Bell, Heart } from "lucide-react";
 import LogoutButton from "@/components/auth/LogoutButton";
 import { useAuthStore } from "@/store/auth";
 import Link from "next/link";
@@ -36,16 +36,15 @@ export default function NavAuthActions() {
     return (
       <div className="flex items-center gap-4">
         {/* Logout */}
-        <button
+        {/* <button
           onClick={logout}
           className="flex items-center text-sm cursor-pointer text-red-600 hover:bg-gray-200 rounded p-2"
         >
           <Power size={20} />
-          {/* Logout */}
-        </button>
+        </button> */}
 
         <div className="relative me-3">
-          <Bell className="w-5 h-5 text-slate-500 cursor-pointer" />
+          <Bell className="w-6 h-6 text-slate-500 cursor-pointer" />
           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
             2
           </span>
@@ -63,12 +62,12 @@ export default function NavAuthActions() {
                   <Image
                     src={user.avatar}
                     alt="avatar"
-                    width={40}
-                    height={40}
+                    width={25}
+                    height={25}
                     className="rounded-full object-cover border-2 border-blue-600"
                   />
                 ) : (
-                  <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center border-2 border-blue-600">
+                  <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center border-2 border-blue-600">
                     <User size={20} className="text-blue-600" />
                   </div>
                 )}
@@ -84,6 +83,15 @@ export default function NavAuthActions() {
                 <Link href="/profile" className="flex items-center gap-2 hover:cursor-pointer">
                   <User size={20} className="text-blue-600" />
                   Profile
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem asChild>
+                <Link href="/wishlist" className="flex items-center gap-2 hover:cursor-pointer">
+                  <Heart size={20} className="text-blue-600" />
+                  Wishlist
                 </Link>
               </DropdownMenuItem>
 
