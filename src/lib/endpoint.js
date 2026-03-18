@@ -47,6 +47,15 @@ export const API = {
   },
 
 
+  REVIEW: {
+    CREATE: `/reviews`,
+    GET_ALL: `/reviews/admin`,
+    STATUS_UPDATE: `/reviews`,
+    GET_BY_STUDENT: `/reviews`,
+    GET_BROWSE: `/reviews`
+  },
+
+
   ADMIN: {
     BOARD: {
       CREATE: `/board`,

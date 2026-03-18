@@ -15,6 +15,7 @@ import {
   Banknote,
   Wallet,
   Ticket,
+  Star,
 } from "lucide-react";
 import { FaBookOpen, FaChalkboardTeacher } from "react-icons/fa";
 import { FaChartBar } from "react-icons/fa6";
@@ -111,9 +112,9 @@ export const adminNavItems = [
     key: 'orders'
   },
   {
-    label: "My Resources",
-    href: "/dashboard/admin/resources",
-    icon: Folder,
-    key: 'resources'
+    label: "Rating & Reviews",
+    href: "/dashboard/admin/reviews",
+    icon: Star,
+    key: 'reviews'
   }
 ];

@@ -7,5 +7,4 @@ export const authService = {
 
   toggleStatus: (id) => 
     api.patch(`${API.TOGGLE_STATUS}/${id}`),
-
 };

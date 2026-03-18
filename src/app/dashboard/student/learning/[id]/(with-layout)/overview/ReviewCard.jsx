@@ -1,28 +1,75 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Star } from "lucide-react";
+import { toast } from "sonner";
+import { useCreateReview, useGetReviewByStudent } from "@/hooks/public/useReview";
 
-export default function ReviewCard({
-  existingReview, // { rating: number, reviewText: string }
-  onSubmit,
-  isSubmitting = false,
-}) {
-  const [rating, setRating] = useState(existingReview?.rating || 0);
+export default function ReviewCard({ classId }) {
+  const { data, isLoading } = useGetReviewByStudent(classId);
+
+  const {
+    mutate: createReview,
+    isPending: isSubmitting,
+  } = useCreateReview();
+
+  const existingReview = data?.data?.data || null;
+  console.log(existingReview, "----------------");
+  
+
+  const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
-  const [reviewText, setReviewText] = useState(
-    existingReview?.reviewText || ""
-  );
+  const [reviewText, setReviewText] = useState("");
 
   const isAlreadyReviewed = !!existingReview;
 
+  // ✅ Prefill if already reviewed
+  useEffect(() => {
+    if (existingReview) {
+      setRating(existingReview.rating);
+      setReviewText(existingReview.reviewText);
+    }
+  }, [existingReview]);
+
+  // ✅ Submit handler
   const handleSubmit = () => {
-    if (!rating) return;
-    onSubmit({ rating, reviewText });
+    // 🔥 Validation
+    if (!rating) {
+      return toast.error("Please select a rating");
+    }
+
+    // if (reviewText.length < 10) {
+    //   return toast.error("Review must be at least 10 characters");
+    // }
+
+    createReview(
+      {
+        classId,
+        rating,
+        reviewText,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Review submitted successfully 🎉");
+        },
+        onError: (err) => {
+          toast.error(
+            err?.response?.data?.message || "Something went wrong"
+          );
+        },
+      }
+    );
   };
 
+  // ⏳ Loading state
+  if (isLoading) {
+    return (
+      <div className="p-5 border rounded-md">Loading review...</div>
+    );
+  }
+
   return (
-    <div className="bg-white border border-gray-200 rounded-md p-5 shadow-sm">
+    <div className="bg-white border border-gray-200 rounded-md p-2 md:p-5 shadow-sm">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">
         {isAlreadyReviewed ? "Your Review" : "Rate this Class"}
       </h3>
@@ -36,7 +83,7 @@ export default function ReviewCard({
             onClick={() => setRating(star)}
             onMouseEnter={() => setHover(star)}
             onMouseLeave={() => setHover(0)}
-            className="transition-transform hover:scale-110"
+            className="transition-transform hover:scale-110 hover:cursor-pointer"
           >
             <Star
               className={`w-6 h-6 ${
@@ -64,10 +111,17 @@ export default function ReviewCard({
         <button
           onClick={handleSubmit}
           disabled={!rating || isSubmitting}
-          className="mt-4 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium disabled:opacity-50"
+          className="mt-4 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium disabled:opacity-50 hover:cursor-pointer"
         >
           {isSubmitting ? "Submitting..." : "Submit Review"}
         </button>
+      )}
+
+      {/* ✅ Already Reviewed UI Enhancement */}
+      {isAlreadyReviewed && (
+        <div className="mt-4 text-sm text-green-600 font-medium">
+          ✅ You have already reviewed this class
+        </div>
       )}
     </div>
   );

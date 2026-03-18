@@ -71,115 +71,6 @@ function formatDate(dateString) {
 }
 
 
-// export const resources = [
-//     {
-//         id: "res_101",
-//         title: "Algebra Formulas Cheat Sheet",
-//         description: "All important algebra identities and shortcuts for quick revision before exams.",
-//         fileType: "PDF",
-//         fileUrl: "/dummy/algebra.pdf",
-//         klassTitle: "Class 10 Mathematics",
-//         createdAt: "2026-02-25T10:30:00Z",
-//         size: "1.2 MB"
-//     },
-//     {
-//         id: "res_102",
-//         title: "Newton's Laws Explained",
-//         description: "Conceptual explanation of Newton’s 3 laws of motion with real life examples.",
-//         fileType: "VIDEO",
-//         fileUrl: "https://youtube.com/watch?v=example",
-//         klassTitle: "Physics - Mechanics",
-//         createdAt: "2026-02-26T14:15:00Z",
-//         size: "15 min"
-//     },
-//     {
-//         id: "res_103",
-//         title: "Periodic Table Chart",
-//         description: "High resolution periodic table for memorization and daily practice.",
-//         fileType: "IMAGE",
-//         fileUrl: "/dummy/periodic-table.png",
-//         klassTitle: "Chemistry Basics",
-//         createdAt: "2026-02-27T09:00:00Z",
-//         size: "800 KB"
-//     },
-//     {
-//         id: "res_104",
-//         title: "Essay Writing Format",
-//         description: "Standard format for writing essays in English examinations.",
-//         fileType: "DOC",
-//         fileUrl: "/dummy/essay-format.docx",
-//         klassTitle: "English Grammar",
-//         createdAt: "2026-02-27T18:45:00Z",
-//         size: "350 KB"
-//     },
-//     {
-//         id: "res_105",
-//         title: "Trigonometry Notes",
-//         description: "Complete trigonometry notes including identities and solved examples.",
-//         fileType: "PDF",
-//         fileUrl: "/dummy/trigonometry.pdf",
-//         klassTitle: "Class 11 Mathematics",
-//         createdAt: "2026-02-28T11:20:00Z",
-//         size: "2.4 MB"
-//     }
-// ];
-
-
-// export const assignments = [
-//     {
-//         id: "ass_201",
-//         title: "Quadratic Equations Worksheet",
-//         description: "Solve all 20 questions using factorization and quadratic formula.",
-//         dueDate: "2026-03-03T23:59:00Z",
-//         maxMarks: 20,
-//         status: "NOT_SUBMITTED",
-//         klassTitle: "Class 10 Mathematics",
-//         submittedAt: null
-//     },
-//     {
-//         id: "ass_202",
-//         title: "Motion Numericals",
-//         description: "Numerical problems based on velocity, acceleration and displacement.",
-//         dueDate: "2026-03-02T23:59:00Z",
-//         maxMarks: 25,
-//         status: "SUBMITTED",
-//         klassTitle: "Physics - Mechanics",
-//         submittedAt: "2026-02-28T16:20:00Z"
-//     },
-//     {
-//         id: "ass_203",
-//         title: "Chemical Reactions Balancing",
-//         description: "Balance the following chemical equations and write reaction types.",
-//         dueDate: "2026-02-28T23:59:00Z",
-//         maxMarks: 15,
-//         status: "LATE",
-//         klassTitle: "Chemistry Basics",
-//         submittedAt: "2026-03-01T08:00:00Z"
-//     },
-//     {
-//         id: "ass_204",
-//         title: "Letter Writing",
-//         description: "Write a formal letter to the principal requesting leave.",
-//         dueDate: "2026-03-05T23:59:00Z",
-//         maxMarks: 10,
-//         status: "NOT_SUBMITTED",
-//         klassTitle: "English Grammar",
-//         submittedAt: null
-//     },
-//     {
-//         id: "ass_205",
-//         title: "Trigonometry Problems",
-//         description: "Solve the identity based trigonometry questions.",
-//         dueDate: "2026-02-27T23:59:00Z",
-//         maxMarks: 20,
-//         status: "GRADED",
-//         klassTitle: "Class 11 Mathematics",
-//         submittedAt: "2026-02-27T20:10:00Z",
-//         marksObtained: 18
-//     }
-// ];
-
-
 export default function ClassOverviewPage() {
     const [preview, setPreview] = useState(null);
 
@@ -308,7 +199,7 @@ export default function ClassOverviewPage() {
             {/* Description + Preview */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
                 {/* Schedule & Joining Window */}
-                <div className="lg:col-span-2 bg-white border rounded-md p-5">
+                <div className="lg:col-span-2 bg-white border rounded-md p-2 md:p-5">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4">
                         Schedule & Availability
                     </h2>
@@ -368,7 +259,7 @@ export default function ClassOverviewPage() {
                 </div>
 
                 {/* Class Preview */}
-                <div className="bg-white border rounded-md p-5">
+                <div className="bg-white border rounded-md p-2 md:p-5">
                     {/* <h2 className="text-lg font-semibold text-gray-900 mb-4">
                         Class Preview
                     </h2> */}
@@ -476,7 +367,7 @@ export default function ClassOverviewPage() {
 
 
             {/* Description */}
-            <div className="bg-white border rounded-md p-5">
+            <div className="bg-white border rounded-md p-2 md:p-5">
                 <h2 className="text-lg font-semibold text-gray-900 mb-2">
                     Class Description
                 </h2>
@@ -486,7 +377,7 @@ export default function ClassOverviewPage() {
             </div>
 
             {/* Syllabus */}
-            <div className="bg-white border rounded-md p-5">
+            <div className="bg-white border rounded-md p-2 md:p-5">
                 <h2 className="text-lg font-semibold text-gray-900 mb-3">
                     Syllabus
                 </h2>
@@ -498,11 +389,10 @@ export default function ClassOverviewPage() {
                     }
                 </ul>
             </div>
+            {
+                klass.endDate <= now && <ReviewCard classId={klass.id} />
 
-            {/* <div className="bg-white border rounded-md p-5"> */}
-                    <ReviewCard />
-            {/* </div> */}
-
+            }
         </div>
     );
 }
