@@ -486,13 +486,28 @@ const ClassBrowser = ({ initialData }) => {
                                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-auto pt-3 border-t border-gray-100">
 
                                             {/* Left: stats */}
-                                            <div className="flex items-center gap-4 text-sm text-gray-600">
-                                                <span className="flex items-center gap-1">
-                                                    <Users className="w-4 h-4" />
-                                                    {classItem.tutor.totalStudents} students
-                                                </span>
-                                                <span>{classItem?.reviews || 45} reviews</span>
+                                            <div>
+                                                {/* 🔥 Urgency message */}
+                                                {classItem?.capacity - classItem?.totalEnrolment <= 0 ? (
+                                                    <span className="text-xs text-red-600 font-semibold">
+                                                        🚫 Class Full
+                                                    </span>
+                                                ) : classItem?.capacity - classItem?.totalEnrolment > 0 && classItem?.capacity - classItem?.totalEnrolment <= 3 ? (
+                                                    <span className="text-xs text-orange-600 font-semibold">
+                                                        ⚡ Only {classItem?.capacity - classItem?.totalEnrolment} seat{classItem?.capacity - classItem?.totalEnrolment > 1 ? "s" : ""} left!
+                                                    </span>
+                                                ) : null}
+
+                                                <div className="flex items-center gap-4 text-sm text-gray-600">
+                                                    <span className="flex items-center gap-1">
+                                                        <Users className="w-4 h-4" />
+                                                        {classItem.tutor.totalStudents} students
+                                                    </span>
+                                                    <span>{classItem?.reviews || 45} reviews</span>
+                                                </div>
                                             </div>
+
+
 
                                             {/* Right: price + CTA */}
                                             <div className="flex items-center justify-between sm:justify-end gap-3">
@@ -503,15 +518,19 @@ const ClassBrowser = ({ initialData }) => {
                                                 </div>
 
                                                 <button
+                                                    disabled={classItem?.totalEnrolment >= classItem?.capacity}
                                                     onClick={() => router.push(`/classes/${classItem?.seo_name}`)}
-                                                    className=" w-full sm:w-auto
+                                                    className={`w-full sm:w-auto
                                                         px-4 sm:px-6
                                                         py-2.5
-                                                        bg-blue-600 hover:bg-blue-700
                                                         text-white font-semibold
-                                                        rounded-md transition-colors hover:cursor-pointer"
+                                                        rounded-md transition-colors
+                                                        ${classItem?.totalEnrolment >= classItem?.capacity
+                                                            ? "bg-gray-400 cursor-not-allowed"
+                                                            : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                                                        }`}
                                                 >
-                                                    Buy Now
+                                                    {classItem?.totalEnrolment >= classItem?.capacity ? "Class Full" : "Buy Now"}
                                                 </button>
                                             </div>
                                         </div>

@@ -242,7 +242,7 @@ export default function ClassOverviewPage() {
                 <StatCard
                     icon={<Users size={18} />}
                     label="Enrolled Students"
-                    value={format2Digit(klass?.totalEnrollment)}
+                    value={format2Digit(klass?.totalEnrolment)}
                 />
                 <StatCard
                     icon={<Layers size={18} />}

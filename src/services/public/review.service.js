@@ -6,7 +6,7 @@ export const reviewService = {
     api.post(API.REVIEW.CREATE, data),
 
   statusUpdate: (id, data) => 
-    api.post(`${API.REVIEW.STATUS_UPDATE}/${id}/status`, data),
+    api.patch(`${API.REVIEW.STATUS_UPDATE}/${id}/status`, data),
 
   getByStudent: (classId) => 
     api.get(`${API.REVIEW.GET_BY_STUDENT}/${classId}`),

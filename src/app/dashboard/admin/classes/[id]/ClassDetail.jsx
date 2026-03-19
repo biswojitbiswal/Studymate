@@ -22,7 +22,9 @@ const DAY_LABELS = {
 
 
 export default function ClassDetailPage({klass}) {
-    console.log(klass);
+    const format2Digit = (num) => {
+        return String(num ?? 0).padStart(2, "0");
+    };
     
 
     function formatTimeRange(startTime, durationMin) {
@@ -137,12 +139,12 @@ export default function ClassDetailPage({klass}) {
                 <StatCard
                     icon={<Users size={18} />}
                     label="Enrolled Students"
-                    value="24"
+                    value={format2Digit(klass?.totalEnrolment)}
                 />
                 <StatCard
                     icon={<Layers size={18} />}
                     label="Capacity"
-                    value={klass?.capacity}
+                    value={format2Digit(klass?.capacity)}
                 />
                 <StatCard
                     icon={<IndianRupee size={18} />}

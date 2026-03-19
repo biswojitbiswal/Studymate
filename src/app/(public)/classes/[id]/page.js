@@ -30,8 +30,7 @@ export default function ClassDetailsPage() {
 
     const param = useParams();
     const router = useRouter();
-    console.log(param.id);
-    
+
     const user = useAuthStore((s) => s.user);
     const { data, isLoading } = useBrowseClass(param.id);
     const { mutate, isPending } = useToggleWishlist();
@@ -116,8 +115,7 @@ export default function ClassDetailsPage() {
             year: "numeric",
         });
     }
-
-
+    
 
     if (isLoading) {
         return <ClassDetailsSkeleton />
@@ -486,10 +484,14 @@ export default function ClassDetailsPage() {
                                 {/* CTA Buttons - Hidden on mobile, shown on larger screens */}
                                 <div className="hidden lg:flex lg:flex-col space-y-3">
                                     <button
+                                        disabled={data?.data?.totalEnrolment >= data?.data?.capacity}
                                         onClick={() => router.push(`/checkout/class/${data?.data?.id}`)}
-                                        className="w-full py-3.5 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/30 transition-all transform hover:scale-105 hover:cursor-pointer"
+                                        className={`w-full py-3.5 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/30 transition-all transform hover:scale-105 hover:cursor-pointer${data?.data?.totalEnrolment >= data?.data?.capacity
+                                            ? "bg-gray-400 cursor-not-allowed"
+                                            : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                                            }`}
                                     >
-                                        Enroll Now
+                                        Enroll Now {data?.data?.capcity}
                                     </button>
 
                                     <button

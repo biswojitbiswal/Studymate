@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 import { useDebounce } from "@/lib/utils";
-import ReviewsTable from "./ReviewsTable";
+import {ReviewsTable} from "./ReviewsTable";
 import { useGetAllReviews } from "@/hooks/public/useReview";
 
 export default function TaxSettingPage() {
@@ -15,12 +15,12 @@ export default function TaxSettingPage() {
   const debouncedSearch = useDebounce(search, 400);
 
   const { data, isLoading, isError } = useGetAllReviews
-  ({
-    page,
-    limit: 10,
-    search: debouncedSearch,
-  });
-  
+    ({
+      page,
+      limit: 10,
+      search: debouncedSearch,
+    });
+
 
   return (
     <div className="space-y-6">
@@ -55,11 +55,11 @@ export default function TaxSettingPage() {
 
       {/* Table */}
       <ReviewsTable
-        data={data?.data?.data?.reviews ?? []}
+        data={data?.data?.data?.data?.reviews ?? []}
         loading={isLoading}
         page={page}
         setPage={setPage}
-        total={Math.ceil((data?.data?.data?.total ?? 0) / 10)}
+        total={Math.ceil((data?.data?.data?.data?.totalPages ?? 0) / 10)}
       />
     </div>
   );
