@@ -142,18 +142,16 @@ const CheckoutPage = () => {
                 couponCode: selectedCoupon?.code || undefined,
             });
 
-            /*
-              paymentData we receive:
-              {
-                orderId,
-                razorpayOrderId,
-                amount,
-                currency,
-                keyId
-              }
-            */
 
-            /* 2️⃣ Open Razorpay Checkout */
+            if (paymentData?.type === "FREE") {
+                toast.success("Enrolled successfully 🎉");
+
+                // 👉 redirect to learning dashboard
+                router.push(`/dashboard/student/learning/${paymentData?.klass?.id}/overview`);
+                return;
+            }
+
+
             const options = {
                 key: paymentData.keyId,
                 amount: paymentData.amount,
@@ -195,10 +193,8 @@ const CheckoutPage = () => {
 
             const rzp = new window.Razorpay(options);
             rzp.open();
-
         } catch (err) {
-            console.log(err);
-            alert("Payment initialization failed");
+            toast.error(err?.response?.data?.message)
         }
     };
 

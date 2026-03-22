@@ -1,25 +1,33 @@
 import { ChevronRight, Icon, Wallet } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import SettingItem from "./SettingItem";
+import Link from "next/link";
 
 export default function SettingsPage() {
   return (
     <div className="max-w-2xl mx-auto p-1 pb-24">
       {/* ACCOUNT */}
       <SettingSection title="Account">
-        <SettingItem
-          title="Profile Information"
-          action={<ChevronRight size={18} />}
-        />
-        <SettingItem
-          title="Change Password"
-          action={<ChevronRight size={18} />}
-        />
+        <Link href="/profile">
+          <SettingItem
+            title="Profile Information"
+            action={<ChevronRight size={18} />}
+          />
+        </Link>
 
-        <SettingItem
-          title="Billings & Purchased"
-          action={<ChevronRight size={18} />}
-        />
+        <Link href="/change-password">
+          <SettingItem
+            title="Change Password"
+            action={<ChevronRight size={18} />}
+          />
+        </Link>
+
+        <Link href="/dashboard/student/billings">
+          <SettingItem
+            title="Billings & Purchased"
+            action={<ChevronRight size={18} />}
+          />
+        </Link>
       </SettingSection>
 
       {/* NOTIFICATIONS */}
@@ -40,17 +48,22 @@ export default function SettingsPage() {
 
       {/* SUPPORT */}
       <SettingSection title="Support & About">
-        <SettingItem
-          title="Help Center"
-          action={<ChevronRight size={18} />}
-        />
-        <SettingItem
-          title="Privacy Policy"
-          action={<ChevronRight size={18} />}
-        />
+        <Link href="/help-center">
+          <SettingItem
+            title="Help Center"
+            action={<ChevronRight size={18} />}
+          />
+        </Link>
+
+        <Link href="/privacy-policy">
+          <SettingItem
+            title="Privacy Policy"
+            action={<ChevronRight size={18} />}
+          />
+        </Link>
       </SettingSection>
 
-    </div>
+    </div >
   );
 }
 

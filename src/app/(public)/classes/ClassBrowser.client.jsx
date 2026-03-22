@@ -408,7 +408,7 @@ const ClassBrowser = ({ initialData }) => {
                                     <div className="relative shrink-0 w-full sm:w-48 h-44 bg-amber-500 rounded-sm overflow-hidden">
                                         <Image
                                             src={classItem?.previewImg || "/Logo.png"}
-                                            alt={classItem.title}
+                                            alt={classItem?.title}
                                             fill
                                             className="object-cover"
                                             sizes="192px"
@@ -421,26 +421,26 @@ const ClassBrowser = ({ initialData }) => {
                                         <div className="flex items-start justify-between mb-2">
                                             <div>
                                                 <h3 className="text-xl font-bold text-gray-900 mb-1">
-                                                    {classItem.title}
+                                                    {classItem?.title}
                                                 </h3>
                                                 <div className="flex items-center gap-2 text-sm text-gray-600">
                                                     <span className="text-blue-600 font-medium">
-                                                        {classItem.subject.name}
+                                                        {classItem?.subject?.name}
                                                     </span>
                                                     <span>•</span>
-                                                    <span>{classItem.level.name}</span>
+                                                    <span>{classItem?.level?.name}</span>
                                                     <span>•</span>
                                                     <span className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded font-semibold">
-                                                        {classItem.type}
+                                                        {classItem?.type}
                                                     </span>
                                                 </div>
                                             </div>
                                             <button
-                                                onClick={() => toggleWishlist(classItem.id)}
+                                                onClick={() => toggleWishlist(classItem?.id)}
                                                 className="p-2 hover:bg-blue-100 rounded-full transition-colors hover:cursor-pointer"
                                             >
                                                 <Heart
-                                                    className={`w-5 h-5 hover:text-red-600 ${classItem.isWishlisted
+                                                    className={`w-5 h-5 hover:text-red-600 ${classItem?.isWishlisted
                                                         ? "fill-red-500 text-red-500"
                                                         : "text-blue-500"
                                                         }`}
@@ -452,16 +452,16 @@ const ClassBrowser = ({ initialData }) => {
                                         {/* Tutor Info */}
                                         <div className="flex items-center gap-3 mb-3">
                                             <img
-                                                src={classItem.tutor.user.avatar}
-                                                alt={classItem.tutor.user.name}
+                                                src={classItem?.tutor?.user?.avatar}
+                                                alt={classItem?.tutor?.user?.name}
                                                 className="w-10 h-10 rounded-full border-2 border-blue-600"
                                             />
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-2">
                                                     <span className="font-semibold text-gray-900">
-                                                        {classItem.tutor.user.name}
+                                                        {classItem?.tutor?.user?.name}
                                                     </span>
-                                                    <StarRating rating={classItem.tutor.rating} size={14} />
+                                                    <StarRating rating={classItem?.tutor?.rating} size={14} />
 
                                                     <button className="flex items-center justify-center gap-1 text-sm px-2 border border-blue-600 text-blue-600 rounded-sm hover:bg-blue-100 font-medium transition-colors whitespace-nowrap hover:cursor-pointer">
                                                         <UserPlus className="w-4 h-4" />
@@ -471,11 +471,11 @@ const ClassBrowser = ({ initialData }) => {
                                                 <div className="flex items-center gap-3 text-xs text-gray-600">
                                                     <span className="flex items-center gap-1">
                                                         <Users className="w-3 h-3" />
-                                                        {classItem.tutor.totalStudents} students
+                                                        {classItem?.tutor?.totalStudents} students
                                                     </span>
                                                     <span className="flex items-center gap-1">
                                                         <Clock className="w-3 h-3" />
-                                                        {classItem.tutor.yearsOfExp} experience
+                                                        {classItem?.tutor?.yearsOfExp} experience
                                                     </span>
                                                     {/* <span>{classItem.tutor.sessions} sessions</span> */}
                                                 </div>
@@ -489,7 +489,7 @@ const ClassBrowser = ({ initialData }) => {
                                             <div className="flex items-center gap-4 text-sm text-gray-600">
                                                 <span className="flex items-center gap-1">
                                                     <Users className="w-4 h-4" />
-                                                    {classItem.tutor.totalStudents} students
+                                                    {classItem?.tutor?.totalStudents} students
                                                 </span>
                                                 <span>{classItem?.reviews || 45} reviews</span>
                                             </div>
@@ -503,16 +503,22 @@ const ClassBrowser = ({ initialData }) => {
                                                 </div>
 
                                                 <button
-                                                    onClick={() => router.push(`/classes/${classItem?.seo_name}`)}
+                                                    onClick={() => {
+                                                        if (classItem?.isPurchased) {
+                                                            router.push(`/dashboard/student/learning/${classItem?.id}/overview`);
+                                                        } else {
+                                                            handlePayment();
+                                                        }
+                                                    }}
                                                     className=" w-full sm:w-auto
-                                                        px-4 sm:px-6
-                                                        py-2.5
+                                                        px-4 sm:px-6 py-2.5
                                                         bg-blue-600 hover:bg-blue-700
                                                         text-white font-semibold
                                                         rounded-md transition-colors hover:cursor-pointer"
                                                 >
-                                                    Buy Now
+                                                    {classItem?.isPurchased === true ? 'Go to Learning' : 'Buy Now'}
                                                 </button>
+                                                <p>{classItem?.isPurchased}</p>
                                             </div>
                                         </div>
 
@@ -538,7 +544,7 @@ const ClassBrowser = ({ initialData }) => {
                                         <div className="relative mb-3 w-full h-48 rounded-lg overflow-hidden">
                                             {hoveredClass?.previewVdo ? (
                                                 <video
-                                                    src={hoveredClass.previewVdo}
+                                                    src={hoveredClass?.previewVdo}
                                                     autoPlay
                                                     muted
                                                     loop
@@ -569,23 +575,23 @@ const ClassBrowser = ({ initialData }) => {
 
                                         {/* Title */}
                                         <h4 className="font-bold text-gray-900 mb-2">
-                                            {hoveredClass.title}
+                                            {hoveredClass?.title}
                                         </h4>
 
                                         {/* Tutor + Follow */}
                                         <div className="flex items-center gap-3 mb-3">
                                             <img
-                                                src={hoveredClass.tutor.user.avatar}
-                                                alt={hoveredClass.tutor.user.name}
+                                                src={hoveredClass?.tutor?.user?.avatar}
+                                                alt={hoveredClass?.tutor?.user?.name}
                                                 className="w-8 h-8 rounded-full"
                                             />
 
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-sm font-semibold text-gray-900">
-                                                        {hoveredClass.tutor.user.name}
+                                                        {hoveredClass?.tutor?.user?.name}
                                                     </span>
-                                                    <StarRating rating={hoveredClass.tutor.rating} size={12} />
+                                                    <StarRating rating={hoveredClass?.tutor?.rating} size={12} />
                                                     <button className="flex items-center justify-center gap-1 text-sm px-2 border border-blue-600 text-blue-600 rounded-sm hover:bg-blue-100 font-medium transition-colors whitespace-nowrap hover:cursor-pointer">
                                                         <UserPlus className="w-4 h-4" />
                                                         <span>Follow</span>
@@ -600,11 +606,11 @@ const ClassBrowser = ({ initialData }) => {
                                         <div className="space-y-2 text-sm text-gray-600 mb-4">
                                             <div className="flex items-center gap-2">
                                                 <Users className="w-4 h-4" />
-                                                <span>{hoveredClass.tutor.totalStudents} students</span>
+                                                <span>{hoveredClass?.tutor?.totalStudents} students</span>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <Video className="w-4 h-4" />
-                                                <span>{hoveredClass.type}</span>
+                                                <span>{hoveredClass?.type}</span>
                                             </div>
                                         </div>
 
@@ -620,13 +626,13 @@ const ClassBrowser = ({ initialData }) => {
                                             <span>Watch Preview</span>
                                         </button>
 
-                                        <button onClick={() => toggleWishlist(hoveredClass.id)} className="flex items-center justify-center gap-2 w-full mt-2 py-2.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold rounded-lg hover:cursor-pointer">
+                                        <button onClick={() => toggleWishlist(hoveredClass?.id)} className="flex items-center justify-center gap-2 w-full mt-2 py-2.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold rounded-lg hover:cursor-pointer">
                                             <Heart
-                                                className={`w-5 h-5 hover:text-red-600 ${hoveredClass.isWishlisted
+                                                className={`w-5 h-5 hover:text-red-600 ${hoveredClass?.isWishlisted
                                                     ? "fill-red-500 text-red-500"
                                                     : "text-blue-500"
                                                     }`}
-                                            /> <span>{hoveredClass.isWishlisted ? 'Added to Wishlist' : 'Add to Wishlist'}</span>
+                                            /> <span>{hoveredClass?.isWishlisted ? 'Added to Wishlist' : 'Add to Wishlist'}</span>
                                         </button>
                                     </div>
                                 ) : (
@@ -718,11 +724,11 @@ const ClassBrowser = ({ initialData }) => {
                         <div className="flex items-center justify-between p-4 border-b">
                             <div>
                                 <h3 className="text-lg font-bold text-gray-900">
-                                    {previewClass.title}
+                                    {previewClass?.title}
                                 </h3>
                                 <div className="flex items-center gap-2 text-sm text-gray-600">
-                                    <span>{previewClass.tutor.user.name}</span>
-                                    <StarRating rating={previewClass.tutor.rating} size={12} />
+                                    <span>{previewClass?.tutor?.user?.name}</span>
+                                    <StarRating rating={previewClass?.tutor?.rating} size={12} />
                                 </div>
                             </div>
 
