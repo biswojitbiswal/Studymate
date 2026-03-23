@@ -7,14 +7,19 @@ export default function SettingsPage() {
     <div className="max-w-2xl mx-auto p-1 pb-24">
       {/* ACCOUNT */}
       <SettingSection title="Account">
-        <SettingItem
-          title="Profile Information"
-          action={<ChevronRight size={18} />}
-        />
-        <SettingItem
-          title="Change Password"
-          action={<ChevronRight size={18} />}
-        />
+        <Link href="/profile">
+          <SettingItem
+            title="Profile Information"
+            action={<ChevronRight size={18} />}
+          />
+        </Link>
+
+        <Link href="/change-password">
+          <SettingItem
+            title="Change Password"
+            action={<ChevronRight size={18} />}
+          />
+        </Link>
       </SettingSection>
 
       {/* NOTIFICATIONS */}
@@ -35,14 +40,19 @@ export default function SettingsPage() {
 
       {/* SUPPORT */}
       <SettingSection title="Support & About">
-        <SettingItem
-          title="Help Center"
-          action={<ChevronRight size={18} />}
-        />
-        <SettingItem
-          title="Privacy Policy"
-          action={<ChevronRight size={18} />}
-        />
+        <Link href="/help-center">
+          <SettingItem
+            title="Help Center"
+            action={<ChevronRight size={18} />}
+          />
+        </Link>
+
+        <Link href="/privacy-policy">
+          <SettingItem
+            title="Privacy Policy"
+            action={<ChevronRight size={18} />}
+          />
+        </Link>
       </SettingSection>
 
     </div>
