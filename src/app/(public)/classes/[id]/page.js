@@ -115,7 +115,7 @@ export default function ClassDetailsPage() {
             year: "numeric",
         });
     }
-    
+
 
     if (isLoading) {
         return <ClassDetailsSkeleton />
@@ -137,6 +137,16 @@ export default function ClassDetailsPage() {
                                 <Video className="w-4 h-4" />
                                 {data?.data?.type === 'PRIVATE' ? 'Private' : 'Group'} Class
                             </div>
+                            {/* 🔥 Urgency message */}
+                            {data?.data?.capacity - data?.data?.totalEnrolment <= 0 ? (
+                                <span className="px-2 text-xs text-red-600 font-semibold">
+                                    🚫 Class Full
+                                </span>
+                            ) : data?.data?.capacity - data?.data?.totalEnrolment > 0 && data?.data?.capacity - data?.data?.totalEnrolment <= 3 ? (
+                                <span className="px-2 text-xs text-orange-600 font-semibold">
+                                    ⚡ Only {data?.data?.capacity - data?.data?.totalEnrolment} seat{data?.data?.capacity - data?.data?.totalEnrolment > 1 ? "s" : ""} left!
+                                </span>
+                            ) : null}
 
                             {/* Title */}
                             <h1 className="text-4xl lg:text-5xl font-bold leading-tight text-gray-900">
@@ -463,6 +473,8 @@ export default function ClassDetailsPage() {
                                     </div>
                                 )}
 
+
+
                                 {/* What's Included */}
                                 <div className="space-y-3">
                                     <p className="font-semibold text-gray-900 text-sm">This class includes:</p>
@@ -482,7 +494,7 @@ export default function ClassDetailsPage() {
                                 </div>
 
                                 {/* CTA Buttons - Hidden on mobile, shown on larger screens */}
-                                <div className="hidden lg:flex lg:flex-col space-y-3">
+                                {/* <div className="hidden lg:flex lg:flex-col space-y-3">
                                     <button
                                         disabled={data?.data?.totalEnrolment >= data?.data?.capacity}
                                         onClick={() => router.push(`/checkout/class/${data?.data?.id}`)}
@@ -491,7 +503,7 @@ export default function ClassDetailsPage() {
                                             : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
                                             }`}
                                     >
-                                        Enroll Now {data?.data?.capcity}
+                                        Enroll Now
                                     </button>
 
                                     <button
@@ -506,7 +518,36 @@ export default function ClassDetailsPage() {
                                         />
                                         {data?.data?.isWishlisted ? 'Added to Wishlist' : 'Add to Wishlist'}
                                     </button>
-                                </div>
+                                </div> */}
+                                <button
+                                    disabled={
+                                        !data?.data?.isPurchased &&
+                                        data?.data?.totalEnrolment >= data?.data?.capacity
+                                    }
+                                    onClick={() => {
+                                        if (data?.data?.isPurchased) {
+                                            router.push(`/dashboard/student/learning/${data?.data?.id}/overview`);
+                                        } else if (
+                                            data?.data?.totalEnrolment < data?.data?.capacity
+                                        ) {
+                                            router.push(`/checkout/class/${data?.data?.id}`);
+                                        }
+                                    }}
+                                    className={`w-full py-3.5
+                                    text-white font-semibold rounded-xl shadow-lg shadow-blue-500/30
+                                    transition-all transform hover:scale-105
+                                    ${!data?.data?.isPurchased &&
+                                            data?.data?.totalEnrolment >= data?.data?.capacity
+                                            ? "bg-gray-400 cursor-not-allowed"
+                                            : "bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 cursor-pointer"
+                                        }`}
+                                >
+                                    {
+                                        data?.data?.isPurchased
+                                            ? "Go to Learning"
+                                            : "Enroll Now"
+                                    }
+                                </button>
                             </div>
                         </div>
                     </aside>
@@ -542,7 +583,7 @@ export default function ClassDetailsPage() {
     );
 }
 
-/* Helper Components */
+
 function MetaCard({ icon: Icon, label, value }) {
     return (
         <div className="flex items-start gap-3 p-3 rounded-lg bg-gray-50 border border-gray-200">

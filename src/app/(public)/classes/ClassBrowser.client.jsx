@@ -517,7 +517,7 @@ const ClassBrowser = ({ initialData }) => {
                                                     </div>
                                                 </div>
 
-                                                <button
+                                                {/* <button
                                                     disabled={classItem?.totalEnrolment >= classItem?.capacity}
                                                     onClick={() => router.push(`/classes/${classItem?.seo_name}`)}
                                                     className={`w-full sm:w-auto
@@ -531,6 +531,36 @@ const ClassBrowser = ({ initialData }) => {
                                                         }`}
                                                 >
                                                     {classItem?.totalEnrolment >= classItem?.capacity ? "Class Full" : "Buy Now"}
+                                                </button> */}
+                                                <button
+                                                    disabled={
+                                                        !classItem?.isPurchased &&
+                                                        classItem?.totalEnrolment >= classItem?.capacity
+                                                    }
+                                                    onClick={() => {
+                                                        if (classItem?.isPurchased) {
+                                                            router.push(`/dashboard/student/learning/${classItem?.id}/overview`);
+                                                        } else if (
+                                                            classItem?.totalEnrolment < classItem?.capacity
+                                                        ) {
+                                                            router.push(`/classes/${classItem.seo_name}`)
+                                                        }
+                                                    }}
+                                                    className={`w-full sm:w-auto
+                                                        px-4 sm:px-6 py-2.5
+                                                        text-white font-semibold
+                                                        rounded-md transition-colors
+                                                        ${!classItem?.isPurchased &&
+                                                            classItem?.totalEnrolment >= classItem?.capacity
+                                                            ? "bg-gray-400 cursor-not-allowed"
+                                                            : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                                                        }`}
+                                                >
+                                                    {
+                                                        classItem?.isPurchased
+                                                            ? "Go to Learning"
+                                                            : "Buy Now"
+                                                    }
                                                 </button>
                                             </div>
                                         </div>
