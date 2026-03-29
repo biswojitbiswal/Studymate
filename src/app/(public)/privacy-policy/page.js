@@ -1,6 +1,19 @@
+'use client';
+import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
+
 export default function PrivacyPolicyPage() {
+  const router = useRouter()
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6 pt-26 space-y-6 pb-10">
+    <div className="max-w-3xl min-h-screen mx-auto px-4 py-6 pt-26 space-y-6 pb-10">
+      {/* Back Button */}
+            <button
+                onClick={() => router.back()}
+                className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg backdrop-blur-sm transition shrink-0 hover:cursor-pointer border border-gray-400"
+            >
+                <ArrowLeft size={18} />
+                <span className="text-sm font-medium">Back</span>
+            </button>
 
       <div>
         <h1 className="text-xl font-semibold">Privacy Policy</h1>

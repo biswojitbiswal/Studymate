@@ -56,6 +56,12 @@ export const API = {
   },
 
 
+  PREFERENCE: {
+    CREATE: `notification-preferences`,
+    GET: `notification-preferences`
+  },
+
+
   ADMIN: {
     BOARD: {
       CREATE: `/board`,

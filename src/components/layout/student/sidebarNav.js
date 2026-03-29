@@ -35,12 +35,6 @@ export const navItems = [
     icon: Presentation,
     key: "learning",
   },
-
-  // {
-  //   label: "Explore",
-  //   href: "/classes",
-  //   icon: Compass,
-  // },
   {
     label: "My Chats",
     href: "/dashboard/student/chats",
@@ -48,7 +42,7 @@ export const navItems = [
     key: "chats",
   },
   {
-    label: "Billings",
+    label: "Billings & Purchase",
     href: "/dashboard/student/billings",
     icon: Wallet,
     key: "billings",
@@ -64,13 +58,13 @@ export const navItems = [
 
 export const mobNavItems = [
   {
-    label: "My Task",
+    label: "Task",
     href: "/dashboard/student/tasks/my",
     icon: ListTodo,
     key: "tasks",
   },
   {
-    label: "My Learning",
+    label: "Learning",
     href: "/dashboard/student/learning",
     icon: Presentation,
     key: "learning",
@@ -82,7 +76,7 @@ export const mobNavItems = [
     key: "dashboard",
   },
   {
-    label: "My Chats",
+    label: "Chats",
     href: "/dashboard/student/chats",
     icon: Send,
     key: "chats",

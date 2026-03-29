@@ -1,8 +1,14 @@
+'use client';
 import { ChevronRight, Icon } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import SettingItem from "./SettingItem";
+import { useNotificationPreference, useUpdateNotificationPreference } from "@/services/public/useNotificationPreference";
+import Link from "next/link";
 
 export default function SettingsPage() {
+  const { data: pref, isLoading } = useNotificationPreference();
+  const { mutate: updatePref } = useUpdateNotificationPreference();
+
   return (
     <div className="max-w-2xl mx-auto p-1 pb-24">
       {/* ACCOUNT */}
@@ -25,16 +31,55 @@ export default function SettingsPage() {
       {/* NOTIFICATIONS */}
       <SettingSection title="Notifications">
         <SettingItem
-          title="Class Reminders"
-          action={<Switch defaultChecked />}
+          title="Email Notifications"
+          action={
+            <Switch
+              checked={pref?.emailEnabled || false}
+              disabled={isLoading}
+              onCheckedChange={(val) =>
+                updatePref({ emailEnabled: val })
+              }
+            />
+          }
         />
+
         <SettingItem
-          title="Assignments"
-          action={<Switch defaultChecked />}
+          title="In-App Notifications"
+          action={
+            <Switch
+              checked={pref?.inAppEnabled || false}
+              disabled={isLoading}
+              onCheckedChange={(val) =>
+                updatePref({ inAppEnabled: val })
+              }
+            />
+          }
         />
+
         <SettingItem
-          title="Messages"
-          action={<Switch />}
+          title="SMS Notifications"
+          action={
+            <Switch
+              checked={pref?.smsEnabled || false}
+              disabled={isLoading}
+              onCheckedChange={(val) =>
+                updatePref({ smsEnabled: val })
+              }
+            />
+          }
+        />
+
+        <SettingItem
+          title="Push Notifications"
+          action={
+            <Switch
+              checked={pref?.pushEnabled || false}
+              disabled={isLoading}
+              onCheckedChange={(val) =>
+                updatePref({ pushEnabled: val })
+              }
+            />
+          }
         />
       </SettingSection>
 

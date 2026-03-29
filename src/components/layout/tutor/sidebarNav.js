@@ -41,12 +41,12 @@ export const navItems = [
     icon: Send,
     key: 'chats'
   },
-  {
-    label: "Settings",
-    href: "/dashboard/tutor/settings",
-    icon: Settings ,
-    key: 'settings'
-  }
+  // {
+  //   label: "Settings",
+  //   href: "/dashboard/tutor/settings",
+  //   icon: Settings ,
+  //   key: 'settings'
+  // }
 ];
 
 

@@ -14,6 +14,8 @@ export default function Sidebar() {
   const segments = useSelectedLayoutSegments();
   const section = segments[0] ?? "dashboard";
 
+  const isSettingsActive = segments.includes("settings");
+
   return (
     <aside className="w-16 h-full bg-blue-600 flex flex-col shadow-lg">
 
@@ -29,10 +31,9 @@ export default function Sidebar() {
                 <Link
                   href={item.href}
                   className={`w-10 h-10 mx-auto flex items-center justify-center rounded-lg transition
-                    ${
-                      active
-                        ? "bg-white text-blue-600 shadow"
-                        : "text-white hover:bg-white/10"
+                    ${active
+                      ? "bg-white text-blue-600 shadow"
+                      : "text-white hover:bg-white/10"
                     }`}
                 >
                   <Icon size={20} />
@@ -50,10 +51,18 @@ export default function Sidebar() {
       <div className="h-14 flex items-center justify-center border-t border-white/10">
         <Tooltip>
           <TooltipTrigger asChild>
-            <button className="w-10 h-10 flex items-center justify-center rounded-lg text-white hover:bg-white/10 transition">
+            <Link
+              href="/dashboard/tutor/settings"
+              className={`w-10 h-10 flex items-center justify-center rounded-lg transition
+          ${isSettingsActive
+                  ? "bg-white text-blue-600 shadow"
+                  : "text-white hover:bg-white/10"
+                }`}
+            >
               <Settings size={20} />
-            </button>
+            </Link>
           </TooltipTrigger>
+
           <TooltipContent side="right">
             Settings
           </TooltipContent>
