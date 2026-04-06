@@ -6,9 +6,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useMarkAllNotificationsAsRead, useMarkNotificationAsRead, useNotifications } from "@/hooks/public/useNotification";
 import { toast } from "sonner";
 import { getAuthToken, useAuthStore } from "@/store/auth";
+import { useRouter } from "next/navigation";
 
 export default function NotificationDropdown({ open, onClose }) {
   const token = getAuthToken();
+  const router = useRouter()
 
   const qc = useQueryClient();
 
@@ -17,7 +19,6 @@ export default function NotificationDropdown({ open, onClose }) {
   const { mutate: markAll } = useMarkAllNotificationsAsRead();
 
 
-  // 🔥 SOCKET CONNECTION
   useEffect(() => {
     const socket = io(process.env.NEXT_PUBLIC_BACKEND_URL, {
       path: "/socket.io",
@@ -75,6 +76,23 @@ export default function NotificationDropdown({ open, onClose }) {
 
   if (!open) return null;
 
+  const handleClick = (n) => {
+    console.log(n);
+
+    markAsRead(n.id);
+
+    // redirect immediately
+    if (n.type === "SESSION") {
+      router.push(`/dashboard/student/learning/${n?.metadata?.classId}/session`);
+    } else if (n.type === "RESOURCE") {
+      router.push(`/dashboard/student/learning/${n?.metadata?.classId}/resources`);
+    } else if (n.type === "ASSIGNMENT") {
+      router.push(`/dashboard/student/learning/${n?.metadata?.classId}/assignments`);
+    } else if (n.type === "MESSAGE") {
+      router.push(`/dashboard/student/chats`);
+    }
+  }
+
 
   return (
     <div className="absolute right-0 mt-2 w-80 bg-white shadow-xl rounded-md border z-50">
@@ -85,7 +103,7 @@ export default function NotificationDropdown({ open, onClose }) {
 
         <button
           onClick={markAll}
-          className="text-xs text-blue-600 hover:underline"
+          className="text-xs text-blue-600 hover:underline hover:cursor-pointer"
         >
           Mark all as read
         </button>
@@ -102,7 +120,7 @@ export default function NotificationDropdown({ open, onClose }) {
         {notifications?.data?.map((n) => (
           <div
             key={n.id}
-            onClick={() => markAsRead(n.id)}
+            onClick={() => handleClick(n)}
             className="p-3 border-b hover:bg-gray-50 cursor-pointer"
           >
             <p className="text-sm font-medium text-gray-800">

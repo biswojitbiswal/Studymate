@@ -6,6 +6,7 @@ import { useStudentResources } from "@/hooks/tutor/useResources";
 import { useEnrolledClassContext } from "../EnrolledClassContext";
 import ResourcesToolbar from "./ResourcesToolbar";
 import ResourcesList from "./ResourcesList";
+import { useDebounce } from "@/lib/utils";
 
 
 export default function ResourcesPage() {

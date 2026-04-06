@@ -477,7 +477,6 @@ const ClassBrowser = ({ initialData }) => {
                                                         <Clock className="w-3 h-3" />
                                                         {classItem?.tutor?.yearsOfExp} experience
                                                     </span>
-                                                    {/* <span>{classItem.tutor.sessions} sessions</span> */}
                                                 </div>
                                             </div>
                                         </div>

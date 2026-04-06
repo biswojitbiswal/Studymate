@@ -1,4 +1,4 @@
-import { notificationService } from "@/services/public/notification";
+import { notificationService } from "@/services/public/notification.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useNotifications = () => {
