@@ -62,6 +62,14 @@ export const API = {
   },
 
 
+  NOTIFICATION: {
+    GET_ALL: `notification`,
+    GET_COUNT: `notification/count`,
+    BULK_MARK_AS_READ: `notification/bulk/mark-read`,
+    MARK_AS_READ: `notification`
+  },
+
+
   ADMIN: {
     BOARD: {
       CREATE: `/board`,

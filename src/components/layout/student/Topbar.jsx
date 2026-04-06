@@ -4,9 +4,17 @@ import { Search, Bell, LogOut, Power } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import Image from "next/image";
 import Link from "next/link";
+import NotificationBell from "@/components/common/NotificationBell";
+import NotificationDropdown from "@/components/common/NotificationDrpdown";
+import { useState } from "react";
+import { useUnreadNotificationCount } from "@/hooks/public/useNotification";
 
 export default function TopBar() {
     const { user, logout } = useAuthStore();
+    const [open, setOpen] = useState(false);
+    const { data: count } = useUnreadNotificationCount();
+    
+
 
     return (
         <header className="h-14 w-full bg-white border-b flex items-center justify-between px-2 lg:px-6">
@@ -33,13 +41,17 @@ export default function TopBar() {
                     {/* Logout */}
                 </button>
 
-                <div className="relative me-2">
-                    <Bell className="w-5 h-5 text-slate-500 cursor-pointer" />
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
-                        2
-                    </span>
-                </div>
+                <div className="relative">
+                    <NotificationBell
+                        count={count}
+                        onOpen={() => setOpen((prev) => !prev)}
+                    />
 
+                    <NotificationDropdown
+                        open={open}
+                        onClose={() => setOpen(false)}
+                    />
+                </div>
 
                 <div className="flex items-center gap-2">
                     <Link
