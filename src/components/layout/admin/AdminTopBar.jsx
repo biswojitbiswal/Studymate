@@ -2,9 +2,14 @@
 
 import { Search, Bell, LogOut, Power } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
+import { useUnreadNotificationCount } from "@/hooks/public/useNotification";
+import NotificationBell from "@/components/common/NotificationBell";
+import { useState } from "react";
 
 export default function AdminTopBar() {
     const { user, logout } = useAuthStore();
+    const [open, setOpen] = useState(false);
+    const { data: count } = useUnreadNotificationCount();
 
     return (
         <header className="h-14 bg-white border-b flex items-center justify-between px-6">
@@ -27,11 +32,13 @@ export default function AdminTopBar() {
                     {/* Logout */}
                 </button>
 
-                <div className="relative me-3">
-                    <Bell className="w-5 h-5 text-slate-500 cursor-pointer" />
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
-                        2
-                    </span>
+                <div className="relative">
+                    <NotificationBell
+                        count={count}
+                        open={open}
+                        onOpen={() => setOpen(true)}
+                        onClose={() => setOpen(false)}
+                    />
                 </div>
 
 

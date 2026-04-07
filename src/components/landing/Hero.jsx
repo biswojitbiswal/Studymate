@@ -1,11 +1,28 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/store/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Hero() {
-  const router = useRouter()
+  const user = useAuthStore((s) => s.user);
+
+  let href = "/signup";
+  let label = "Become a Tutor";
+
+  if (user) {
+    if (user.role === "TUTOR") {
+      href = "/dashboard/tutor";
+      label = "Dashboard";
+    } else if (user.role === "STUDENT") {
+      href = "/tutor-apply";
+      label = "Become a Tutor";
+    } else if (user.role === "ADMIN") {
+      href = "/dashboard/admin";
+      label = "Dashboard";
+    }
+  }
   return (
     <section className="relative overflow-hidden lg:px-18 bg-white pt-26 md:pt-24 lg:pt-30 pb-10">
 
@@ -48,13 +65,13 @@ export default function Hero() {
                 </Button>
               </Link>
 
-              <Link href="/signup">
+              <Link href={href}>
                 <Button
                   size="lg"
                   variant="outline"
                   className="rounded-xl border-blue-600 text-blue-600 hover:bg-blue-50 hover:cursor-pointer"
                 >
-                  Become a Tutor
+                  {label}
                 </Button>
               </Link>
             </div>

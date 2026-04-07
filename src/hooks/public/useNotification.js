@@ -20,7 +20,7 @@ export const useUnreadNotificationCount = () => {
             const res = await notificationService.getUnreadCount();
             return res.data.data;
         },
-        refetchOnWindowFocus: false,
+        // refetchOnWindowFocus: false,
     });
 };
 

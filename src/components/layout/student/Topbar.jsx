@@ -48,10 +48,6 @@ export default function TopBar() {
                         onOpen={() => setOpen(true)}
                         onClose={() => setOpen(false)}
                     />
-
-                    {/* <NotificationDropdown
-                        open={open}
-                    /> */}
                 </div>
 
                 <div className="flex items-center gap-2">

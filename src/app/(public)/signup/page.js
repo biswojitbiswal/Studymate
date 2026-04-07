@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 export const SignupForm = ({ type }) => {
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",

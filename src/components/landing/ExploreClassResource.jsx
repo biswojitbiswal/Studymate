@@ -1,5 +1,6 @@
 "use client";
 
+import { useBrowseClasses } from "@/hooks/public/useClass";
 import { ArrowRight, Play, FileText, BookOpen } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -52,11 +53,29 @@ const RESOURCES = [
   },
 ];
 
+const GRADIENTS = [
+  "from-blue-600 to-indigo-600",
+  "from-purple-600 to-pink-600",
+  "from-green-600 to-emerald-500",
+];
+
 /* ---------------- MAIN COMPONENT ---------------- */
 
 export default function ExploreClassesResources() {
+  const { data, isLoading, isFetching } = useBrowseClasses({ page: 1, limit: 5 })
+
+  const classes = data?.data?.items
+    ?.slice(0, 3) // only 3
+    .map((cls, index) => ({
+      title: cls.title,
+      subtitle: cls.type, // or cls.category/type from backend
+      tutor: cls.tutor?.user?.name || "Tutor",
+      gradient: GRADIENTS[index % GRADIENTS.length],
+    })) || [];
+    
+
   return (
-    <section className="lg:px-18 pt-8">
+    classes.length > 2 && <section className="lg:px-18 pt-8">
       <div className="mx-auto max-w-7xl px-4 lg:px-6 space-y-6">
 
         <div className="text-center space-y-2">
@@ -71,11 +90,11 @@ export default function ExploreClassesResources() {
         <div className="space-y-3">
           <SectionHeader title="Featured" link="View All" />
 
-          <MobileCarousel items={CLASSES} />
+          <MobileCarousel items={classes} />
 
           {/* Desktop Grid */}
           <div className="hidden md:grid gap-6 md:grid-cols-3">
-            {CLASSES.map((item) => (
+            {classes?.map((item) => (
               <ClassCard key={item.title} {...item} />
             ))}
           </div>
@@ -255,11 +274,10 @@ function MobileCarousel({ items }) {
           <button
             key={index}
             onClick={() => setActiveIndex(index + 1)}
-            className={`h-1 rounded-full transition-all duration-300 ${
-              activeIndex === index + 1
+            className={`h-1 rounded-full transition-all duration-300 ${activeIndex === index + 1
                 ? "w-6 bg-blue-600"
                 : "w-3 bg-gray-300"
-            }`}
+              }`}
           />
         ))}
       </div>

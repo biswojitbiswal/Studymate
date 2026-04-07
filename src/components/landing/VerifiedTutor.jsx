@@ -10,6 +10,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { useAuthStore } from "@/store/auth";
 
 const VERIFIED_POINTS = [
     {
@@ -35,6 +36,23 @@ const VERIFIED_POINTS = [
 ];
 
 export default function VerifiedTutorsSection() {
+    const user = useAuthStore((s) => s.user);
+
+    let href = "/signup";
+    let label = "Apply to Tutor";
+
+    if (user) {
+        if (user.role === "TUTOR") {
+            href = "/dashboard/tutor";
+            label = "Dashboard";
+        } else if (user.role === "STUDENT") {
+            href = "/tutor-apply";
+            label = "Apply to Tutor";
+        } else if (user.role === "ADMIN") {
+            href = "/dashboard/admin";
+            label = "Dashboard";
+        }
+    }
     return (
         <section className="py-10">
             <div className="mx-auto max-w-6xl px-4 lg:px-6">
@@ -81,9 +99,13 @@ export default function VerifiedTutorsSection() {
                         </Button>
                     </Link>
 
-                    <Link href="/signin">
-                        <Button size="lg" className="rounded-lg bg-blue-600 hover:cursor-pointer">
-                            Apply To Tutor
+                    <Link href={href}>
+                        <Button
+                            size="lg"
+                            // variant="outline"
+                            className="rounded-xl bg-blue-600 hover:bg-blue-800 hover:cursor-pointer"
+                        >
+                            {label}
                         </Button>
                     </Link>
                 </div>

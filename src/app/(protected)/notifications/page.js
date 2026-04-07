@@ -120,10 +120,10 @@ export default function NotificationsPage() {
     }
 
     return (
-        <div className="max-w-3xl mx-auto p-4 min-h-screen">
+        <div className="max-w-3xl mx-auto p-2 lg:p-4 min-h-screen mb-2 lg:border-2 border-blue-600 rounded-sm">
 
             {/* Header */}
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-4 border-b-2 border-blue-600">
                 <h1 className="text-xl font-semibold">Notifications</h1>
 
                 <button
@@ -176,7 +176,20 @@ export default function NotificationsPage() {
                         </p>
 
                         <p className="text-[10px] text-gray-400 mt-1">
-                            {new Date(n.createdAt).toLocaleString()}
+                            {(() => {
+                                const d = new Date(n.createdAt);
+
+                                const day = String(d.getDate()).padStart(2, "0");
+                                const month = String(d.getMonth() + 1).padStart(2, "0");
+                                const year = d.getFullYear();
+
+                                const time = d.toLocaleTimeString([], {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                });
+
+                                return `${day}-${month}-${year} ${time}`;
+                            })()}
                         </p>
                     </div>
                 ))}

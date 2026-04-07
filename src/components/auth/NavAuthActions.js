@@ -13,11 +13,15 @@ import { useAuthStore } from "@/store/auth";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import NotificationBell from "../common/NotificationBell";
+import { useUnreadNotificationCount } from "@/hooks/public/useNotification";
 
 
 export default function NavAuthActions() {
   const user = useAuthStore((s) => s.user);
   const { logout } = useAuthStore();
+  // const [openBell, setOpenBell] = useState(false);
+  // const { data: count } = useUnreadNotificationCount();
 
   const [open, setOpen] = useState(false);
 
@@ -43,12 +47,14 @@ export default function NavAuthActions() {
           <Power size={20} />
         </button> */}
 
-        <div className="relative me-3">
-          <Bell className="w-6 h-6 text-slate-500 cursor-pointer" />
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
-            2
-          </span>
-        </div>
+        {/* <div className="relative">
+          <NotificationBell
+            count={count}
+            open={openBell}
+            onOpen={() => setOpenBell(true)}
+            onClose={() => setOpenBell(false)}
+          />
+        </div> */}
 
         <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
           <div

@@ -7,6 +7,7 @@ import { useMarkAllNotificationsAsRead, useMarkNotificationAsRead, useNotificati
 import { toast } from "sonner";
 import { getAuthToken, useAuthStore } from "@/store/auth";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function NotificationDropdown({ open }) {
   const user = useAuthStore((s) => s.user);
@@ -156,12 +157,12 @@ export default function NotificationDropdown({ open }) {
 
       {/* Footer */}
       <div className="p-2 text-center border-t">
-        <a
-          href="/dashboard/notifications"
+        <Link
+          href="/notifications"
           className="text-sm text-blue-600 hover:underline"
         >
           View all
-        </a>
+        </Link>
       </div>
     </div>
   );
