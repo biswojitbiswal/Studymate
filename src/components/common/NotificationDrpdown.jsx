@@ -8,14 +8,17 @@ import { toast } from "sonner";
 import { getAuthToken, useAuthStore } from "@/store/auth";
 import { useRouter } from "next/navigation";
 
-export default function NotificationDropdown({ open, onClose }) {
+export default function NotificationDropdown({ open }) {
+  const user = useAuthStore((s) => s.user);
+
   const token = getAuthToken();
+
   const router = useRouter()
 
   const qc = useQueryClient();
 
   const { data: notifications } = useNotifications();
-  const { mutate: markAsRead } = useMarkNotificationAsRead();
+  const { mutateAsync: markAsRead } = useMarkNotificationAsRead();
   const { mutate: markAll } = useMarkAllNotificationsAsRead();
 
 
@@ -27,8 +30,6 @@ export default function NotificationDropdown({ open, onClose }) {
       },
       transports: ["websocket"],
     });
-
-
 
     socket.on("connect", () => {
       console.log("✅ Socket connected:", socket.id);
@@ -76,26 +77,46 @@ export default function NotificationDropdown({ open, onClose }) {
 
   if (!open) return null;
 
-  const handleClick = (n) => {
-    console.log(n);
-
-    markAsRead(n.id);
+  const handleClick = async (n) => {
+    try {
+      await markAsRead(n.id);
+    } catch (err) {
+      console.error(err);
+    }
 
     // redirect immediately
-    if (n.type === "SESSION") {
-      router.push(`/dashboard/student/learning/${n?.metadata?.classId}/session`);
-    } else if (n.type === "RESOURCE") {
-      router.push(`/dashboard/student/learning/${n?.metadata?.classId}/resources`);
-    } else if (n.type === "ASSIGNMENT") {
-      router.push(`/dashboard/student/learning/${n?.metadata?.classId}/assignments`);
-    } else if (n.type === "MESSAGE") {
-      router.push(`/dashboard/student/chats`);
+    if (user.role === 'STUDENT') {
+      if (n.type === "SESSION") {
+        router.push(`/dashboard/student/learning/${n?.metadata?.classId}/session`);
+      } else if (n.type === "RESOURCE") {
+        router.push(`/dashboard/student/learning/${n?.metadata?.classId}/resources`);
+      } else if (n.type === "ASSIGNMENT") {
+        router.push(`/dashboard/student/learning/${n?.metadata?.classId}/assignments`);
+      } else if (n.type === "MESSAGE") {
+        router.push(`/dashboard/student/chats`);
+      }
+    } else if (user.role === "TUTOR") {
+      if (n.type === "SESSION") {
+        router.push(`/dashboard/tutor/classes/${n?.metadata?.classId}/session`);
+      } else if (n.type === "RESOURCE") {
+        router.push(`/dashboard/tutor/classes/${n?.metadata?.classId}/resources`);
+      } else if (n.type === "ASSIGNMENT") {
+        router.push(`/dashboard/tutor/classes/${n?.metadata?.classId}/assignments`);
+      } else if (n.type === "MESSAGE") {
+        router.push(`/dashboard/tutor/chats`);
+      }
+    } else if (user.role === "ADMIN") {
+      if (n.type === "CLASS") {
+        router.push(`/dashboard/admin/classes/${n?.metadata?.classId}`);
+      } else if (n.type === "MESSAGE") {
+        router.push(`/dashboard/admin/chats`);
+      }
     }
   }
 
 
   return (
-    <div className="absolute right-0 mt-2 w-80 bg-white shadow-xl rounded-md border z-50">
+    <div className="absolute right-0 w-80 bg-white shadow-xl rounded-md border z-50">
 
       {/* Header */}
       <div className="flex justify-between items-center p-3 border-b">
@@ -126,7 +147,7 @@ export default function NotificationDropdown({ open, onClose }) {
             <p className="text-sm font-medium text-gray-800">
               {n.title}
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 truncate">
               {n.message}
             </p>
           </div>

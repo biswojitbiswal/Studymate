@@ -13,7 +13,7 @@ export default function TopBar() {
     const { user, logout } = useAuthStore();
     const [open, setOpen] = useState(false);
     const { data: count } = useUnreadNotificationCount();
-    
+
 
 
     return (
@@ -44,13 +44,14 @@ export default function TopBar() {
                 <div className="relative">
                     <NotificationBell
                         count={count}
-                        onOpen={() => setOpen((prev) => !prev)}
-                    />
-
-                    <NotificationDropdown
                         open={open}
+                        onOpen={() => setOpen(true)}
                         onClose={() => setOpen(false)}
                     />
+
+                    {/* <NotificationDropdown
+                        open={open}
+                    /> */}
                 </div>
 
                 <div className="flex items-center gap-2">

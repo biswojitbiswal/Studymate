@@ -40,7 +40,10 @@ export const useMarkNotificationAsRead = () => {
             qc.setQueryData(["notifications"], (old) => {
                 if (!old) return old;
 
-                return old.filter((n) => n.id !== id);
+                return {
+                    ...old,
+                    data: old.data.filter((n) => n.id !== id),
+                };
             });
 
             // also update count
