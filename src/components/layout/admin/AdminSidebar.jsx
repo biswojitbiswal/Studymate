@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSelectedLayoutSegments } from "next/navigation";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Settings } from "lucide-react";
 import { useState } from "react";
 import { adminNavItems } from "./sidebarNav";
 import Image from "next/image";
@@ -95,6 +95,18 @@ export default function AdminSidebar() {
                     );
                 })}
             </nav>
+
+            {/* Bottom Section */}
+            <div className="p-1.5 border-t border-white/10">
+                <Link
+                    href="/dashboard/admin/settings"
+                    className={`${baseItem} ${section === "settings" ? activeItem : inactiveItem
+                        }`}
+                >
+                    <Settings size={18} />
+                    Settings
+                </Link>
+            </div>
         </aside>
     );
 }

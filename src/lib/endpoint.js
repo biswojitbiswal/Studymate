@@ -10,6 +10,9 @@ export const API = {
   PROFILE: `/auth/profile`,
   VERIFY_EMAIL: `/auth/verify-email`,
   TOGGLE_STATUS: `/auth/toggle`,
+  FORGOT_PASSWORD: `/auth/forgot-password`,
+  RESET_PASSWORD: `/auth/reset-password`,
+  CHANGE_PASSWORD: `/auth/change-password`,
 
 
   //Classes

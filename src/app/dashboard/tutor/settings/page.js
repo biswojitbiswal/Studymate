@@ -2,8 +2,8 @@
 import { ChevronRight, Icon } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import SettingItem from "./SettingItem";
-import { useNotificationPreference, useUpdateNotificationPreference } from "@/services/public/useNotificationPreference";
 import Link from "next/link";
+import { useNotificationPreference, useUpdateNotificationPreference } from "@/hooks/public/useNotificationPreference";
 
 export default function SettingsPage() {
   const { data: pref, isLoading } = useNotificationPreference();

@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import { Mail, Lock, User, ChevronRight, Phone } from "lucide-react"
+import { Mail, Lock, User, ChevronRight, Phone, Eye, EyeOff } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { FaFacebook, FaGoogle, FaInstagramSquare } from "react-icons/fa"
@@ -10,7 +10,8 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 export const SignupForm = ({ type }) => {
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showCnfPassword, setShowCnfPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -99,12 +100,26 @@ export const SignupForm = ({ type }) => {
         <div className="relative">
           <Lock className="absolute left-3 top-3 h-5 w-5 text-blue-500" />
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="password"
+            // value={formData.password}
             placeholder="******"
             onChange={handleChange}
+            required
             className="w-full pl-10 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 placeholder:not-lg:"
           />
+          {/* Right toggle icon */}
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-3 text-gray-500"
+          >
+            {showPassword ? (
+              <EyeOff className="h-5 w-5" />
+            ) : (
+              <Eye className="h-5 w-5" />
+            )}
+          </button>
         </div>
       </div>
 
@@ -113,12 +128,25 @@ export const SignupForm = ({ type }) => {
         <div className="relative">
           <Lock className="absolute left-3 top-3 h-5 w-5 text-blue-500" />
           <input
-            type="password"
+            type={showCnfPassword ? "text" : "password"}
             name="confirmPassword"
             placeholder="******"
             onChange={handleChange}
             className="w-full pl-10 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500"
           />
+
+          {/* Right toggle icon */}
+          <button
+            type="button"
+            onClick={() => setShowCnfPassword(!showCnfPassword)}
+            className="absolute right-3 top-3 text-gray-500"
+          >
+            {showCnfPassword ? (
+              <EyeOff className="h-5 w-5" />
+            ) : (
+              <Eye className="h-5 w-5" />
+            )}
+          </button>
         </div>
       </div>
 

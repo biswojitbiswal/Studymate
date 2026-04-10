@@ -1,5 +1,5 @@
+import { preferenceService } from "@/services/public/preference.service";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"; 
-import { preferenceService } from "./preference.service";
 
 
 

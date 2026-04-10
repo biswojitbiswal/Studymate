@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
 import { FaGoogle } from "react-icons/fa";
 import Link from "next/link";
-import { Lock, Mail } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -15,6 +15,7 @@ export default function SignInForm() {
   const [role, setRole] = useState("STUDENT");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false)
   const [err, setErr] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -27,7 +28,7 @@ export default function SignInForm() {
 
     try {
       const { user } = await login(email, password, rememberMe);
-      
+
       if (!user) {
         router.push("/");
         return;
@@ -81,9 +82,9 @@ export default function SignInForm() {
       </div>
 
 
-      <div>
+      {/* <div>
         <label className="block text-sm font-medium mb-1">Password</label>
-        <div className="relative">
+        <div className="relative bg-red-400">
           <Lock className="absolute left-3 top-4 h-5 w-5 text-blue-500" />
           <input
             className="w-full pl-10 py-2 rounded-lg border focus:ring-2"
@@ -93,6 +94,37 @@ export default function SignInForm() {
             required
             type="password"
           />
+        </div>
+      </div> */}
+      <div>
+        <label className="block text-sm font-medium mb-1">Password</label>
+
+        <div className="relative">
+          {/* Left icon */}
+          <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+
+          {/* Input */}
+          <input
+            className="w-full pl-10 pr-10 py-2 rounded-lg border focus:ring-2"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            type={showPassword ? "text" : "password"}
+          />
+
+          {/* Right toggle icon */}
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-3 text-gray-500"
+          >
+            {showPassword ? (
+              <EyeOff className="h-5 w-5" />
+            ) : (
+              <Eye className="h-5 w-5" />
+            )}
+          </button>
         </div>
       </div>
 

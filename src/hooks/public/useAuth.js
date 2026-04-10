@@ -28,3 +28,26 @@ export function useToggleUserStatus() {
   });
 }
 
+
+export function useForgotPassword() {
+  return useMutation({
+    mutationFn: (email) =>
+      authService.forgotPassword(email),
+  });
+}
+
+
+export function useResetPassword() {
+  return useMutation({
+    mutationFn: ({ token, data }) =>
+      authService.resetPassword(token, data),
+  });
+}
+
+
+export function useChangePassword() {
+  return useMutation({
+    mutationFn: (data) =>
+      authService.changePassword(data),
+  });
+}

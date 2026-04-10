@@ -1,39 +1,15 @@
-'use client';
-import { ChevronRight, Icon, Wallet } from "lucide-react";
-import { Switch } from "@/components/ui/switch";
-import SettingItem from "./SettingItem";
-import Link from "next/link";
+"use client"
 import { useNotificationPreference, useUpdateNotificationPreference } from "@/hooks/public/useNotificationPreference";
+import SettingItem from "./SettingItem";
+import { Switch } from "@/components/ui/switch";
 
-export default function SettingsPage() {
-  const { data: pref, isLoading } = useNotificationPreference();
+
+export default function NotificationPage() {
+    const { data: pref, isLoading } = useNotificationPreference();
   const { mutate: updatePref } = useUpdateNotificationPreference();
   
   return (
     <div className="max-w-2xl mx-auto p-1 pb-24">
-      {/* ACCOUNT */}
-      <SettingSection title="Account">
-        <Link href="/profile">
-          <SettingItem
-            title="Profile Information"
-            action={<ChevronRight size={18} />}
-          />
-        </Link>
-
-        <Link href="/change-password">
-          <SettingItem
-            title="Change Password"
-            action={<ChevronRight size={18} />}
-          />
-        </Link>
-
-        <Link href="/dashboard/student/billings">
-          <SettingItem
-            title="Billings & Purchased"
-            action={<ChevronRight size={18} />}
-          />
-        </Link>
-      </SettingSection>
 
       {/* NOTIFICATIONS */}
       <SettingSection title="Notifications">
@@ -91,7 +67,7 @@ export default function SettingsPage() {
       </SettingSection>
 
       {/* SUPPORT */}
-      <SettingSection title="Support & About">
+      {/* <SettingSection title="Support & About">
         <Link href="/help-center">
           <SettingItem
             title="Help Center"
@@ -105,7 +81,7 @@ export default function SettingsPage() {
             action={<ChevronRight size={18} />}
           />
         </Link>
-      </SettingSection>
+      </SettingSection> */}
 
     </div >
   );
