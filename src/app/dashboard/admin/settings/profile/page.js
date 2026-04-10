@@ -4,9 +4,8 @@ import CommonProfile from "@/app/(protected)/profile/CommonProfile";
 import { useAuthStore } from "@/store/auth";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner"; // or react-hot-toast
-// 👉 create/update this hook similar to student
-import { useUpdateAdminProfile } from "@/hooks/admin/useAdmin";
+import { toast } from "sonner";
+import { useUpdateAdminProfile } from "@/hooks/public/useAuth";
 
 export default function SettingsProfilePage() {
   const user = useAuthStore((s) => s.user);
@@ -19,9 +18,10 @@ export default function SettingsProfilePage() {
     avatarPreview: user?.avatar || null,
   });
 
-  const { mutate, isPending } = ();
+  const { mutate, isPending } = useUpdateAdminProfile();
 
   if (!user) return null;
+  
 
   const handleSubmit = () => {
     if (!common.name.trim()) {
@@ -39,28 +39,33 @@ export default function SettingsProfilePage() {
       fd.append("avatar", common.avatar);
     }
 
-    mutate(fd, {
-      onSuccess: () => {
-        toast.success("Profile updated successfully ✅");
+    mutate(
+      {
+        userId: user.id,   // 🔥 IMPORTANT
+        data: fd,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Profile updated successfully ✅");
 
-        // ✅ Sync auth store (VERY IMPORTANT)
-        useAuthStore.setState((s) => ({
-          ...s,
-          user: {
-            ...s.user,
-            name: common.name,
-            email: common.email,
-            phone: common.phone,
-            avatar: common.avatarPreview || s.user.avatar,
-          },
-        }));
-      },
-      onError: (e) => {
-        toast.error(
-          e?.response?.data?.message || "Update failed"
-        );
-      },
-    });
+          useAuthStore.setState((s) => ({
+            ...s,
+            user: {
+              ...s.user,
+              name: common.name,
+              email: common.email,
+              phone: common.phone,
+              avatar: common.avatarPreview || s.user.avatar,
+            },
+          }));
+        },
+        onError: (e) => {
+          toast.error(
+            e?.response?.data?.message || "Update failed"
+          );
+        },
+      }
+    );
   };
 
   return (
@@ -71,7 +76,7 @@ export default function SettingsProfilePage() {
       <Button
         onClick={handleSubmit}
         disabled={isPending}
-        className="w-full bg-blue-600 hover:bg-blue-700"
+        className="w-full bg-blue-600 hover:bg-blue-700 hover:cursor-pointer"
       >
         {isPending ? "Saving..." : "Save Profile"}
       </Button>

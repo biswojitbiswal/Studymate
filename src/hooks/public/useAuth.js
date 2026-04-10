@@ -51,3 +51,11 @@ export function useChangePassword() {
       authService.changePassword(data),
   });
 }
+
+
+export function useUpdateAdminProfile() {
+  return useMutation({
+    mutationFn: ({ userId, data }) =>
+      authService.update(userId, data),
+  });
+}

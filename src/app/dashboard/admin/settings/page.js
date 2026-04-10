@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import SettingsProfilePage from "./profile/page";
 
 export default function SettingsPage() {
-  redirect("/dashboard/admin/settings/profile");
+  return <SettingsProfilePage />;
 }

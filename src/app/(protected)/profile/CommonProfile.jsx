@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 
 export default function CommonProfile({ common, setCommon }) {
   const fileRef = useRef(null);
@@ -17,6 +18,7 @@ export default function CommonProfile({ common, setCommon }) {
       avatarPreview: URL.createObjectURL(file),
     }));
   };
+  
 
   return (
     <Card className="text-center text-2xl rounded-sm">
@@ -32,9 +34,12 @@ export default function CommonProfile({ common, setCommon }) {
             className="h-24 w-24 rounded-full  border-3 border-blue-600 bg-slate-200 overflow-hidden cursor-pointer"
           >
             {common.avatarPreview ? (
-              <img
+              <Image
                 src={common.avatarPreview}
+                alt={common.name || 'Avatar'}
                 className="h-full w-full object-cover"
+                width={100}
+                height={100}
               />
             ) : (
               <span className="flex h-full items-center justify-center text-xl">

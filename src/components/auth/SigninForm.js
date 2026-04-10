@@ -101,7 +101,7 @@ export default function SignInForm() {
 
         <div className="relative">
           {/* Left icon */}
-          <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+          <Lock className="absolute left-3 top-3 h-5 w-5 text-blue-500" />
 
           {/* Input */}
           <input

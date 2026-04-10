@@ -17,7 +17,7 @@ export default function SettingsLayout({ children }) {
       <h1 className="text-2xl font-semibold mb-2">Settings</h1>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b mb-2">
+      <div className="flex gap-8 border-b mb-2">
         {tabs.map((tab) => {
           const isActive = pathname === tab.path;
 
@@ -25,7 +25,7 @@ export default function SettingsLayout({ children }) {
             <Link
               key={tab.path}
               href={tab.path}
-              className={`pr-4 py-2 text-sm font-medium border-b-2 transition ${
+              className={`py-2 text-sm font-medium border-b-2 transition ${
                 isActive
                   ? "border-blue-600 text-blue-600"
                   : "border-transparent text-gray-500 hover:text-black"
