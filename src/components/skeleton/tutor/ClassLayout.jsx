@@ -19,10 +19,12 @@ export default function ClassLayoutSkeleton() {
             </div>
 
             {/* Badges row */}
-            <div className="flex flex-wrap gap-3 mt-3">
-                <div className="h-10 w-28 bg-gray-200 rounded-md" />
-                <div className="h-10 w-28 bg-gray-200 rounded-md" />
-                <div className="h-10 w-28 bg-gray-200 rounded-md" />
+            <div className="flex flex-wrap items-center justify-between gap-3 mt-3">
+                <div className="flex flex-wrap gap-3">
+                    <div className="h-10 w-22 bg-gray-200 rounded-md" />
+                    <div className="h-10 w-22 bg-gray-200 rounded-md" />
+                </div>
+                <div className="h-10 w-22 bg-gray-200 rounded-md" />
             </div>
 
             {/* Tabs */}

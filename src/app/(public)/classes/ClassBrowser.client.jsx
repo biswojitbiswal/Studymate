@@ -411,7 +411,9 @@ const ClassBrowser = ({ initialData }) => {
                                             alt={classItem?.title}
                                             fill
                                             className="object-cover"
-                                            sizes="192px"
+                                            // sizes="192px"
+                                            width={auto}
+                                            height={auto}
                                         />
 
                                     </div>

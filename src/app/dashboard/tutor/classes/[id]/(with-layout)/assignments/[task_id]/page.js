@@ -1,15 +1,20 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useAssignment } from "@/hooks/tutor/useAssignments";
 import { MessageCircle } from "lucide-react";
 import { AssignmentDetailsSkeleton } from "@/components/skeleton/tutor/AssignmentSkeleton";
+import { useCreateDM } from "@/hooks/public/useChat";
 
 export default function AssignmentDetailsPage() {
-
   const { task_id } = useParams();
 
   const { data, isLoading, error } = useAssignment(task_id);
+
+
+  const router = useRouter();
+  const { mutateAsync: createDM } = useCreateDM();
+
 
   if (isLoading) {
     return <AssignmentDetailsSkeleton />
@@ -22,6 +27,22 @@ export default function AssignmentDetailsPage() {
   const assignment = data?.data?.assignment;
   const summary = data?.data?.summary;
   const students = data?.data?.students || [];
+
+  const handleMessage = async (studentUserId) => {
+    try {
+      const res = await createDM({
+        receiverId: studentUserId,
+        classId: assignment.classId,
+      });
+
+      const conversationId = res?.data?.data?.id;
+
+
+      router.push(`/dashboard/tutor/chats/${conversationId}`);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const statusColor = {
     TODO: "bg-gray-100 text-gray-600",
@@ -111,7 +132,8 @@ export default function AssignmentDetailsPage() {
               </span>
 
               <button
-                className="p-2 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 hover:cursor-pointer"
+                onClick={() => handleMessage(student.studentUserId)}
+                className="p-2 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200"
               >
                 <MessageCircle size={16} />
               </button>

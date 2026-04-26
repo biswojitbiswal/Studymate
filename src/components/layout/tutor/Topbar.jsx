@@ -20,7 +20,7 @@ export default function TopBar() {
                     src="/Logo.png"
                     alt="StudyNest Logo"
                     unoptimized
-                    width={140}
+                    width={120}
                     height={120}
                     priority
                 />
@@ -59,6 +59,7 @@ export default function TopBar() {
                                 alt={user?.name || "User avatar"}
                                 fill
                                 className="object-cover"
+                                sizes="100"
                             />
                         ) : (
                             <span>

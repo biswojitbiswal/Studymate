@@ -27,6 +27,15 @@ export const API = {
   },
 
 
+  CHAT: {
+    DM_CREATE: `/chat/dm`,
+    GROUP_CREATE: `/chat/group`,
+    MESSAGE_CREATE: `/chat/message`,
+    GET_MESSAGE: `/chat/messages`,
+    GET_CONVERSATIONS: `/chat/conversations`,
+  },
+
+
 
   //Checkout
   GET_CHECKOUT_DETAILS: `/order/checkout`,

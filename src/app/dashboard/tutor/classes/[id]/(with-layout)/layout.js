@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { useParams, usePathname, useRouter, useSelectedLayoutSegments } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, BookOpenText, CheckCircle, Users } from "lucide-react";
+import { ArrowLeft, BookOpenText, CheckCircle, MessageCircle, Users } from "lucide-react";
 import { useClass } from "@/hooks/tutor/useClass";
 import LoadingScreen from "@/components/common/LoadingScreen";
 import { ClassProvider } from "./ClassContext";
 import { useMemo } from "react";
 import ClassLayoutSkeleton from "@/components/skeleton/tutor/ClassLayout";
+import { useCreateGroup } from "@/hooks/public/useChat";
 
 
 const tabs = [
@@ -17,7 +18,7 @@ const tabs = [
     // { name: "Attendance", href: "attendance" },
     { name: "Assignments", href: "assignments", key: "assignments" },
     { name: "Resources", href: "resources", key: "resources" },
-    // { name: "Students", href: "students", key: "students" },
+    { name: "Students", href: "students", key: "students" },
 ];
 
 const STATUS_BASE =
@@ -38,8 +39,10 @@ export default function ClassLayout({ children }) {
     const pathname = usePathname();
     const router = useRouter()
 
+    const { mutateAsync: createGroup } = useCreateGroup();
+
     const segments = useSelectedLayoutSegments();
-      const section = segments[0] ?? "dashboard";
+    const section = segments[0] ?? "dashboard";
 
     const { data, isLoading } = useClass(id);
     const klass = data?.data;
@@ -51,6 +54,23 @@ export default function ClassLayout({ children }) {
         isDraft: klass?.status === "DRAFT",
         isGroup: klass?.type === "GROUP",
     }), [klass, id]);
+
+
+    const handleChat = async () => {
+        try {
+            const res = await createGroup({
+                classId: klass.id
+            });
+
+            const conversationId = res?.data?.id;
+            // console.log(conversationId, res);
+            
+
+            router.push(`/dashboard/tutor/chats/${conversationId}`);
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
 
     if (isLoading) return <ClassLayoutSkeleton />;
@@ -68,14 +88,16 @@ export default function ClassLayout({ children }) {
                             className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg backdrop-blur-sm transition shrink-0 hover:cursor-pointer"
                         >
                             <ArrowLeft size={18} />
-                            <span className="text-sm font-medium">Back</span>
+                            {/* <span className="text-sm font-medium">Back</span> */}
                         </button>
 
                         {/* Title + Description */}
                         <div className="flex flex-col min-w-0">
-                            <h1 className="text-2xl font-semibold leading-tight truncate">
-                                {klass?.title || "Tuition Class"}
-                            </h1>
+                            <div>
+                                <h1 className="text-2xl font-semibold leading-tight truncate">
+                                    {klass?.title || "Tuition Class"}
+                                </h1>
+                            </div>
 
                             <p className="text-sm opacity-90 truncate">
                                 {`${klass?.subject?.name} | ${klass?.level?.name}`}
@@ -85,30 +107,51 @@ export default function ClassLayout({ children }) {
                     </div>
                 </div>
 
-                <div className="flex flex-wrap gap-3 mt-3">
-                    {/* Visibility */}
-                    <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-md px-3 py-1.5 text-sm font-medium">
-                        <BookOpenText size={14} />
-                        {/* <span>Visibility:</span> */}
-                        <span className="font-semibold">{klass?.visibility}</span>
+                <div className="flex flex-wrap items-center justify-between gap-3 mt-3">
+
+                    {/* LEFT SIDE (Badges) */}
+                    <div className="flex flex-wrap gap-3">
+
+                        {/* Class Type */}
+                        <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-md px-3 py-1.5 text-sm font-medium">
+                            <Users size={14} />
+                            <span className="font-semibold">{klass?.type}</span>
+                        </div>
+
+                        {/* Status */}
+                        <div
+                            className={`${STATUS_BASE} ${STATUS_STYLES[klass?.status] ||
+                                "bg-gray-50 border-gray-200 text-gray-700"
+                                }`}
+                        >
+                            <CheckCircle size={14} />
+                            <span className="font-semibold">{klass?.status}</span>
+                        </div>
+
+                        {/* Visibility */}
+                        {/* <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-md px-3 py-1.5 text-sm font-medium">
+                            <BookOpenText size={14} />
+                            <span className="font-semibold">{klass?.visibility}</span>
+                        </div> */}
+
                     </div>
 
-                    {/* Class Type */}
-                    <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-md px-3 py-1.5 text-sm font-medium">
-                        <Users size={14} />
-                        {/* <span>Class Type:</span> */}
-                        <span className="font-semibold">{klass?.type}</span>
-                    </div>
+                    {/* RIGHT SIDE (Chat Button) */}
+                    {
+                        klass.type === 'GROUP' && (<div className="flex items-center gap-2">
 
-                    {/* Status */}
-                    <div
-                        className={`${STATUS_BASE} ${STATUS_STYLES[klass?.status] || "bg-gray-50 border-gray-200 text-gray-700"
-                            }`}
-                    >
-                        <CheckCircle size={14} />
-                        <span className="font-semibold">{klass?.status}</span>
-                    </div>
+                            <button
+                                onClick={handleChat}
+                                className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition hover:cursor-pointer"
+                            >
+                                <MessageCircle size={14} />
+                                <span>
+                                    Group
+                                </span>
+                            </button>
 
+                        </div>)
+                    }
 
                 </div>
 
