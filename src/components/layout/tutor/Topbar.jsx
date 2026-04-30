@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Bell, LogOut, Power } from "lucide-react";
+import { Search, Bell, LogOut, Power, Wallet } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import Image from "next/image";
 import Link from "next/link";
@@ -34,7 +34,7 @@ export default function TopBar() {
                     onClick={logout}
                     className="flex items-center text-sm cursor-pointer text-red-600 hover:bg-gray-200 rounded p-2"
                 >
-                    <Power size={24} />
+                    <Power size={22} />
                     {/* Logout */}
                 </button>
 
@@ -45,6 +45,12 @@ export default function TopBar() {
                         onOpen={() => setOpen(true)}
                         onClose={() => setOpen(false)}
                     />
+                </div>
+
+                <div className="relative text-blue-600 pr-2 md:hidden">
+                    <Link href="/dashboard/tutor/wallet">
+                    <Wallet size={22}/>
+                    </Link>
                 </div>
 
 

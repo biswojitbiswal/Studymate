@@ -249,6 +249,13 @@ export const API = {
       GET_BY_ID: `/assignments`,
       GET: `/assignments/class`,
       GET_FOR_STUDENT: `/assignments/assigned`,
+    },
+
+
+    WALLET: {
+      CREATE: `/wallet/withdrawls`,
+      GET_WITHDRAWL_TUTOR: `/wallet/withdrawls`,
+      GET_ALL: `/wallet/admin/withdrawls`
     }
   }
 };

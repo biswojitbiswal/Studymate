@@ -116,5 +116,11 @@ export const adminNavItems = [
     href: "/dashboard/admin/reviews",
     icon: Star,
     key: 'reviews'
+  },
+  {
+    label: "Tutor Payouts",
+    href: "/dashboard/admin/payouts",
+    icon: Wallet,
+    key: 'payouts'
   }
 ];

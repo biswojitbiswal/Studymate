@@ -12,7 +12,8 @@ import {
  BookOpenCheck,
  Send,
  Presentation,
- Settings
+ Settings,
+ Wallet
 } from "lucide-react";
 import { PiStudentFill } from "react-icons/pi";
 
@@ -41,12 +42,12 @@ export const navItems = [
     icon: Send,
     key: 'chats'
   },
-  // {
-  //   label: "Settings",
-  //   href: "/dashboard/tutor/settings",
-  //   icon: Settings ,
-  //   key: 'settings'
-  // }
+  {
+    label: "My Wallet",
+    href: "/dashboard/tutor/wallet",
+    icon: Wallet ,
+    key: 'wallet'
+  }
 ];
 
 
