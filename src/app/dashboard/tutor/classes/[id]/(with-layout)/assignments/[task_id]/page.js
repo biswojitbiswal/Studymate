@@ -133,7 +133,7 @@ export default function AssignmentDetailsPage() {
 
               <button
                 onClick={() => handleMessage(student.studentUserId)}
-                className="p-2 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200"
+                className="p-2 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 hover:cursor-pointer"
               >
                 <MessageCircle size={16} />
               </button>

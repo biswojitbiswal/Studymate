@@ -10,6 +10,8 @@ import {
     EyeOff,
     X,
     MemoryStick,
+    Star,
+    MessageCircle,
 } from "lucide-react";
 import { useEnrolledClassContext } from "../EnrolledClassContext";
 import Image from "next/image";
@@ -24,6 +26,8 @@ import { Button } from "@/components/ui/button";
 import AssignmentDetailsModal from "../assignments/AssignmentDetails";
 import { toast } from "sonner";
 import ReviewCard from "./ReviewCard";
+import { useRouter } from "next/navigation";
+import { useCreateDM } from "@/hooks/public/useChat";
 
 
 const DAY_LABELS = {
@@ -73,6 +77,8 @@ function formatDate(dateString) {
 
 export default function ClassOverviewPage() {
     const [preview, setPreview] = useState(null);
+      const router = useRouter();
+      const { mutateAsync: createDM } = useCreateDM();
 
 
     const now = new Date()
@@ -111,6 +117,22 @@ export default function ClassOverviewPage() {
         setOpenDetails(true);
     };
 
+
+    const handleMessage = async (studentUserId) => {
+    try {
+      const res = await createDM({
+        receiverId: studentUserId,
+        classId: klass?.id,
+      });
+
+      const conversationId = res?.data?.data?.id;
+
+
+      router.push(`/dashboard/student/chats/${conversationId}`);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
     return (
         <div className="space-y-2">
@@ -196,7 +218,7 @@ export default function ClassOverviewPage() {
 
             </div>
 
-            {/* Description + Preview */}
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
                 {/* Schedule & Joining Window */}
                 <div className="lg:col-span-2 bg-white border rounded-md p-2 md:p-5">
@@ -375,6 +397,103 @@ export default function ClassOverviewPage() {
                     {klass?.description}
                 </p>
             </div>
+
+            {/* Tutor Description */}
+            <div className="bg-white border rounded-xl p-5 shadow-sm hover:shadow-md transition">
+            
+            {/* Top Section */}
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+
+                {/* Avatar */}
+                <div className="relative w-20 h-20 shrink-0">
+                    <Image
+                        src={klass?.tutor?.user?.avatar}
+                        alt="Tutor"
+                        fill
+                        className="rounded-full object-cover border"
+                        unoptimized
+                    />
+                </div>
+
+                {/* Info */}
+                <div className="flex-1 text-center sm:text-left">
+
+                    {/* Name */}
+                    <h3 className="text-lg font-semibold text-gray-900">
+                        {klass?.tutor?.user?.name}
+                    </h3>
+
+                    {/* Title */}
+                    <p className="text-sm text-gray-500">
+                        {klass?.tutor?.title}
+                    </p>
+
+                    {/* Rating */}
+                    <div className="flex justify-center sm:justify-start items-center gap-1 mt-2">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                            <Star
+                                key={i}
+                                size={16}
+                                className={
+                                    i < Math.floor(klass?.tutor?.rating)
+                                        ? "text-yellow-500 fill-yellow-500"
+                                        : "text-gray-300"
+                                }
+                            />
+                        ))}
+                        <span className="text-sm text-gray-600 ml-1">
+                            ({klass?.tutor?.rating})
+                        </span>
+                    </div>
+
+                    {/* Experience */}
+                    <p className="text-sm text-gray-600 mt-1">
+                        {klass?.tutor?.yearsOfExp} years experience
+                    </p>
+                </div>
+
+                {/* CTA Button */}
+                <div className="w-full sm:w-auto">
+                    <button
+                        onClick={() => handleMessage(klass?.tutor?.user?.id)}
+                        className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition hover:cursor-pointer"
+                    >
+                        <MessageCircle size={16} />
+                        Message Tutor
+                    </button>
+                </div>
+            </div>
+
+            {/* Divider */}
+            <div className="my-4 border-t" />
+
+            {/* Bottom Section */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+
+                {/* Qualification */}
+                <div>
+                    <p className="font-medium text-gray-900 mb-1">Qualification</p>
+                    <div className="flex flex-wrap gap-2">
+                        {klass?.tutor?.qualification?.map((q, idx) => (
+                            <span
+                                key={idx}
+                                className="px-2 py-1 bg-blue-50 text-blue-600 rounded text-xs"
+                            >
+                                {q}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Bio */}
+                <div>
+                    <p className="font-medium text-gray-900 mb-1">About</p>
+                    <p className="text-gray-600 line-clamp-3">
+                        {klass?.tutor?.bio}
+                    </p>
+                </div>
+            </div>
+        </div>
 
             {/* Syllabus */}
             <div className="bg-white border rounded-md p-2 md:p-5">

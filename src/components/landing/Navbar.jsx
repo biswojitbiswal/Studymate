@@ -56,7 +56,7 @@ export default function FloatingNavbar() {
 
         {/* Center Navigation */}
         <div className="flex items-center gap-6 text-gray-600">
-          {["Classes", "Groups", "Tutors", "Resources", "About", "Contact"].map(
+          {["Classes", "Tutors", "About", "Contact"].map(
             (item) => {
               const href = `/${item.toLowerCase()}`;
               const isActive = pathname === href;
@@ -126,9 +126,7 @@ export default function FloatingNavbar() {
       <nav className="flex flex-col gap-4 mt-8 text-lg">
         {[
           "Classes",
-          "Groups",
           "Tutors",
-          "Resources",
           "About",
           "Contact",
         ].map((item) => {

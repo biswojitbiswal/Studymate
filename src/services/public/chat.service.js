@@ -16,4 +16,16 @@ export const chatService = {
 
     getConversations: () =>
         api.get(API.CHAT.GET_CONVERSATIONS),
+
+    deleteForme: (id) =>
+        api.delete(`${API.CHAT.DELETE_FOR_ME}/${id}/delete-for-me`),
+
+    deleteForEveryone: (id) =>
+        api.delete(`${API.CHAT.DELETE_FOR_EVERYONE}/${id}/delete-for-everyone`),
+
+    togglePin: (id) =>
+        api.post(`${API.CHAT.TOGGLE_PINNED}/${id}/toggle-pin`),
+
+    toggleMute: (conversationId) =>
+        api.post(`${API.CHAT.MUTE_CONVERSATIONS}/${conversationId}/toggle-mute`),
 };

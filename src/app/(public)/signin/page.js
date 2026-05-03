@@ -9,7 +9,7 @@ import { BsTwitterX } from "react-icons/bs";
 export default function SignInPage() {
   return (
     <RedirectIfAuthClient redirectToHomeIfAuth={true}>
-      <section className="min-h-screen flex items-center justify-center bg-white px-6 py-24">
+      <section className="min-h-screen flex items-center justify-center bg-white px-3 py-24">
         <div className="w-full max-w-lg rounded-md shadow-md border pt-6">
 
           {/* Header */}

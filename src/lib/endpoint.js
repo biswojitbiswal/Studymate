@@ -33,7 +33,12 @@ export const API = {
     MESSAGE_CREATE: `/chat/message`,
     GET_MESSAGE: `/chat/messages`,
     GET_CONVERSATIONS: `/chat/conversations`,
+    DELETE_FOR_ME: `/chat/messages`,
+    DELETE_FOR_EVERYONE: `/chat/messages`,
+    TOGGLE_PINNED: `/chat/messages`,
+    MUTE_CONVERSATIONS: `/chat/conversations`,
   },
+
 
 
 
@@ -184,6 +189,10 @@ export const API = {
     ORDERS: {
       GET_MY_ORDERS: `/order/my`,
       GET_BY_ID: `order`
+    },
+
+    DASHBOARD: {
+      ANALYTICS: `/admin/student/analytics`
     }
   },
 
@@ -256,6 +265,11 @@ export const API = {
       CREATE: `/wallet/withdrawls`,
       GET_WITHDRAWL_TUTOR: `/wallet/withdrawls`,
       GET_ALL: `/wallet/admin/withdrawls`
+    },
+
+
+    DASHBOARD: {
+      ANALYTICS: `/admin/tutor/analytics`
     }
   }
 };

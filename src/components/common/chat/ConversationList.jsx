@@ -2,6 +2,7 @@
 
 import LoadingScreen from "@/components/common/LoadingScreen";
 import { useConversations } from "@/hooks/public/useChat";
+import { BellOff } from "lucide-react";
 
 
 function formatTime(date) {
@@ -56,19 +57,39 @@ export default function ConversationList({ onSelect, selectedId }) {
 
               {/* Top Row */}
               <div className="flex justify-between items-center">
+
+                {/* LEFT SIDE */}
                 <p className="font-medium text-gray-800 truncate">
                   {conv.type === "GROUP" ? conv.classTitle : user?.name}
                 </p>
 
+                {/* RIGHT SIDE */}
+                <div className="flex items-center gap-2">
+
+                  {/* 🔕 MUTE ICON */}
+                  {conv.isMuted && (
+                    <BellOff size={14} className="text-gray-400" />
+                  )}
+
+                  {/* 🔵 UNREAD COUNT */}
+                  {conv.unreadCount > 0 && (
+                    <span className="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full">
+                      {conv.unreadCount}
+                    </span>
+                  )}
+
+                </div>
+              </div>
+
+              {/* Bottom Row */}
+              <div className="flex justify-between items-center">
+                <p className="text-sm text-gray-500 truncate">
+                  {conv?.lastMessage?.content ?? "Start conversation 👋"}
+                </p>
                 <span className="text-xs text-gray-400 whitespace-nowrap">
                   {formatTime(conv.lastMessage?.createdAt)}
                 </span>
               </div>
-
-              {/* Bottom Row */}
-              <p className="text-sm text-gray-500 truncate">
-                {conv.lastMessage?.content || "Start conversation 👋"}
-              </p>
             </div>
           </div>
         );

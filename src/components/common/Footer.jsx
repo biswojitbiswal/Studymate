@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="border-t bg-white lg:px-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
 
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 lg:gap-18 sm:grid-cols-2 lg:grid-cols-4">
 
           {/* BRAND */}
           <div className="sm:col-span-2 lg:col-span-1">
@@ -22,7 +22,7 @@ export default function Footer() {
             </p>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between md:col-span-3">
             {/* PRODUCT */}
             <div className="text-start sm:text-left">
               <h4 className="text-sm font-semibold text-gray-900">Product</h4>
@@ -37,9 +37,9 @@ export default function Footer() {
             <div className="text-start sm:text-left">
               <h4 className="text-sm font-semibold text-gray-900">For Users</h4>
               <ul className="mt-4 space-y-2 text-sm text-gray-600">
-                <li><a href="#" className="hover:text-blue-600 transition">Students</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition">Tutors</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition">Sign In</a></li>
+                <li><a href="/classes" className="hover:text-blue-600 transition">Classes</a></li>
+                <li><a href="/tutors" className="hover:text-blue-600 transition">Tutors</a></li>
+                <li><a href="/signin" className="hover:text-blue-600 transition">Sign In</a></li>
               </ul>
             </div>
 
@@ -47,9 +47,10 @@ export default function Footer() {
             <div className="text-start sm:text-left">
               <h4 className="text-sm font-semibold text-gray-900">Legal</h4>
               <ul className="mt-4 space-y-2 text-sm text-gray-600">
+                <li><a href="/about" className="hover:text-blue-600 transition">About</a></li>
                 <li><a href="#" className="hover:text-blue-600 transition">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition">Contact</a></li>
+                {/* <li><a href="#" className="hover:text-blue-600 transition">Terms of Service</a></li> */}
+                <li><a href="/contact" className="hover:text-blue-600 transition">Contact</a></li>
               </ul>
             </div>
           </div>
