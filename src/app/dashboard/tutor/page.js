@@ -34,44 +34,6 @@ import { toast } from "sonner";
 import { useTutorAnalytics } from "@/hooks/tutor/useDashboard";
 import { WalletCardSkeleton } from "@/components/skeleton/tutor/WalletSkeleton";
 
-
-const earningsData = [
-  { name: "1 May", earnings: 500 },
-  { name: "5 May", earnings: 900 },
-  { name: "10 May", earnings: 1200 },
-  { name: "15 May", earnings: 1500 },
-  { name: "20 May", earnings: 1900 },
-  { name: "25 May", earnings: 2100 },
-  { name: "30 May", earnings: 2450 },
-  { name: "1 May", earnings: 500 },
-  { name: "5 May", earnings: 900 },
-  { name: "10 May", earnings: 1200 },
-  { name: "15 May", earnings: 1500 },
-  { name: "20 May", earnings: 1900 },
-  { name: "25 May", earnings: 2100 },
-  { name: "30 May", earnings: 2450 },
-  { name: "1 May", earnings: 500 },
-  { name: "5 May", earnings: 900 },
-  { name: "10 May", earnings: 1200 },
-  { name: "15 May", earnings: 1500 },
-  { name: "20 May", earnings: 1900 },
-  { name: "25 May", earnings: 2100 },
-  { name: "30 May", earnings: 2450 },
-  { name: "1 May", earnings: 500 },
-  { name: "5 May", earnings: 900 },
-  { name: "10 May", earnings: 1200 },
-  { name: "15 May", earnings: 1500 },
-  { name: "20 May", earnings: 1900 },
-  { name: "25 May", earnings: 2100 },
-  { name: "30 May", earnings: 2450 },
-];
-
-const sessionData = [
-  { name: "Completed", value: 18 },
-  { name: "Ongoing", value: 6 },
-  { name: "Scheduled", value: 6 },
-];
-
 const COLORS = [
   "#2563eb", // blue-600
   "#a855f7", // purple-500
@@ -79,14 +41,22 @@ const COLORS = [
   "#22c55e", // green-500
 ];
 
+const months = [
+  { value: 1, label: "January" },
+  { value: 2, label: "February" },
+  { value: 3, label: "March" },
+  { value: 4, label: "April" },
+  { value: 5, label: "May" },
+  { value: 6, label: "June" },
+  { value: 7, label: "July" },
+  { value: 8, label: "August" },
+  { value: 9, label: "September" },
+  { value: 10, label: "October" },
+  { value: 11, label: "November" },
+  { value: 12, label: "December" },
+];
+
 export default function TutorDashboard() {
-  const parseMonthYear = (value) => {
-    const date = new Date(value);
-    return {
-      month: date.getMonth() + 1, // 1–12
-      year: date.getFullYear(),
-    };
-  };
   const user = useAuthStore(s => s.user);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -107,36 +77,31 @@ export default function TutorDashboard() {
 
   const currentDate = new Date();
 
-  const formatMonth = (date) =>
-    date.toLocaleString("en-US", {
-      month: "short",
-      year: "numeric",
-    });
+  const [selectedMonth, setSelectedMonth] = useState(
+    currentDate.getMonth() + 1
+  );
 
-  // ✅ Generate all 12 months of current year
-  const generateMonths = () => {
-    const year = currentDate.getFullYear();
-    return Array.from({ length: 12 }, (_, i) =>
-      formatMonth(new Date(year, i))
-    );
-  };
+  const [selectedYear, setSelectedYear] = useState(
+    currentDate.getFullYear()
+  );
 
-  const months = generateMonths();
+  const currentYear = new Date().getFullYear();
 
-  // ✅ Default → current month
-  const [selectedMonth, setSelectedMonth] = useState(formatMonth(currentDate));
+  const years = Array.from(
+    { length: 50 },
+    (_, i) => currentYear - i
+  );
 
-  const { month, year } = parseMonthYear(selectedMonth);
+
 
   const {
     data: analyticsData,
     isLoading: analyticsLoading,
-  } = useTutorAnalytics({ month, year });
+  } = useTutorAnalytics({
+    month: selectedMonth,
+    year: selectedYear,
+  });
 
-  // ✅ API trigger on change
-  const handleChange = (value) => {
-    setSelectedMonth(value);
-  };
 
 
 
@@ -188,17 +153,34 @@ export default function TutorDashboard() {
       </div>
       <div className="w-full flex justify-between items-center">
         <h2 className="text-lg font-semibold">Analytics</h2>
-        <select
-          value={selectedMonth}
-          onChange={(e) => handleChange(e.target.value)}
-          className="border rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
-        >
-          {months.map((month) => (
-            <option key={month} value={month}>
-              {month}
-            </option>
-          ))}
-        </select>
+
+        <div className="flex items-center gap-2">
+          {/* Month */}
+          <select
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(Number(e.target.value))}
+            className="border rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+          >
+            {months.map((month) => (
+              <option key={month.value} value={month.value}>
+                {month.label}
+              </option>
+            ))}
+          </select>
+
+          {/* Year */}
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(Number(e.target.value))}
+            className="border rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+          >
+            {years.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
       {/* CHARTS ROW */}
       <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-2">
@@ -386,11 +368,11 @@ function Card({ title, value = 0, color, info, Icon }) {
 
   return (
     <div className={`flex items-start gap-2 p-4 rounded-xl shadow-sm ${colors[color]}`}>
-      <div className={`p-2.5 rounded-md ${icons[color]}`}>
+      <div className={`p-3 rounded-md ${icons[color]}`}>
         {Icon && <Icon size={18} />}
       </div>
       <div className="gap-1">
-        <p className="text-sm text-gray-500">{title}</p>
+        <p className="text-xs text-gray-500">{title}</p>
         <h2 className={`text-xl font-semibold`}>
           {((value || 0))}
         </h2>

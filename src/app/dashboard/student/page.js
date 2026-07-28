@@ -202,11 +202,11 @@ function Card({ title, value = 0, color, info, Icon }) {
 
   return (
     <div className={`flex items-start gap-2 p-4 rounded-xl shadow-sm ${colors[color]}`}>
-      <div className={`p-2.5 rounded-md ${icons[color]}`}>
+      <div className={`p-3 rounded-md ${icons[color]}`}>
         {Icon && <Icon size={18} />}
       </div>
       <div className="gap-1">
-        <p className="text-sm text-gray-500">{title}</p>
+        <p className="text-xs text-gray-500">{title}</p>
         <h2 className={`text-xl font-semibold`}>
           {((value || 0))}
         </h2>

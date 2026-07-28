@@ -161,6 +161,9 @@ export const API = {
       GET_BY_ID: `/order`
     },
 
+    DASHBOARD: {
+      ANALYTICS: `/dashboard/admin/analytics`
+    }
 
   },
 
@@ -192,7 +195,7 @@ export const API = {
     },
 
     DASHBOARD: {
-      ANALYTICS: `/admin/student/analytics`
+      ANALYTICS: `/dashboard/student/analytics`
     }
   },
 
@@ -269,7 +272,7 @@ export const API = {
 
 
     DASHBOARD: {
-      ANALYTICS: `/admin/tutor/analytics`
+      ANALYTICS: `/dashboard/tutor/analytics`
     }
   }
 };
