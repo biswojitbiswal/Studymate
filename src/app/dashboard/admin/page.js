@@ -22,81 +22,7 @@ import {
   Legend,
 } from "recharts";
 
-// -------------------- STATIC DATA --------------------
 
-const stats = [
-  { title: "Total Users", value: "12,450", Icon: { Wallet }, color: "blue", info: "+12.5%" },
-  { title: "Students", value: "8,230", Icon: { Wallet }, color: "blue", info: "+10.3%" },
-  { title: "Tutors", value: "1,540", Icon: { Wallet }, color: "blue", info: "+8.1%" },
-  { title: "Pending Requests", value: "78", Icon: { Wallet }, color: "blue", info: "-5.4%" },
-  { title: "Total Classes", value: "2,450", Icon: { Wallet }, color: "blue", info: "+11.2%" },
-  { title: "Ongoing Classes", value: "320", Icon: { Wallet }, color: "blue", info: "+7.4%" },
-  { title: "Completed Classes", value: "2,130", Icon: { Wallet }, color: "blue", info: "+14.2%" },
-  { title: "Total Earning", value: "$24,560", Icon: { Wallet }, color: "blue", info: "+18.6%" },
-  { title: "Total Earning", value: "$24,560", Icon: { Wallet }, color: "blue", info: "+18.6%" },
-  { title: "Total Earning", value: "$24,560", Icon: { Wallet }, color: "blue", info: "+18.6%" },
-  { title: "Total Earning", value: "$24,560", Icon: { Wallet }, color: "blue", info: "+18.6%" },
-  { title: "Total Earning", value: "$24,560", Icon: { Wallet }, color: "blue", info: "+18.6%" },
-];
-
-const earningData = [
-  { day: "1 May", value: 5000 },
-  { day: "6 May", value: 8000 },
-  { day: "11 May", value: 12000 },
-  { day: "16 May", value: 15000 },
-  { day: "21 May", value: 14000 },
-  { day: "31 May", value: 24560 },
-];
-
-const sessionData = [
-  { name: "Completed", value: 1650 },
-  { name: "Scheduled", value: 720 },
-  { name: "Cancelled", value: 280 },
-  { name: "No-show", value: 130 },
-];
-
-const sessionTypeData = [
-  { name: "Regular", value: 1680 },
-  { name: "Extra", value: 730 },
-  { name: "Doubt", value: 370 },
-
-];
-
-const userOverviewData = [
-  { day: "1 May", students: 7000, tutors: 2000 },
-  { day: "8 May", students: 7500, tutors: 2200 },
-  { day: "15 May", students: 7800, tutors: 2300 },
-  { day: "22 May", students: 8200, tutors: 2400 },
-  { day: "31 May", students: 8600, tutors: 2600 },
-];
-
-const revenueData = [
-  {
-    label: "Total Earning",
-    value: 24560,
-    icon: <IndianRupee className="w-4 h-4" />,
-  },
-  {
-    label: "Tax",
-    value: 2456,
-    icon: <FileText className="w-4 h-4" />,
-  },
-  {
-    label: "Payout",
-    value: 18240,
-    icon: <Landmark className="w-4 h-4" />,
-  },
-  {
-    label: "Commission",
-    value: 3120,
-    icon: <Percent className="w-4 h-4" />,
-  },
-  {
-    label: "Discount",
-    value: 1250,
-    icon: <Tag className="w-4 h-4" />,
-  },
-];
 
 const revenueIcons = {
   "Total Earning": <IndianRupee className="w-4 h-4" />,
@@ -106,9 +32,7 @@ const revenueIcons = {
   Discount: <Tag className="w-4 h-4" />,
 };
 
-const COLORS = ["#2563eb", "#16a34a", "#f59e0b", "#ef4444"];
 const SESSION_COLORS = ["#2563eb", "#16a34a", "#f59e0b"];
-// -------------------- COMPONENT --------------------
 
 export default function Dashboard() {
   const today = new Date();
@@ -130,7 +54,6 @@ export default function Dashboard() {
 
   const user = useAuthStore((s) => s.user);
 
-  const netRevenue = 21440;
 
   const formatINR = (num) =>
     new Intl.NumberFormat("en-IN", {
