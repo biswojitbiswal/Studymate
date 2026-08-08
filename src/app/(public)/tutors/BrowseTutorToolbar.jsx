@@ -1,137 +1,54 @@
 "use client";
 
-import {
-    ChevronDown,
-    Search,
-    SlidersHorizontal,
-} from "lucide-react";
-
-import { Button } from "@/components/ui/button";
+import { Search, SlidersHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
-export default function BrowseTutorToolbar() {
-    return (
-        <section className="w-full rounded-2xl border bg-white p-4 shadow-sm">
+const SORT_OPTIONS = [
+  ["RECOMMENDED", "Recommended"],
+  ["HIGHEST_RATED", "Highest rated"],
+  ["MOST_STUDENTS", "Most students"],
+  ["MOST_EXPERIENCED", "Most experienced"],
+  ["NEWEST", "Newest"],
+];
 
-            {/* Mobile Layout */}
+function Select({ value, onChange, children, className = "" }) {
+  return (
+    <select
+      value={value || ""}
+      onChange={(event) => onChange(event.target.value || undefined)}
+      className={`h-11 rounded-lg border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 ${className}`}
+    >
+      {children}
+    </select>
+  );
+}
 
-            <div className="flex flex-col gap-3 lg:hidden">
+export default function BrowseTutorToolbar({ search, onSearchChange, filters, onFilterChange, subjects, levels, onOpenFilters }) {
+  return (
+    <section className="w-full rounded-2xl border border-slate-100 bg-white p-3 shadow-sm sm:p-4">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+        <div className="relative min-w-0 flex-1">
+          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Input value={search} onChange={(event) => onSearchChange(event.target.value)} placeholder="Search tutors by name, title or keyword..." className="h-11 border-slate-200 pl-10 sm:h-12" />
+        </div>
 
-                {/* Search */}
-
-                <div className="relative">
-
-                    <Search
-                        className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                        size={18}
-                    />
-
-                    <Input
-                        placeholder="Search tutors..."
-                        className="h-11 pl-11"
-                    />
-
-                </div>
-
-                {/* Filters */}
-
-                <div className="grid grid-cols-2 gap-3">
-
-                    <Button
-                        variant="outline"
-                        className="justify-between h-11"
-                    >
-                        Subject
-                        <ChevronDown size={18} />
-                    </Button>
-
-                    <Button
-                        variant="outline"
-                        className="justify-between h-11"
-                    >
-                        Level
-                        <ChevronDown size={18} />
-                    </Button>
-
-                    <Button
-                        variant="outline"
-                        className="justify-between h-11"
-                    >
-                        Sort
-                        <ChevronDown size={18} />
-                    </Button>
-
-                    <Button className="h-11">
-                        <SlidersHorizontal className="mr-2 h-4 w-4" />
-                        Filters
-                    </Button>
-
-                </div>
-
-            </div>
-
-            {/* Desktop Layout */}
-
-            <div className="hidden lg:flex items-center gap-4">
-
-                {/* Search */}
-
-                <div className="relative flex-1">
-
-                    <Search
-                        className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                        size={18}
-                    />
-
-                    <Input
-                        placeholder="Search tutors by name, subject or keyword..."
-                        className="h-12 pl-11"
-                    />
-
-                </div>
-
-                {/* Subject */}
-
-                <Button
-                    variant="outline"
-                    className="h-12 min-w-[150px] justify-between"
-                >
-                    Subject
-                    <ChevronDown size={18} />
-                </Button>
-
-                {/* Level */}
-
-                <Button
-                    variant="outline"
-                    className="h-12 min-w-[140px] justify-between"
-                >
-                    Level
-                    <ChevronDown size={18} />
-                </Button>
-
-                {/* Sort */}
-
-                <Button
-                    variant="outline"
-                    className="h-12 min-w-[190px] justify-between"
-                >
-                    Sort: Recommended
-                    <ChevronDown size={18} />
-                </Button>
-
-                {/* Filters */}
-
-                <Button className="h-12 px-6 bg-white text-blue-600 border-2 border-blue-600">
-
-                    <SlidersHorizontal className="mr-2 h-4 w-4" />
-
-                    Filters
-
-                </Button>
-
-            </div>
-
-        </section>
-    );
+        <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap lg:flex-nowrap">
+          <Select value={filters.subjectId} onChange={(value) => onFilterChange("subjectId", value)} className="min-w-0 sm:min-w-36">
+            <option value="">All subjects</option>
+            {subjects.map((subject) => <option key={subject.id} value={subject.id}>{subject.name}</option>)}
+          </Select>
+          <Select value={filters.levelId} onChange={(value) => onFilterChange("levelId", value)} className="min-w-0 sm:min-w-32">
+            <option value="">All levels</option>
+            {levels.map((level) => <option key={level.id} value={level.id}>{level.name}</option>)}
+          </Select>
+          <Select value={filters.sortBy} onChange={(value) => onFilterChange("sortBy", value || "RECOMMENDED")} className="min-w-0 sm:min-w-40">
+            {SORT_OPTIONS.map(([value, label]) => <option key={value} value={value}>Sort: {label}</option>)}
+          </Select>
+          <button onClick={onOpenFilters} className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border-2 border-blue-600 px-4 text-sm font-semibold text-blue-600 transition hover:bg-blue-50 lg:hidden" aria-label="Open tutor filters">
+            <SlidersHorizontal className="h-4 w-4" /> Filters
+          </button>
+        </div>
+      </div>
+    </section>
+  );
 }
