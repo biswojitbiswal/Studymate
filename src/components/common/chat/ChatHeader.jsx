@@ -10,6 +10,7 @@ import {
   useToggleMute,
   useTogglePin,
 } from "@/hooks/public/useChat";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function ChatHeader({
   conversation,
@@ -78,46 +79,78 @@ export default function ChatHeader({
           </button>
 
           <div className="flex gap-4 text-blue-600">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                {/* Reply */}
+                <button onClick={() => setReplyMessage(selectedMessage)}>
+                  <Reply size={20} />
+                </button>
+              </TooltipTrigger>
 
-            {/* Reply */}
-            <button onClick={() => setReplyMessage(selectedMessage)}>
-              <Reply size={20} />
-            </button>
+              <TooltipContent side="bottom">
+                Reply
+              </TooltipContent>
+            </Tooltip>
 
             {/* Delete for me */}
-            <button
-              onClick={() => {
-                deleteForMe({ messageId: selectedMessage.id });
-                setSelectedMessage(null);
-              }}
-            >
-              <EyeOff size={20} />
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => {
+                    deleteForMe({ messageId: selectedMessage.id });
+                    setSelectedMessage(null);
+                  }}
+                >
+                  <EyeOff size={20} />
+                </button>
+              </TooltipTrigger>
+
+              <TooltipContent side="bottom">
+                Delete For Me
+              </TooltipContent>
+            </Tooltip>
 
             {/* Delete for everyone */}
             {selectedMessage?.senderId === user.id && (
-              <button
-                onClick={() => {
-                  deleteForEveryone({ messageId: selectedMessage.id });
-                  setSelectedMessage(null);
-                }}
-              >
-                <Trash2 size={20} />
-              </button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => {
+                      deleteForEveryone({ messageId: selectedMessage.id });
+                      setSelectedMessage(null);
+                    }}
+                  >
+                    <Trash2 size={20} />
+                  </button>
+                </TooltipTrigger>
+
+                <TooltipContent side="bottom">
+                  Delete For Everyone
+                </TooltipContent>
+              </Tooltip>
             )}
 
             {/* Pin */}
-            <button
-              onClick={() => {
-                togglePin({ messageId: selectedMessage.id });
-                setSelectedMessage(null);
-              }}
-            >
-              {isPinned ? <PinOff size={20} /> : <Pin size={20} />}
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => {
+                    togglePin({ messageId: selectedMessage.id });
+                    setSelectedMessage(null);
+                  }}
+                >
+                  {isPinned ? <PinOff size={20} /> : <Pin size={20} />}
+                </button>
+              </TooltipTrigger>
+
+              <TooltipContent side="bottom">
+                Pin
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 }

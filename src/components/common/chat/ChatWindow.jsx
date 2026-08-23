@@ -1,23 +1,75 @@
 "use client";
 
-import { useState } from "react";
 import { useInfiniteMessages } from "@/hooks/public/useChat";
 
 import ChatHeader from "./ChatHeader";
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
+import { useRef, useEffect, useState } from "react";
 
 export default function ChatWindow({ conversationId }) {
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [replyMessage, setReplyMessage] = useState(null);
 
-  const { data, isLoading } = useInfiniteMessages(conversationId);
+  const containerRef = useRef(null);
+  const bottomRef = useRef(null);
+  const isAtBottomRef = useRef(true);
 
-  // ✅ FIX: always array
-  const conversation =
-    data?.pages?.flatMap((page) => page?.data?.data?.conversation) || [];
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteMessages(conversationId);
 
-  const conversationData = conversation[0]; // ✅ clean access
+  const messages = (data?.pages?.flatMap((page) => page.messages) ?? [])
+    .sort(
+      (a, b) =>
+        new Date(a.createdAt) - new Date(b.createdAt)
+    );
+
+  const conversation = data?.pages?.map((page) => page.conversation) ?? [];
+
+  const conversationData = conversation[0];
+
+
+  useEffect(() => {
+    if (isAtBottomRef.current) {
+      bottomRef.current?.scrollIntoView({
+        behavior: "smooth",
+      });
+    }
+  }, [messages]);
+
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      isAtBottomRef.current =
+        container.scrollHeight -
+        container.scrollTop -
+        container.clientHeight <
+        50;
+
+      if (
+        container.scrollTop <= 50 &&
+        hasNextPage &&
+        !isFetchingNextPage
+      ) {
+        fetchNextPage();
+      }
+    };
+
+    container.addEventListener("scroll", handleScroll);
+
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+    };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
 
   if (!conversationId) {
     return (
@@ -35,6 +87,8 @@ export default function ChatWindow({ conversationId }) {
     );
   }
 
+
+
   return (
     <div className="flex flex-col h-full">
 
@@ -48,13 +102,19 @@ export default function ChatWindow({ conversationId }) {
       />
 
       {/* 🔥 MESSAGES */}
-      <div className="flex-1 overflow-y-auto bg-blue-50">
+      <div
+        ref={containerRef}
+        className="flex-1 overflow-y-auto bg-blue-50"
+      >
         <MessageList
+          messages={messages}
+          conversation={conversationData}
           conversationId={conversationId}
           replyMessage={replyMessage}
           setReplyMessage={setReplyMessage}
           selectedMessage={selectedMessage}
           setSelectedMessage={setSelectedMessage}
+          bottomRef={bottomRef}
         />
       </div>
 

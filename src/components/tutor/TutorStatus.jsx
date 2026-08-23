@@ -12,19 +12,19 @@ export function TutorStatusCard({ tutor, onEdit, onDashboard }) {
   const statusConfig = {
     PENDING_REVIEW: {
       label: "Under Review",
-      color: "bg-yellow-100 text-yellow-800",
+      color: "border-yellow-200 bg-yellow-100 text-yellow-800",
       message:
         "Your tutor application is currently under review by our admin team.",
     },
     APPROVED: {
       label: "Approved",
-      color: "bg-green-100 text-green-800",
+      color: "border-green-200 bg-green-100 text-green-800",
       message:
         "Congratulations! Your tutor profile has been approved.",
     },
     REJECTED: {
       label: "Rejected",
-      color: "bg-red-100 text-red-800",
+      color: "border-red-200 bg-red-100 text-red-800",
       message:
         "Your application needs some changes. Please update and resubmit.",
     },
@@ -55,7 +55,7 @@ export function TutorStatusCard({ tutor, onEdit, onDashboard }) {
               </p>
             </div>
 
-            <Badge className={`${cfg.color} px-3 py-1`}>
+            <Badge variant="outline" className={`${cfg.color} cursor-default px-3 py-1`}>
               {cfg.label}
             </Badge>
           </div>
@@ -105,7 +105,7 @@ export function TutorStatusCard({ tutor, onEdit, onDashboard }) {
             {status !== "APPROVED" && (
               <Button
                 variant="outline"
-                className="flex-1 hover:cursor-pointer bg-blue-600 text-white"
+                className="flex-1 cursor-pointer border-blue-600 bg-blue-600 text-white hover:bg-blue-700 hover:text-white"
                 onClick={onEdit}
               >
                 Edit Application
@@ -114,7 +114,7 @@ export function TutorStatusCard({ tutor, onEdit, onDashboard }) {
 
             {status === "APPROVED" && (
               <Button
-                className="flex-1 bg-blue-600 hover:bg-blue-700 hover:cursor-pointer"
+                className="flex-1 cursor-pointer bg-blue-600 hover:bg-blue-700"
                 onClick={onDashboard}
               >
                 Go to Dashboard

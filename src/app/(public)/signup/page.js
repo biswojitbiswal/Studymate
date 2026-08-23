@@ -19,7 +19,6 @@ export const SignupForm = ({ type }) => {
     password: "",
     confirmPassword: "",
     provider: "CREDENTIALS",
-    signupIntent: type === "Student" ? "STUDENT" : "TUTOR",
   })
   const [err, setErr] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -40,7 +39,10 @@ export const SignupForm = ({ type }) => {
     setErr(null);
 
     try {
-      await signup(formData);
+      await signup({
+        ...formData,
+        signupIntent: type === "Tutor" ? "TUTOR" : "STUDENT",
+      });
 
       toast.success("Signup Successful, Please verify your email.");
       router.push("/signin");

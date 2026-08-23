@@ -101,16 +101,18 @@ export const useInfiniteMessages = (conversationId) => {
         limit: 20,
       });
 
-      return res;
+      // Return only the payload
+      return res.data.data;
     },
 
     getNextPageParam: (lastPage) => {
-      return lastPage.nextCursor || undefined;
+      return lastPage.nextCursor ?? undefined;
     },
 
     enabled: !!conversationId,
 
-    // 🔥 ADD THESE
+    initialPageParam: undefined,
+
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,

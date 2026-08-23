@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 const SORT_OPTIONS = [
@@ -23,7 +23,7 @@ function Select({ value, onChange, children, className = "" }) {
   );
 }
 
-export default function BrowseTutorToolbar({ search, onSearchChange, filters, onFilterChange, subjects, levels, onOpenFilters }) {
+export default function BrowseTutorToolbar({ search, onSearchChange, filters, onFilterChange, subjects, levels, filtersOpen, onToggleFilters }) {
   return (
     <section className="w-full rounded-2xl border border-slate-100 bg-white p-3 shadow-sm sm:p-4">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
@@ -44,8 +44,8 @@ export default function BrowseTutorToolbar({ search, onSearchChange, filters, on
           <Select value={filters.sortBy} onChange={(value) => onFilterChange("sortBy", value || "RECOMMENDED")} className="min-w-0 sm:min-w-40">
             {SORT_OPTIONS.map(([value, label]) => <option key={value} value={value}>Sort: {label}</option>)}
           </Select>
-          <button onClick={onOpenFilters} className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border-2 border-blue-600 px-4 text-sm font-semibold text-blue-600 transition hover:bg-blue-50 lg:hidden" aria-label="Open tutor filters">
-            <SlidersHorizontal className="h-4 w-4" /> Filters
+          <button onClick={onToggleFilters} className={`inline-flex h-11 items-center justify-center gap-2 rounded-lg border-2 px-4 text-sm font-semibold transition ${filtersOpen ? "border-blue-600 bg-blue-600 text-white hover:bg-blue-700" : "border-blue-600 text-blue-600 hover:bg-blue-50"}`} aria-expanded={filtersOpen} aria-controls="tutor-filters">
+            {filtersOpen ? <X className="h-4 w-4" /> : <SlidersHorizontal className="h-4 w-4" />} {filtersOpen ? "Hide filters" : "Filters"}
           </button>
         </div>
       </div>

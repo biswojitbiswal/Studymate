@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { toast } from "sonner";
 
 import {
@@ -14,7 +15,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
 import { usePublicSubjects } from "@/hooks/admin/useSubject";
@@ -37,68 +37,9 @@ function CenteredMessage({ title, description }) {
 
 export default function TutorApplyPage() {
     const router = useRouter();
-    const fileRef = useRef(null);
-
     const { data: tutor, isLoading } = useMyTutor();
     const { data: subjects = [] } = usePublicSubjects();
     const { data: levels = [] } = usePublicLevels();
-    const { mutate, isPending } = useTutorApply();
-
-
-    const [avatar, setAvatar] = useState(null);
-    const [avatarPreview, setAvatarPreview] = useState(null);
-
-    const [form, setForm] = useState({
-        title: "",
-        bio: "",
-        yearsOfExp: "",
-    });
-
-    const [isEditing, setIsEditing] = useState(false);
-
-    const [subjectIds, setSubjectIds] = useState([]);
-    const [levelIds, setLevelIds] = useState([]);
-
-    const [subjectsOpen, setSubjectsOpen] = useState(false);
-    const [levelsOpen, setLevelsOpen] = useState(false);
-
-    const [qualifications, setQualifications] = useState([]);
-    const [qualificationInput, setQualificationInput] = useState("");
-
-    const [demoLinks, setDemoLinks] = useState([]);
-    const [demoLinkInput, setDemoLinkInput] = useState("");
-
-    useEffect(() => {
-        if (!tutor?.data) return;
-
-        const t = tutor.data;
-
-        setForm({
-            title: t.title || "",
-            bio: t.bio || "",
-            yearsOfExp: t.yearsOfExp ? String(t.yearsOfExp) : "",
-        });
-
-        if (t.tutorSubjects?.length) {
-            setSubjectIds(t?.tutorSubjects.map((s) => s?.subject?.id));
-        }
-
-        if (t.tutorLevels?.length) {
-            setLevelIds(t.tutorLevels.map((l) => l.level.id));
-        }
-
-        if (t.qualification?.length) {
-            setQualifications(t.qualification);
-        }
-
-        if (t.demoLinks?.length) {
-            setDemoLinks(t.demoLinks);
-        }
-
-        if (t.user?.avatar) {
-            setAvatarPreview(t.user.avatar);
-        }
-    }, [tutor]);
 
     useEffect(() => {
         if (tutor?.data?.tutorStatus === "APPROVED") {
@@ -108,6 +49,45 @@ export default function TutorApplyPage() {
 
     if (isLoading) return <LoadingScreen />;
 
+    return (
+        <TutorApplicationForm
+            key={tutor?.data?.updatedAt || "new-application"}
+            tutor={tutor}
+            subjects={subjects}
+            levels={levels}
+        />
+    );
+}
+
+function TutorApplicationForm({ tutor, subjects, levels }) {
+    const fileRef = useRef(null);
+    const { mutate, isPending } = useTutorApply();
+    const existingTutor = tutor?.data;
+
+    const [avatar, setAvatar] = useState(null);
+    const [avatarPreview, setAvatarPreview] = useState(existingTutor?.user?.avatar || null);
+    const [form, setForm] = useState({
+        title: existingTutor?.title || "",
+        bio: existingTutor?.bio || "",
+        yearsOfExp: existingTutor?.yearsOfExp
+            ? String(existingTutor.yearsOfExp)
+            : "",
+    });
+    const [isEditing, setIsEditing] = useState(false);
+    const [subjectIds, setSubjectIds] = useState(
+        existingTutor?.tutorSubjects?.map((s) => s?.subject?.id) || []
+    );
+    const [levelIds, setLevelIds] = useState(
+        existingTutor?.tutorLevels?.map((l) => l?.level?.id) || []
+    );
+    const [subjectsOpen, setSubjectsOpen] = useState(false);
+    const [levelsOpen, setLevelsOpen] = useState(false);
+    const [qualifications, setQualifications] = useState(
+        existingTutor?.qualification || []
+    );
+    const [qualificationInput, setQualificationInput] = useState("");
+    const [demoLinks, setDemoLinks] = useState(existingTutor?.demoLinks || []);
+    const [demoLinkInput, setDemoLinkInput] = useState("");
 
     const handleAvatarChange = (file) => {
         if (!file.type.startsWith("image/")) {
@@ -144,8 +124,6 @@ export default function TutorApplyPage() {
             toast.error(error);
             return;
         }
-        console.log(form);
-
         const formData = new FormData();
 
         if (avatar) formData.append("avatar", avatar);
@@ -165,14 +143,15 @@ export default function TutorApplyPage() {
         levelIds.forEach((id) =>
             formData.append("levelIds[]", id)
         );
-        for (const [key, value] of formData.entries()) {
-            console.log(key, value);
-        }
-
-
-
         mutate(formData, {
-            onSuccess: () => toast.success("Application submitted"),
+            onSuccess: () => {
+                setIsEditing(false);
+                toast.success(
+                    isEditing
+                        ? "Application updated and sent for review"
+                        : "Application submitted for review"
+                );
+            },
             onError: (err) =>
                 toast.error(
                     err?.response?.data?.message ||
@@ -210,15 +189,27 @@ export default function TutorApplyPage() {
                         <CardContent className="space-y-6">
                             {/* AVATAR */}
                             <div className="flex flex-col items-center">
+                                <RequiredLabel>Profile Photo</RequiredLabel>
                                 <div
                                     onClick={() => fileRef.current?.click()}
-                                    className="relative h-24 w-24 rounded-full bg-slate-200 overflow-hidden cursor-pointer"
+                                    className="relative mt-2 h-24 w-24 rounded-full bg-slate-200 overflow-hidden cursor-pointer ring-offset-2 transition hover:ring-2 hover:ring-blue-500"
+                                    role="button"
+                                    tabIndex={0}
+                                    aria-label="Choose a profile photo"
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter" || e.key === " ") {
+                                            e.preventDefault();
+                                            fileRef.current?.click();
+                                        }
+                                    }}
                                 >
                                     {avatarPreview ? (
-                                        <img
+                                        <Image
                                             src={avatarPreview}
+                                            fill
+                                            unoptimized
                                             className="h-full w-full object-cover"
-                                            alt="avatar"
+                                            alt="Tutor profile preview"
                                         />
                                     ) : (
                                         <span className="flex h-full items-center justify-center text-xl">
@@ -239,31 +230,48 @@ export default function TutorApplyPage() {
                                 />
                             </div>
 
-                            <Input
-                                placeholder="Title (e.g. Maths Educator)"
-                                value={form.title}
-                                onChange={(e) =>
-                                    setForm({ ...form, title: e.target.value })
-                                }
-                            />
+                            <div className="space-y-1.5">
+                                <RequiredLabel htmlFor="title">Professional Title</RequiredLabel>
+                                <Input
+                                    id="title"
+                                    required
+                                    placeholder="e.g. Maths Educator"
+                                    value={form.title}
+                                    onChange={(e) =>
+                                        setForm({ ...form, title: e.target.value })
+                                    }
+                                />
+                            </div>
 
-                            <Input
-                                type="number"
-                                placeholder="Years of Experience"
-                                value={form.yearsOfExp}
-                                onChange={(e) =>
-                                    setForm({ ...form, yearsOfExp: e.target.value })
-                                }
-                            />
+                            <div className="space-y-1.5">
+                                <RequiredLabel htmlFor="yearsOfExp">Years of Experience</RequiredLabel>
+                                <Input
+                                    id="yearsOfExp"
+                                    required
+                                    min="1"
+                                    max="60"
+                                    type="number"
+                                    placeholder="Enter years of experience"
+                                    value={form.yearsOfExp}
+                                    onChange={(e) =>
+                                        setForm({ ...form, yearsOfExp: e.target.value })
+                                    }
+                                />
+                            </div>
 
-                            <Textarea
-                                rows={4}
-                                placeholder="Short bio"
-                                value={form.bio}
-                                onChange={(e) =>
-                                    setForm({ ...form, bio: e.target.value })
-                                }
-                            />
+                            <div className="space-y-1.5">
+                                <RequiredLabel htmlFor="bio">Short Bio</RequiredLabel>
+                                <Textarea
+                                    id="bio"
+                                    required
+                                    rows={4}
+                                    placeholder="Tell students about your teaching experience"
+                                    value={form.bio}
+                                    onChange={(e) =>
+                                        setForm({ ...form, bio: e.target.value })
+                                    }
+                                />
+                            </div>
 
                             <Separator />
 
@@ -297,6 +305,7 @@ export default function TutorApplyPage() {
                                 setInput={setQualificationInput}
                                 values={qualifications}
                                 setValues={setQualifications}
+                                placeholder="e.g. M.Sc. in Mathematics"
                             />
 
                             <ChipInput
@@ -305,12 +314,14 @@ export default function TutorApplyPage() {
                                 setInput={setDemoLinkInput}
                                 values={demoLinks}
                                 setValues={setDemoLinks}
+                                placeholder="https://example.com/demo"
+                                inputType="url"
                             />
 
                             <Button
                                 onClick={submit}
                                 disabled={isPending}
-                                className="w-full bg-blue-600 hover:bg-blue-700 hover:cursor-pointer"
+                                className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700"
                             >
                                 {isPending ? "Submitting..." : "Submit Application"}
                             </Button>
@@ -319,6 +330,15 @@ export default function TutorApplyPage() {
                 )}
             </div>
         </div>
+    );
+}
+
+function RequiredLabel({ children, htmlFor }) {
+    return (
+        <label htmlFor={htmlFor} className="text-sm font-medium">
+            {children} <span className="text-red-500" aria-hidden="true">*</span>
+            <span className="sr-only"> (required)</span>
+        </label>
     );
 }
 
@@ -333,12 +353,13 @@ function DropdownMultiSelect({
 }) {
     return (
         <div>
-            <p className="text-sm font-medium">{label}</p>
+            <RequiredLabel>{label}</RequiredLabel>
 
             <button
                 type="button"
                 onClick={() => setOpen((p) => !p)}
-                className="w-full border rounded-lg px-3 py-2 bg-white text-left"
+                aria-expanded={open}
+                className="w-full cursor-pointer border rounded-lg px-3 py-2 bg-white text-left transition hover:border-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             >
                 {selected.length
                     ? `${selected.length} selected`
@@ -356,6 +377,7 @@ function DropdownMultiSelect({
                                 type="checkbox"
                                 checked={selected.includes(i.id)}
                                 onChange={() => toggle(i.id)}
+                                className="cursor-pointer"
                             />
                             {i.name}
                         </label>
@@ -367,13 +389,15 @@ function DropdownMultiSelect({
                 {selected.map((id) => {
                     const item = items.find((i) => i.id === id);
                     return (
-                        <Badge
+                        <button
+                            type="button"
                             key={id}
-                            className="bg-blue-100 text-blue-700 cursor-pointer"
+                            className="inline-flex cursor-pointer items-center rounded-md border border-blue-200 bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-700 transition-colors hover:border-blue-600 hover:bg-blue-600 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                             onClick={() => toggle(id)}
+                            aria-label={`Remove ${item?.name}`}
                         >
                             {item?.name} ✕
-                        </Badge>
+                        </button>
                     );
                 })}
             </div>
@@ -387,13 +411,18 @@ function ChipInput({
     setInput,
     values,
     setValues,
+    placeholder,
+    inputType = "text",
 }) {
     return (
         <div>
-            <p className="text-sm font-medium">{label}</p>
+            <RequiredLabel>{label}</RequiredLabel>
 
             <div className="flex gap-2">
                 <Input
+                    type={inputType}
+                    aria-required="true"
+                    placeholder={placeholder}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                 />
@@ -404,7 +433,7 @@ function ChipInput({
                         setValues([...values, input.trim()]);
                         setInput("");
                     }}
-                    className="bg-blue-600 hover:bg-blue-700"
+                    className="cursor-pointer bg-blue-600 hover:bg-blue-700"
                 >
                     Add
                 </Button>
@@ -412,15 +441,17 @@ function ChipInput({
 
             <div className="flex flex-wrap gap-2 mt-2">
                 {values.map((v, i) => (
-                    <Badge
+                    <button
+                        type="button"
                         key={i}
-                        className="bg-blue-100 text-blue-700 cursor-pointer"
+                        className="inline-flex cursor-pointer items-center rounded-md border border-blue-200 bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-700 transition-colors hover:border-blue-600 hover:bg-blue-600 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                         onClick={() =>
                             setValues(values.filter((_, idx) => idx !== i))
                         }
+                        aria-label={`Remove ${v}`}
                     >
                         {v} ✕
-                    </Badge>
+                    </button>
                 ))}
             </div>
         </div>

@@ -20,6 +20,7 @@ export const API = {
   BROWSE_CLASSES: `/public/classes/browse`,
   BROWSE_CLASSES_BY_ID: `/public/classes`,
   BROWSE_TUTORS: `/tutor/browse`,
+  BROWSE_TUTOR_BY_ID: (id) => `/tutor/${id}/browse`,
 
 
   WISHLIST: {
