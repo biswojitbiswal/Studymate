@@ -25,27 +25,22 @@ import { toast } from "sonner";
 const STATIC_HOURLY_RATE = 800;
 
 export default function TutorDetailsPage() {
-  const { id } = useParams();
-
+  const { slug } = useParams();
+  console.log(slug);
+  
   const {
     data: tutor,
     isLoading,
     isError,
     refetch,
-  } = useBrowseTutor(id);
+  } = useBrowseTutor(slug);
 
-  // ==========================================
-  // SHARE STATE
-  // ==========================================
 
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
   const shareRef = useRef(null);
 
-  // ==========================================
-  // CLOSE SHARE WHEN CLICKING OUTSIDE
-  // ==========================================
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -69,24 +64,15 @@ export default function TutorDetailsPage() {
     };
   }, [isShareOpen]);
 
-  // ==========================================
-  // SHARE URL
-  // ==========================================
 
   const shareUrl =
     typeof window !== "undefined"
       ? window.location.href
       : "";
 
-  // ==========================================
-  // SHARE TEXT
-  // ==========================================
 
   const shareText = `Check out ${ tutor?.name || "this tutor" } 's tutor profile`;
 
-// ==========================================
-// COPY LINK
-// ==========================================
 
 const handleCopyLink = async () => {
   try {
@@ -104,9 +90,7 @@ const handleCopyLink = async () => {
   }
 };
 
-// ==========================================
-// WHATSAPP
-// ==========================================
+
 
 const handleWhatsAppShare = () => {
   const message = `${shareText}\n${shareUrl}`;
@@ -119,9 +103,6 @@ const handleWhatsAppShare = () => {
   setIsShareOpen(false);
 };
 
-// ==========================================
-// TELEGRAM
-// ==========================================
 
 const handleTelegramShare = () => {
   window.open(
@@ -134,9 +115,6 @@ const handleTelegramShare = () => {
   setIsShareOpen(false);
 };
 
-// ==========================================
-// EMAIL
-// ==========================================
 
 const handleEmailShare = () => {
   const subject = `Tutor Profile - ${tutor?.name || "Tutor"}`;
@@ -150,9 +128,6 @@ const handleEmailShare = () => {
   setIsShareOpen(false);
 };
 
-// ==========================================
-// NATIVE SHARE
-// ==========================================
 
 const handleNativeShare = async () => {
   if (!navigator.share) {
@@ -176,9 +151,7 @@ const handleNativeShare = async () => {
   }
 };
 
-// ==========================================
-// LOADING
-// ==========================================
+
 
 if (isLoading) {
   return (
@@ -192,9 +165,6 @@ if (isLoading) {
   );
 }
 
-// ==========================================
-// ERROR
-// ==========================================
 
 if (isError || !tutor) {
   return (
@@ -213,9 +183,6 @@ if (isError || !tutor) {
   );
 }
 
-// ==========================================
-// INITIALS
-// ==========================================
 
 const initials =
   tutor.name

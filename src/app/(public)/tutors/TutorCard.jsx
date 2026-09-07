@@ -50,7 +50,7 @@ export default function TutorCard({ tutor }) {
 
       <div className="flex shrink-0 items-center justify-between gap-4 border-t border-slate-100 pt-4 sm:w-38 sm:flex-col sm:items-stretch sm:border-l sm:border-t-0 sm:pl-5 sm:pt-0">
         <p className="whitespace-nowrap text-xl font-bold text-slate-950">₹{STATIC_HOURLY_RATE}<span className="text-xs font-normal text-slate-500"> / hour</span></p>
-        <Link href={`/tutors/${tutor.id}`} className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-lg border border-blue-600 px-4 text-sm font-semibold text-blue-600 transition hover:bg-blue-600 hover:text-white">View profile</Link>
+        <Link href={`/tutors/${tutor.slug}`} className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-lg border border-blue-600 px-4 text-sm font-semibold text-blue-600 transition hover:bg-blue-600 hover:text-white">View profile</Link>
       </div>
     </article>
   );

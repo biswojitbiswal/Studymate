@@ -13,13 +13,13 @@ export function useBrowseTutors(params = {}) {
   });
 }
 
-export function useBrowseTutor(id) {
+export function useBrowseTutor(slug) {
   return useQuery({
-    queryKey: ["browse-tutor", id],
+    queryKey: ["browse-tutor", slug],
     queryFn: async () => {
-      const response = await publicTutorService.getById(id);
+      const response = await publicTutorService.getById(slug);
       return response.data?.data ?? response.data;
     },
-    enabled: Boolean(id),
+    enabled: Boolean(slug),
   });
 }
