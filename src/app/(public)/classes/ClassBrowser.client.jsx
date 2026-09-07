@@ -306,7 +306,7 @@ const ClassBrowser = ({ initialData }) => {
                             <SlidersHorizontal className="w-5 h-5" />
 
                             {/* Text only on desktop */}
-                            <span className="hidden lg:inline ml-2 font-semibold">
+                            <span className="hidden lg:inline ml-2 font-semibold hover:cursor-pointer">
                                 All Filters
                             </span>
 
