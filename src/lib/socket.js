@@ -2,10 +2,14 @@ import { io } from "socket.io-client";
 import { getAuthToken } from "@/store/auth";
 
 let socket;
+let socketToken;
 
 export const getSocket = () => {
-  if (!socket) {
-    const token = getAuthToken();
+  const token = getAuthToken();
+
+  if (!socket || socketToken !== token) {
+    socket?.disconnect();
+    socketToken = token;
 
     socket = io(process.env.NEXT_PUBLIC_BACKEND_URL, {
       auth: { token },

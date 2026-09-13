@@ -1,249 +1,230 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { useInfiniteMessages } from "@/hooks/public/useChat";
+import { format, isToday, isYesterday } from "date-fns";
+import { Check, Pin, Reply } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
-import { Check, CheckCheck, Reply } from "lucide-react";
-import { getSocket } from "@/lib/socket";
-import { useQueryClient } from "@tanstack/react-query";
 
-function formatMessageTime(date) {
-  if (!date) return "";
-  return new Date(date).toLocaleTimeString("en-IN", {
+const messageTime = (date) =>
+  new Date(date).toLocaleTimeString(undefined, {
     hour: "2-digit",
     minute: "2-digit",
   });
-}
 
+const fullTimestamp = (date) =>
+  new Date(date).toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
 
-import { format, isToday, isYesterday } from "date-fns";
-
-export function getMessageDateLabel(date) {
+const dateLabel = (date) => {
   if (isToday(date)) return "Today";
   if (isYesterday(date)) return "Yesterday";
-
   return format(date, "dd MMM yyyy");
-}
+};
 
 export default function MessageList({
   messages,
   conversation,
-  conversationId,
-  replyMessage,
-  setReplyMessage,
   selectedMessage,
   setSelectedMessage,
-  bottomRef
+  setReplyMessage,
+  bottomRef,
+  navigateToMessageId,
+  onNavigateToMessage,
+  onNavigationComplete,
 }) {
-
-  const user = useAuthStore((s) => s.user);
-
+  const userId = useAuthStore((state) => state.user?.id);
   const messageRefs = useRef({});
-  // const bottomRef = useRef(null);
-
-  const queryClient = useQueryClient();
-
   const isGroup = conversation?.type === "GROUP";
 
+  const firstUnreadId = (() => {
+    if (!messages.length) return null;
+    const lastReadId = conversation?.lastSeenMessageId;
+    if (!lastReadId) {
+      return messages.find((message) => message.senderId !== userId)?.id || null;
+    }
+    const lastReadIndex = messages.findIndex((message) => message.id === lastReadId);
+    if (lastReadIndex < 0 && conversation?.lastReadAt) {
+      const lastReadAt = new Date(conversation.lastReadAt).getTime();
+      return messages.find(
+        (message) =>
+          message.senderId !== userId &&
+          new Date(message.createdAt).getTime() > lastReadAt,
+      )?.id || null;
+    }
+    if (lastReadIndex < 0) return null;
+    return messages
+      .slice(lastReadIndex + 1)
+      .find((message) => message.senderId !== userId)?.id || null;
+  })();
 
-
-  // ============================
-  // 🔥 EMIT SEEN (ONLY WHEN NEEDED)
-  // ============================
-  const emitSeen = () => {
-    if (!conversationId) return;
-
-    const socket = getSocket();
-
-    if (document.hidden) return;
-
-    socket.emit("messages_seen", { conversationId });
-  };
-
-  // 👉 When chat opens
   useEffect(() => {
-    emitSeen();
-  }, [conversationId]);
+    if (!navigateToMessageId) return;
+    const target = messageRefs.current[navigateToMessageId];
+    if (!target) return;
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+    target.classList.add("ring-2", "ring-amber-400");
+    const timer = window.setTimeout(() => {
+      target.classList.remove("ring-2", "ring-amber-400");
+      onNavigationComplete?.();
+    }, 1600);
+    return () => window.clearTimeout(timer);
+  }, [messages, navigateToMessageId, onNavigationComplete]);
 
-  // 👉 When new message arrives
-  useEffect(() => {
-    emitSeen();
-  }, [messages.length]);
-
-  // ============================
-  // 🔥 RESET UNREAD
-  // ============================
-  useEffect(() => {
-    if (!conversationId) return;
-
-    queryClient.setQueryData(["conversations"], (old) => {
-      if (!old) return old;
-
-      const list = old.data || old;
-
-      const updated = list.map((conv) => {
-        if (conv.id !== conversationId) return conv;
-        return { ...conv, unreadCount: 0 };
-      });
-
-      return old.data ? { ...old, data: updated } : updated;
-    });
-  }, [conversationId]);
-
-
-  const pinnedId = conversation?.pinnedMessageId;
-  const isPinned = pinnedId === selectedMessage?.id;
-
-  console.log(
-    messages.map((m) => ({
-      id: m.id,
-      time: m.createdAt,
-    }))
-  );
-
-    console.log("after",
-    messages.map((m) => ({
-      id: m.id,
-      time: m.createdAt,
-    }))
-  );
-
+  if (!messages.length) {
+    return (
+      <div className="flex min-h-full items-center justify-center p-6 text-center text-sm text-gray-500">
+        No messages yet. Start the conversation.
+        <div ref={bottomRef} />
+      </div>
+    );
+  }
 
   return (
-    <div
-      className="p-4 space-y-2 bg-blue-50"
-    >
-      {messages.map((msg, index) => {
-        const isOwn = msg.senderId === user.id;
-        const isSelected = selectedMessage?.id === msg.id;
-
-        const previousMessage = messages[index - 1];
-
+    <div className="min-h-full space-y-1 bg-slate-50 px-3 py-4 sm:px-5">
+      {messages.map((message, index) => {
+        const own = message.senderId === userId;
+        const selected = selectedMessage?.id === message.id;
+        const previous = messages[index - 1];
         const showDate =
-          !previousMessage ||
-          new Date(previousMessage.createdAt).toDateString() !==
-          new Date(msg.createdAt).toDateString();
+          !previous ||
+          new Date(previous.createdAt).toDateString() !==
+            new Date(message.createdAt).toDateString();
+        const showUnread = message.id === firstUnreadId;
 
         return (
-          <React.Fragment key={msg.id}>
-
+          <React.Fragment key={message.id}>
             {showDate && (
-              <div className="my-4 flex justify-center">
-                <span className="rounded-full bg-gray-200 px-3 py-1 text-xs text-blue-700 shadow">
-                  {getMessageDateLabel(new Date(msg.createdAt))}
+              <div className="sticky top-2 z-10 flex justify-center py-3 pointer-events-none">
+                <span className="rounded-full border border-slate-200 bg-white/95 px-3 py-1 text-xs font-medium text-slate-600 shadow-sm backdrop-blur">
+                  {dateLabel(new Date(message.createdAt))}
                 </span>
               </div>
             )}
-            <div
-              ref={(el) => (messageRefs.current[msg.id] = el)}
-              onClick={() =>
-                setSelectedMessage((prev) =>
-                  prev?.id === msg.id ? null : msg
-                )
-              }
-              className={`group flex ${isOwn ? "justify-end" : "justify-start"
-                }`}
-            >
-              <div
-                className={`relative max-w-xs px-3 py-2 rounded-xl text-sm shadow-sm transition ${isOwn
-                  ? "bg-blue-600 text-white rounded-br-none"
-                  : "bg-white text-gray-800 border rounded-bl-none"
-                  } ${isSelected ? "ring-2 ring-green-400 bg-blue-100" : ""}`}
-              >
-                {/* 🔵 GROUP SENDER NAME */}
-                {isGroup && !isOwn && (
-                  <p className="text-xs font-semibold text-blue-600 mb-1">
-                    {msg.sender?.name}
-                  </p>
-                )}
 
-
-                {/* 🔁 REPLY PREVIEW */}
-                {msg.replyTo && (
-                  <div
-                    onClick={() => {
-                      const target = messageRefs.current[msg.replyTo?.id];
-                      if (target) {
-                        target.scrollIntoView({ behavior: "smooth", block: "center" });
-                        target.classList.add("bg-blue-200");
-
-                        setTimeout(() => {
-                          target.classList.remove("bg-blue-200");
-                        }, 2000);
-                      }
-                    }}
-                    className={`cursor-pointer text-xs border-l-2 pl-2 mb-1 ${isOwn
-                      ? "border-blue-200 text-blue-100"
-                      : "border-gray-300 text-gray-500"
-                      }`}
-                  >
-                    <p className="truncate max-w-[180px]">
-                      {msg.replyTo?.isDeleted
-                        ? "🚫 Message deleted"
-                        : msg.replyTo?.content}
-                    </p>
-                  </div>
-                )}
-
-
-                {/* 💬 MESSAGE CONTENT */}
-                {msg.isDeleted ? (
-                  <p className="italic text-gray-400 text-sm">
-                    🚫 This message was deleted
-                  </p>
-                ) : (
-                  <p className="break-words">{msg.content}</p>
-                )}
-
-
-                {/* 🕒 TIME + TICKS */}
-                <div className="flex justify-end items-center gap-1 text-[10px] mt-1">
-                  {msg.id === pinnedId && (
-                    <span className="absolute -top-2 -right-2 text-yellow-500 bg-white rounded-full p-0.5 shadow">
-                      📌
-                    </span>
-                  )}
-                  <span
-                    className={
-                      isOwn ? "text-blue-100" : "text-gray-400"
-                    }
-                  >
-                    {formatMessageTime(msg.createdAt)}
-                  </span>
-
-                  {isOwn &&
-                    (msg.seenAt ? (
-                      <CheckCheck size={14} className="text-blue-200" />
-                    ) : (
-                      <Check size={14} className="text-blue-200" />
-                    ))}
-                </div>
-
-                {/* ⚡ HOVER ACTIONS */}
-                <div
-                  className="absolute top-0 right-0 hidden group-hover:flex gap-1 bg-white shadow-md px-1 py-1 rounded-md"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {!msg.isDeleted && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setReplyMessage(msg);
-                        setSelectedMessage(null);
-                      }}
-                      className="p-1 hover:bg-gray-100 rounded text-blue-600"
-                    >
-                      <Reply size={14} />
-                    </button>
-                  )}
-                </div>
+            {showUnread && (
+              <div className="flex items-center gap-3 py-3" aria-label="Unread messages">
+                <div className="h-px flex-1 bg-blue-200" />
+                <span className="text-xs font-semibold text-blue-600">New messages</span>
+                <div className="h-px flex-1 bg-blue-200" />
               </div>
+            )}
+
+            <div
+              ref={(element) => {
+                if (element) messageRefs.current[message.id] = element;
+                else delete messageRefs.current[message.id];
+              }}
+              className={`group flex scroll-mt-24 items-start gap-1 transition ${own ? "justify-end" : "justify-start"}`}
+            >
+              {own && !message.isDeleted && (
+                <ReplyButton
+                  onClick={() => {
+                    setReplyMessage(message);
+                    setSelectedMessage(null);
+                  }}
+                />
+              )}
+
+              <button
+                type="button"
+                onClick={() =>
+                  setSelectedMessage((current) =>
+                    current?.id === message.id ? null : message,
+                  )
+                }
+                className={`relative max-w-[82%] rounded-2xl px-3 py-2 text-left text-sm shadow-sm sm:max-w-md ${
+                  own
+                    ? "rounded-br-md bg-blue-600 text-white"
+                    : "rounded-bl-md border border-slate-200 bg-white text-slate-800"
+                } ${selected ? "ring-2 ring-emerald-400" : ""}`}
+                aria-label={`Message from ${own ? "you" : message.sender?.name || "participant"}`}
+              >
+                {isGroup && !own && (
+                  <span className="mb-1 block text-xs font-semibold text-blue-600">
+                    {message.sender?.name || "Participant"}
+                  </span>
+                )}
+
+                {message.replyTo && (
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onNavigateToMessage?.(message.replyTo.id);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") onNavigateToMessage?.(message.replyTo.id);
+                    }}
+                    className={`mb-1 block cursor-pointer rounded border-l-2 px-2 py-1 text-xs ${
+                      own
+                        ? "border-blue-200 bg-blue-700/40 text-blue-50"
+                        : "border-blue-400 bg-slate-50 text-slate-500"
+                    }`}
+                  >
+                    <span className="block truncate">
+                      {message.replyTo.isDeleted
+                        ? "Message deleted"
+                        : message.replyTo.content}
+                    </span>
+                  </span>
+                )}
+
+                {message.isDeleted ? (
+                  <span className={`italic ${own ? "text-blue-100" : "text-slate-400"}`}>
+                    This message was deleted
+                  </span>
+                ) : (
+                  <span className="block whitespace-pre-wrap break-words">{message.content}</span>
+                )}
+
+                <span className="mt-1 flex items-center justify-end gap-1 text-[10px]">
+                  {message.id === conversation?.pinnedMessageId && (
+                    <Pin size={11} aria-label="Pinned" />
+                  )}
+                  <time
+                    dateTime={message.createdAt}
+                    title={fullTimestamp(message.createdAt)}
+                    className={own ? "text-blue-100" : "text-slate-400"}
+                  >
+                    {messageTime(message.createdAt)}
+                  </time>
+                  {own && !message.isDeleted && (
+                    <Check size={13} className="text-blue-100" aria-label="Delivered" />
+                  )}
+                </span>
+
+              </button>
+
+              {!own && !message.isDeleted && (
+                <ReplyButton
+                  onClick={() => {
+                    setReplyMessage(message);
+                    setSelectedMessage(null);
+                  }}
+                />
+              )}
             </div>
           </React.Fragment>
         );
       })}
-
       <div ref={bottomRef} />
     </div>
+  );
+}
+
+function ReplyButton({ onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="mt-1 rounded-full bg-white p-1.5 text-blue-600 opacity-0 shadow transition hover:bg-blue-50 focus:opacity-100 group-hover:opacity-100"
+      aria-label="Reply to message"
+      title="Reply"
+    >
+      <Reply size={14} />
+    </button>
   );
 }

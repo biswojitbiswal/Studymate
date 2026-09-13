@@ -38,7 +38,7 @@ export const API = {
     DELETE_FOR_ME: `/chat/messages`,
     DELETE_FOR_EVERYONE: `/chat/messages`,
     TOGGLE_PINNED: `/chat/messages`,
-    MUTE_CONVERSATIONS: `/chat/conversations`,
+    MARK_CONVERSATION_READ: `/chat/conversations`,
   },
 
 

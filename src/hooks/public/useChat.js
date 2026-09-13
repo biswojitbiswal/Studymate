@@ -1,297 +1,177 @@
 import { chatService } from "@/services/public/chat.service";
-import { useMutation, useQueryClient, useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
+const updateMessagePages = (old, updater) => {
+  if (!old) return old;
+  return {
+    ...old,
+    pages: old.pages.map((page, index) => updater(page, index)),
+  };
+};
 
 export const useCreateDM = () => {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (data) => {
-      const res = await chatService.dmCreate(data);
-      return res;
-    },
+    mutationFn: (data) => chatService.dmCreate(data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["conversations"] }),
   });
 };
-
 
 export const useCreateGroup = () => {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (data) => {
-      const res = await chatService.groupCreate(data);
-      return res.data;
-    },
+    mutationFn: async (data) => (await chatService.groupCreate(data)).data,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["conversations"] }),
   });
 };
-
-
-// export const useSendMessage = () => {
-//   const queryClient = useQueryClient();
-
-//   return useMutation({
-//     mutationFn: async (data) => {
-//       const res = await chatService.messageCreate(data);
-//       return res.data;
-//     },
-
-//     onSuccess: (data, variables) => {
-//       // optional: update cache instantly (optimistic-like)
-//       queryClient.invalidateQueries({
-//         queryKey: ["messages", variables.conversationId],
-//       });
-//     },
-//   });
-// };
-
-
-// export const useSendMessage = () => {
-//   return useMutation({
-//     mutationFn: async (data) => {
-//       const res = await chatService.messageCreate(data);
-//       return res.data;
-//     },
-//   });
-// };
 
 export const useSendMessage = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: async (data) => {
-      const res = await chatService.messageCreate(data);
-      return res.data.data; // ✅ FIXED
-      console.log(res.data.data);
-    },
-
+    mutationFn: async (data) => (await chatService.messageCreate(data)).data.data,
     onSuccess: (newMessage, variables) => {
+      queryClient.setQueryData(["messages", variables.conversationId], (old) =>
+        updateMessagePages(old, (page, index) => {
+          if (index !== 0) return page;
+          if (page.messages.some((message) => message.id === newMessage.id)) return page;
+          return { ...page, messages: [...page.messages, newMessage] };
+        }),
+      );
+
       queryClient.setQueryData(["conversations"], (old) => {
-        if (!old) return old;
-
-        const updated = old.data.map((conv) => {
-          if (conv.id !== variables.conversationId) return conv;
-
-          return {
-            ...conv,
-            lastMessage: newMessage, // ✅ now correct shape
-          };
-        });
-
-        const sorted = updated.sort((a, b) => {
-          if (a.id === variables.conversationId) return -1;
-          if (b.id === variables.conversationId) return 1;
-          return 0;
-        });
-
-        return {
-          ...old,
-          data: sorted,
-        };
+        if (!old?.data) return old;
+        const conversations = old.data.map((conversation) =>
+          conversation.id === variables.conversationId
+            ? { ...conversation, lastMessage: newMessage, updatedAt: newMessage.createdAt }
+            : conversation,
+        );
+        conversations.sort((a, b) =>
+          a.id === variables.conversationId
+            ? -1
+            : b.id === variables.conversationId
+              ? 1
+              : 0,
+        );
+        return { ...old, data: conversations };
       });
     },
   });
 };
 
-
-
-export const useInfiniteMessages = (conversationId) => {
-  return useInfiniteQuery({
+export const useInfiniteMessages = (conversationId) =>
+  useInfiniteQuery({
     queryKey: ["messages", conversationId],
-
     queryFn: async ({ pageParam }) => {
-      const res = await chatService.getMessage({
+      const response = await chatService.getMessage({
         conversationId,
         cursor: pageParam,
         limit: 20,
       });
-
-      // Return only the payload
-      return res.data.data;
+      return response.data.data;
     },
-
-    getNextPageParam: (lastPage) => {
-      return lastPage.nextCursor ?? undefined;
-    },
-
-    enabled: !!conversationId,
-
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+    enabled: Boolean(conversationId),
     initialPageParam: undefined,
-
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
   });
-};
 
-
-
-export const useConversations = () => {
-  return useQuery({
+export const useConversations = () =>
+  useQuery({
     queryKey: ["conversations"],
-    queryFn: async () => {
-      const res = await chatService.getConversations();
-      return res.data;
-    },
-    staleTime: Infinity,
-    gcTime: Infinity
+    queryFn: async () => (await chatService.getConversations()).data,
+    staleTime: 30_000,
   });
-};
-
-
 
 export const useDeleteForMe = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: async ({ messageId }) => {
-      const res = await chatService.deleteForme(messageId);
-      // console.log("DELETE RESPONSE:", res);
-      return res.data.data;
-    },
+    mutationFn: async ({ messageId }) =>
+      (await chatService.deleteForme(messageId)).data.data,
     onSuccess: ({ messageId, conversationId }) => {
-      queryClient.setQueryData(["messages", conversationId], (old) => {
-        if (!old) return old;
-
-        return {
-          ...old,
-          pages: old.pages.map((page) => ({
-            ...page,
-            data: {
-              ...page.data,
-              data: {
-                ...page.data.data,
-                messages: page.data.data.messages.filter(
-                  (m) => m.id !== messageId
-                ),
-              },
-            },
-          })),
-        };
-      });
-    }
+      queryClient.setQueryData(["messages", conversationId], (old) =>
+        updateMessagePages(old, (page) => ({
+          ...page,
+          messages: page.messages.filter((message) => message.id !== messageId),
+          conversation:
+            page.conversation.pinnedMessageId === messageId
+              ? { ...page.conversation, pinnedMessageId: null, pinnedMessage: null }
+              : page.conversation,
+        })),
+      );
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    },
   });
 };
-
-
 
 export const useDeleteForEveryone = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: async ({ messageId }) => {
-      const res = await chatService.deleteForEveryone(messageId);
-      return res.data.data;
-    },
-
+    mutationFn: async ({ messageId }) =>
+      (await chatService.deleteForEveryone(messageId)).data.data,
     onSuccess: ({ messageId, conversationId }) => {
-      queryClient.setQueryData(["messages", conversationId], (old) => {
-        if (!old) return old;
-
-        return {
-          ...old,
-          pages: old.pages.map((page) => ({
-            ...page,
-            data: {
-              ...page.data,
-              data: {
-                ...page.data.data,
-                messages: page.data.data.messages.map((m) =>
-                  m.id === messageId
-                    ? {
-                      ...m,
-                      content: "This message was deleted",
-                      isDeleted: true,
-                    }
-                    : m
-                ),
-              },
-            },
-          })),
-        };
-      });
+      queryClient.setQueryData(["messages", conversationId], (old) =>
+        updateMessagePages(old, (page) => ({
+          ...page,
+          messages: page.messages.map((message) =>
+            message.id === messageId
+              ? { ...message, content: "This message was deleted", isDeleted: true, replyTo: null }
+              : message,
+          ),
+          conversation:
+            page.conversation.pinnedMessageId === messageId
+              ? { ...page.conversation, pinnedMessageId: null, pinnedMessage: null }
+              : page.conversation,
+        })),
+      );
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
     },
   });
 };
-
-
 
 export const useTogglePin = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: async ({ messageId }) => {
-      const res = await chatService.togglePin(messageId);
-      return res.data.data;
-    },
-
+    mutationFn: async ({ messageId }) =>
+      (await chatService.togglePin(messageId)).data.data,
     onSuccess: ({ messageId, conversationId }) => {
       queryClient.setQueryData(["messages", conversationId], (old) => {
         if (!old) return old;
-
-        return {
-          ...old,
-          pages: old.pages.map((page) => ({
-            ...page,
-            data: {
-              ...page.data,
-              data: {
-                ...page.data.data,
-                conversation: {
-                  ...page.data.data.conversation,
-                  pinnedMessageId: messageId || null,
-                },
-              },
-            },
-          })),
-        };
+        const pinnedMessage = old.pages
+          .flatMap((page) => page.messages)
+          .find((message) => message.id === messageId);
+        return updateMessagePages(old, (page) => ({
+          ...page,
+          conversation: {
+            ...page.conversation,
+            pinnedMessageId: messageId || null,
+            pinnedMessage: pinnedMessage || null,
+          },
+        }));
       });
     },
   });
 };
 
-
-
-export const useToggleMute = () => {
+export const useMarkConversationRead = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: async ({ conversationId }) => {
-      const res = await chatService.toggleMute(conversationId);
-      return res.data.data;
-    },
-
-    onSuccess: ({ conversationId, isMuted }) => {
-
-      // ✅ 1. Update conversation list
+    mutationFn: async ({ conversationId }) =>
+      (await chatService.markConversationRead(conversationId)).data.data,
+    onSuccess: ({ conversationId }) => {
       queryClient.setQueryData(["conversations"], (old) => {
-        if (!old) return old;
-
-        const list = old.data || old;
-
-        const updated = list.map((conv) =>
-          conv.id === conversationId
-            ? { ...conv, isMuted }
-            : conv
-        );
-
-        return old.data ? { ...old, data: updated } : updated;
-      });
-
-      // ✅ 2. 🔥 UPDATE CURRENT CHAT (THIS IS YOUR BUG FIX)
-      queryClient.setQueryData(["messages", conversationId], (old) => {
-        if (!old) return old;
-
+        if (!old?.data) return old;
         return {
           ...old,
-          pages: old.pages.map((page) => ({
-            ...page,
-            data: {
-              ...page.data,
-              data: {
-                ...page.data.data,
-                conversation: {
-                  ...page.data.data.conversation,
-                  isMuted, // 🔥 THIS WAS MISSING
-                },
-              },
-            },
-          })),
+          data: old.data.map((conversation) =>
+            conversation.id === conversationId
+              ? { ...conversation, unreadCount: 0 }
+              : conversation,
+          ),
         };
       });
     },

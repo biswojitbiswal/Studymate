@@ -26,6 +26,6 @@ export const chatService = {
     togglePin: (id) =>
         api.post(`${API.CHAT.TOGGLE_PINNED}/${id}/toggle-pin`),
 
-    toggleMute: (conversationId) =>
-        api.post(`${API.CHAT.MUTE_CONVERSATIONS}/${conversationId}/toggle-mute`),
+    markConversationRead: (conversationId) =>
+        api.post(`${API.CHAT.MARK_CONVERSATION_READ}/${conversationId}/read`),
 };

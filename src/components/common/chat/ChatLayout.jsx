@@ -1,55 +1,34 @@
 "use client";
 
-import { useState } from "react";
-import ConversationList from "./ConversationList";
-import ChatWindow from "./ChatWindow";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
+import ConversationList from "./ConversationList";
+import ChatWindow from "./ChatWindow";
 import useGlobalChatSocket from "./useGlobalChatSocket";
 
 export default function ChatLayout({ initialConversationId }) {
-  const [selectedConversation, setSelectedConversation] = useState(null);
-
   const router = useRouter();
-  const user = useAuthStore((s) => s.user);
+  const role = useAuthStore((state) => state.user?.role);
+  useGlobalChatSocket(initialConversationId);
 
-  // ✅ Active conversation (single source)
-  const activeConversationId =
-    selectedConversation?.id || initialConversationId;
-
-  // ✅ Global socket (IMPORTANT)
-  useGlobalChatSocket(activeConversationId);
+  const selectConversation = (conversation) => {
+    const dashboard = role === "TUTOR" ? "tutor" : "student";
+    router.push(`/dashboard/${dashboard}/chats/${conversation.id}`);
+  };
 
   return (
-    <div className="flex h-[80vh] md:h-[89vh] border rounded-lg overflow-auto m-3">
-
-      {/* 🟦 SIDEBAR */}
-      <div className="w-full md:w-1/3 border-r">
-        <ConversationList
-          onSelect={(conv) => {
-            // 📱 Mobile → go to dedicated page
-            if (window.innerWidth < 768) {
-              router.push(
-                `/dashboard/${
-                  user.role === "TUTOR" ? "tutor" : "student"
-                }/chats/${conv.id}`
-              );
-            } else {
-              // 🖥 Desktop → update state
-              setSelectedConversation(conv);
-            }
-          }}
-          selectedId={activeConversationId}
-        />
+    <div className="m-0 flex h-[calc(100dvh-8rem)] min-h-[32rem] overflow-hidden border-y bg-white md:m-3 md:h-[calc(100dvh-7rem)] md:rounded-xl md:border">
+      <div className={`${initialConversationId ? "hidden md:block" : "block"} h-full w-full border-r md:w-[38%] lg:w-[34%]`}>
+        <ConversationList onSelect={selectConversation} selectedId={initialConversationId} />
       </div>
 
-      {/* 🟩 CHAT AREA (DESKTOP ONLY) */}
-      <div className="hidden md:flex md:w-2/3 flex-col">
-        {activeConversationId ? (
-          <ChatWindow conversationId={activeConversationId} />
+      <div className={`${initialConversationId ? "flex" : "hidden md:flex"} h-full min-w-0 flex-1 flex-col`}>
+        {initialConversationId ? (
+          <ChatWindow key={initialConversationId} conversationId={initialConversationId} />
         ) : (
-          <div className="flex items-center justify-center h-full text-gray-400">
-            Select a chat
+          <div className="flex h-full flex-col items-center justify-center bg-slate-50 p-6 text-center text-slate-400">
+            <p className="font-medium text-slate-600">Select a conversation</p>
+            <p className="mt-1 text-sm">Choose a student, tutor, or class group to start messaging.</p>
           </div>
         )}
       </div>

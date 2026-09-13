@@ -2,155 +2,202 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Bell, BellOff, EyeOff, Pin, PinOff, Reply, Trash2, X } from "lucide-react";
+import { EyeOff, Loader2, Pin, PinOff, Reply, Trash2, X } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { useAuthStore } from "@/store/auth";
 import {
   useDeleteForEveryone,
   useDeleteForMe,
-  useToggleMute,
   useTogglePin,
 } from "@/hooks/public/useChat";
+import ConfirmDialog from "@/components/common/ConfirmDialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+
+const errorMessage = (error, fallback) =>
+  error?.response?.data?.message || fallback;
 
 export default function ChatHeader({
   conversation,
+  pinnedMessage,
   selectedMessage,
   setSelectedMessage,
   setReplyMessage,
-  conversationId,
+  onNavigateToMessage,
 }) {
   const router = useRouter();
-  const user = useAuthStore((s) => s.user);
+  const user = useAuthStore((state) => state.user);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
-  const { mutate: deleteForMe } = useDeleteForMe();
-  const { mutate: deleteForEveryone } = useDeleteForEveryone();
-  const { mutate: togglePin } = useTogglePin();
-  const { mutate: toggleMute } = useToggleMute();
+  const deleteForMe = useDeleteForMe();
+  const deleteForEveryone = useDeleteForEveryone();
+  const togglePin = useTogglePin();
+  const isBusy = deleteForMe.isPending || deleteForEveryone.isPending || togglePin.isPending;
+  const isPinned = conversation?.pinnedMessageId === selectedMessage?.id;
 
-  const isMuted = conversation?.isMuted;
-  const pinnedId = conversation?.pinnedMessageId;
-  const isPinned = pinnedId === selectedMessage?.id;
+  const runDeleteForMe = async () => {
+    try {
+      await deleteForMe.mutateAsync({ messageId: selectedMessage.id });
+      setSelectedMessage(null);
+      toast.success("Message removed for you");
+    } catch (error) {
+      toast.error(errorMessage(error, "Could not remove the message"));
+    }
+  };
+
+  const runTogglePin = async () => {
+    try {
+      await togglePin.mutateAsync({ messageId: selectedMessage.id });
+      setSelectedMessage(null);
+      toast.success(isPinned ? "Message unpinned" : "Message pinned");
+    } catch (error) {
+      toast.error(errorMessage(error, "Could not update the pinned message"));
+    }
+  };
+
+  const runDeleteForEveryone = async () => {
+    try {
+      await deleteForEveryone.mutateAsync({ messageId: selectedMessage.id });
+      setConfirmDelete(false);
+      setSelectedMessage(null);
+      toast.success("Message deleted for everyone");
+    } catch (error) {
+      toast.error(errorMessage(error, "Could not delete the message"));
+    }
+  };
 
   return (
-    <div className="flex items-center justify-between px-3 py-3 border-b bg-white">
-
-      {/* 🟢 NORMAL MODE */}
-      {!selectedMessage ? (
-        <div className="flex items-center w-full justify-between gap-2">
-
-          {/* LEFT */}
-          <div className="flex items-center gap-2">
+    <header className="shrink-0 border-b bg-white">
+      <div className="flex min-h-16 items-center justify-between gap-3 px-3 py-2">
+        {!selectedMessage ? (
+          <div className="flex min-w-0 items-center gap-3">
             <button
+              type="button"
               onClick={() => router.back()}
-              className="text-blue-600 font-bold"
+              className="rounded-full p-2 text-blue-600 hover:bg-blue-50 md:hidden"
+              aria-label="Back to conversations"
             >
               ←
             </button>
 
-            {/* Avatar */}
             {conversation?.displayImage ? (
-              <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-blue-600">
-                <Image src={conversation.displayImage} alt="avatar" fill />
+              <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full bg-blue-100">
+                <Image
+                  src={conversation.displayImage}
+                  alt=""
+                  fill
+                  sizes="40px"
+                  className="object-cover"
+                />
               </div>
             ) : (
-              <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center">
-                {conversation?.displayName?.charAt(0)?.toUpperCase()}
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 font-semibold text-white">
+                {conversation?.displayName?.charAt(0)?.toUpperCase() || "?"}
               </div>
             )}
 
-            <p className="font-semibold text-gray-800">
-              {conversation?.displayName}
-            </p>
+            <div className="min-w-0">
+              <p className="truncate font-semibold text-gray-900">
+                {conversation?.displayName || "Conversation"}
+              </p>
+              <p className="text-xs text-gray-500">
+                {conversation?.type === "GROUP" ? "Class group" : "Direct message"}
+              </p>
+            </div>
           </div>
+        ) : (
+          <>
+            <button
+              type="button"
+              onClick={() => setSelectedMessage(null)}
+              className="rounded-full p-2 hover:bg-gray-100"
+              aria-label="Cancel message selection"
+            >
+              <X size={20} />
+            </button>
 
-          {/* RIGHT */}
-          <button
-            onClick={() => toggleMute({ conversationId })}
-            className="text-blue-600"
-          >
-            {isMuted ? <BellOff size={20} /> : <Bell size={20} />}
-          </button>
-        </div>
-      ) : (
-        // 🔥 ACTION MODE
-        <div className="flex items-center justify-between w-full">
-          <button onClick={() => setSelectedMessage(null)}>
-            <X size={20} />
-          </button>
-
-          <div className="flex gap-4 text-blue-600">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                {/* Reply */}
-                <button onClick={() => setReplyMessage(selectedMessage)}>
-                  <Reply size={20} />
-                </button>
-              </TooltipTrigger>
-
-              <TooltipContent side="bottom">
-                Reply
-              </TooltipContent>
-            </Tooltip>
-
-            {/* Delete for me */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
+            <div className="flex items-center gap-2 text-blue-600">
+              {isBusy && <Loader2 size={18} className="animate-spin" />}
+              {!selectedMessage.isDeleted && (
+                <ActionButton
+                  label="Reply"
+                  disabled={isBusy}
                   onClick={() => {
-                    deleteForMe({ messageId: selectedMessage.id });
+                    setReplyMessage(selectedMessage);
                     setSelectedMessage(null);
                   }}
                 >
-                  <EyeOff size={20} />
-                </button>
-              </TooltipTrigger>
-
-              <TooltipContent side="bottom">
-                Delete For Me
-              </TooltipContent>
-            </Tooltip>
-
-            {/* Delete for everyone */}
-            {selectedMessage?.senderId === user.id && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={() => {
-                      deleteForEveryone({ messageId: selectedMessage.id });
-                      setSelectedMessage(null);
-                    }}
-                  >
-                    <Trash2 size={20} />
-                  </button>
-                </TooltipTrigger>
-
-                <TooltipContent side="bottom">
-                  Delete For Everyone
-                </TooltipContent>
-              </Tooltip>
-            )}
-
-            {/* Pin */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => {
-                    togglePin({ messageId: selectedMessage.id });
-                    setSelectedMessage(null);
-                  }}
+                  <Reply size={20} />
+                </ActionButton>
+              )}
+              <ActionButton label="Delete for me" disabled={isBusy} onClick={runDeleteForMe}>
+                <EyeOff size={20} />
+              </ActionButton>
+              {!selectedMessage.isDeleted && selectedMessage.senderId === user?.id && (
+                <ActionButton
+                  label="Delete for everyone"
+                  disabled={isBusy}
+                  onClick={() => setConfirmDelete(true)}
+                >
+                  <Trash2 size={20} />
+                </ActionButton>
+              )}
+              {!selectedMessage.isDeleted && (
+                <ActionButton
+                  label={isPinned ? "Unpin" : "Pin"}
+                  disabled={isBusy}
+                  onClick={runTogglePin}
                 >
                   {isPinned ? <PinOff size={20} /> : <Pin size={20} />}
-                </button>
-              </TooltipTrigger>
+                </ActionButton>
+              )}
+            </div>
+          </>
+        )}
+      </div>
 
-              <TooltipContent side="bottom">
-                Pin
-              </TooltipContent>
-            </Tooltip>
-          </div>
-        </div>
-      )
-      }
-    </div >
+      {pinnedMessage && !pinnedMessage.isDeleted && (
+        <button
+          type="button"
+          onClick={() => onNavigateToMessage(pinnedMessage.id)}
+          className="flex w-full items-center gap-2 border-t bg-amber-50 px-4 py-2 text-left hover:bg-amber-100"
+        >
+          <Pin size={15} className="shrink-0 text-amber-600" />
+          <span className="min-w-0">
+            <span className="block text-xs font-semibold text-amber-800">
+              Pinned message{pinnedMessage.sender?.name ? ` · ${pinnedMessage.sender.name}` : ""}
+            </span>
+            <span className="block truncate text-xs text-gray-600">{pinnedMessage.content}</span>
+          </span>
+        </button>
+      )}
+
+      <ConfirmDialog
+        open={confirmDelete}
+        onOpenChange={setConfirmDelete}
+        title="Delete message for everyone?"
+        description="This message will be replaced with a deleted-message notice for every participant."
+        onConfirm={runDeleteForEveryone}
+        confirmLoading={deleteForEveryone.isPending}
+      />
+    </header>
+  );
+}
+
+function ActionButton({ label, children, ...props }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          className="rounded-full p-2 hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
+          aria-label={label}
+          {...props}
+        >
+          {children}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="bottom">{label}</TooltipContent>
+    </Tooltip>
   );
 }
