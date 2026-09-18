@@ -29,8 +29,12 @@ import {
 } from "lucide-react";
 
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import ReviewsSection from "@/components/public/ReviewsSection";
+import RelatedClassesSection from "@/components/public/RelatedClassesSection";
+import RelatedTutorsSection from "@/components/public/RelatedTutorsSection";
 
 export default function ClassDetailsPage() {
     const param = useParams();
@@ -533,7 +537,7 @@ export default function ClassDetailsPage() {
                                     </div>
 
                                     <p className="text-md lg:text-2xl font-bold text-gray-900">
-                                        {data?.data?.tutor?.rating}
+                                        {Number(data?.data?.rating || 0).toFixed(1)}
                                     </p>
                                 </div>
                             </div>
@@ -592,7 +596,7 @@ export default function ClassDetailsPage() {
                                 </div>
 
                                 <h2 className="text-2xl font-bold text-gray-900">
-                                    What You'll Learn
+                                    What You&apos;ll Learn
                                 </h2>
                             </div>
 
@@ -825,12 +829,15 @@ export default function ClassDetailsPage() {
                                     </div>
                                 </div>
 
-                                <button className="w-full mt-4 flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 text-blue-600 rounded-md text-sm font-medium hover:bg-blue-100 transition-colors">
+                                <Link
+                                    href={`/tutors/${data?.data?.tutor?.slug}`}
+                                    className="w-full mt-4 flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 text-blue-600 rounded-md text-sm font-medium hover:bg-blue-100 transition-colors"
+                                >
 
-                                    <MessageCircle className="w-4 h-4" />
+                                    <GraduationCap className="w-4 h-4" />
 
-                                    Contact Instructor
-                                </button>
+                                    View tutor profile
+                                </Link>
                             </div>
                         </section>
 
@@ -999,6 +1006,24 @@ export default function ClassDetailsPage() {
                         </div>
                     </aside>
                 </div>
+            </div>
+
+            <div className="mx-auto max-w-7xl space-y-7 py-6">
+                <ReviewsSection
+                    classId={data?.data?.id}
+                    rating={data?.data?.rating}
+                    title="Reviews for this class"
+                />
+                <RelatedClassesSection
+                    subjectId={data?.data?.subject?.id}
+                    excludeId={data?.data?.id}
+                    title={`More ${data?.data?.subject?.name || "related"} classes`}
+                />
+                <RelatedTutorsSection
+                    subjectId={data?.data?.subject?.id}
+                    excludeId={data?.data?.tutor?.id}
+                    title={`Tutors for ${data?.data?.subject?.name || "this subject"}`}
+                />
             </div>
 
             {/* Mobile Bottom Bar */}

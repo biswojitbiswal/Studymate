@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Heart, Users, Star, Clock, Video, Play, Search, ChevronDown, SlidersHorizontal, X, UserPlus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Heart, Users, Star, Clock, Video, Play, Search, ChevronDown, SlidersHorizontal, X, UserPlus, BookOpen } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { usePublicLanguages } from "@/hooks/admin/useLanguage";
@@ -29,8 +29,15 @@ const DEFAULT_SORT = {
     sortOrder: "desc",
 };
 
+const formatSlug = (slug) =>
+    slug
+        .split("-")
+        .filter(Boolean)
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(" ");
 
-const ClassBrowser = ({ initialData }) => {
+
+const ClassBrowser = ({ initialData, tutorSlug, tutorName }) => {
     const [hoveredClass, setHoveredClass] = useState(null);
     const [wishlist, setWishlist] = useState([]);
     const [showFilters, setShowFilters] = useState(false);
@@ -42,8 +49,6 @@ const ClassBrowser = ({ initialData }) => {
     const [showPreviewModal, setShowPreviewModal] = useState(false);
     const [previewClass, setPreviewClass] = useState(null);
 
-
-    const isFirstLoad = useRef(true);
 
     const debouncedSearch = useDebounce(search, 500);
 
@@ -72,6 +77,7 @@ const ClassBrowser = ({ initialData }) => {
     const browseParams = {
         page,
         limit: 10,
+        tutorSlug: tutorSlug || undefined,
         search: debouncedSearch || undefined,
 
         subjectIds: selectedFilters.subjectIds?.length
@@ -111,17 +117,20 @@ const ClassBrowser = ({ initialData }) => {
         isLoading,
         isFetching
     } = useBrowseClasses(browseParams, {
-        initialData: isFirstLoad.current ? initialData : undefined,
+        initialData:
+            page === 1 &&
+            !debouncedSearch &&
+            Object.keys(selectedFilters).length === 0
+                ? initialData
+                : undefined,
     });
 
 
     const classes = data?.data?.items || [];
 
     useEffect(() => {
-        isFirstLoad.current = false;
-    }, []);
-
-    useEffect(() => {
+        // Pagination is reset when the debounced query/filter set changes.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setPage(1);
     }, [debouncedSearch, selectedFilters]);
 
@@ -227,11 +236,22 @@ const ClassBrowser = ({ initialData }) => {
             <div className="max-w-7xl mx-auto">
                 <div className="hidden lg:block mb-8">
                     <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                        Browse Classes
+                        {tutorSlug ? `Classes by ${tutorName || formatSlug(tutorSlug)}` : "Browse Classes"}
                     </h1>
                     <p className="text-gray-600">
-                        Explore and join interactive, mentored study classes
+                        {tutorSlug
+                            ? `Browse every published class currently offered by ${tutorName || formatSlug(tutorSlug)}.`
+                            : "Explore and join interactive, mentored study classes"}
                     </p>
+                    {tutorSlug && (
+                        <button
+                            type="button"
+                            onClick={() => router.push("/classes")}
+                            className="mt-3 text-sm font-semibold text-blue-600 hover:text-blue-700"
+                        >
+                            View classes from all tutors
+                        </button>
+                    )}
                 </div>
 
                 {/* Filters */}
@@ -397,7 +417,17 @@ const ClassBrowser = ({ initialData }) => {
                     <div className="w-full lg:flex-1 space-y-4">
                         {(isLoading || isFetching) ? Array.from({ length: 6 }).map((_, i) => (
                             <ClassCardSkeleton key={i} />
-                        )) : classes.map((classItem) => (
+                        )) : classes.length === 0 ? (
+                            <div className="rounded-xl border border-dashed border-gray-300 bg-white px-6 py-14 text-center">
+                                <BookOpen className="mx-auto h-9 w-9 text-gray-400" />
+                                <h2 className="mt-3 text-lg font-semibold text-gray-900">No classes found</h2>
+                                <p className="mt-1 text-sm text-gray-500">
+                                    {tutorSlug
+                                        ? `${tutorName || formatSlug(tutorSlug)} has no published classes matching these filters.`
+                                        : "Try changing your search or filters."}
+                                </p>
+                            </div>
+                        ) : classes.map((classItem) => (
                             <div
                                 key={classItem.id}
                                 onMouseEnter={() => setHoveredClass(classItem)}

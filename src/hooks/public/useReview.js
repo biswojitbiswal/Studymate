@@ -64,8 +64,11 @@ export const useGetAllReviews = (params) => {
 export const useBrowseReviews = (params) => {
     return useQuery({
         queryKey: ["reviews", "browse", params],
-        queryFn: () => reviewService.getBrowse(params),
+        queryFn: async () => {
+            const response = await reviewService.getBrowse(params);
+            return response.data?.data?.data ?? response.data?.data ?? response.data;
+        },
 
-        keepPreviousData: true,
+        placeholderData: (previousData) => previousData,
     });
 };

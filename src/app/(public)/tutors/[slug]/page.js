@@ -21,12 +21,14 @@ import {
 } from "lucide-react";
 import { useBrowseTutor } from "@/hooks/public/useTutor";
 import { toast } from "sonner";
+import ReviewsSection from "@/components/public/ReviewsSection";
+import RelatedClassesSection from "@/components/public/RelatedClassesSection";
+import RelatedTutorsSection from "@/components/public/RelatedTutorsSection";
 
 const STATIC_HOURLY_RATE = 800;
 
 export default function TutorDetailsPage() {
   const { slug } = useParams();
-  console.log(slug);
   
   const {
     data: tutor,
@@ -277,7 +279,7 @@ return (
             </div>
 
             <Link
-              href="/classes"
+              href={`/classes?tutor=${encodeURIComponent(tutor.slug)}`}
               className="inline-flex h-11 items-center justify-center rounded-lg bg-blue-600 px-6 text-sm font-semibold text-white transition hover:bg-blue-700"
             >
               Browse classes
@@ -286,6 +288,24 @@ return (
           </div>
         </div>
       </article>
+
+      <div className="mt-7 space-y-7">
+        <ReviewsSection
+          tutorId={tutor.id}
+          rating={tutor.rating}
+          title={`Reviews for ${tutor.name}`}
+        />
+        <RelatedClassesSection
+          tutorSlug={tutor.slug}
+          title={`Classes by ${tutor.name}`}
+          viewAllHref={`/classes?tutor=${encodeURIComponent(tutor.slug)}`}
+        />
+        <RelatedTutorsSection
+          subjectId={tutor.subjectIds?.[0]}
+          excludeId={tutor.id}
+          title="Similar tutors"
+        />
+      </div>
     </div>
   </main>
 );
