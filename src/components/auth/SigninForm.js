@@ -4,7 +4,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
-import { FaGoogle } from "react-icons/fa";
 import Link from "next/link";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 

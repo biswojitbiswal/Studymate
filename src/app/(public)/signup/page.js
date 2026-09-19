@@ -3,11 +3,10 @@ import { useState } from "react"
 import { Mail, Lock, User, ChevronRight, Phone, Eye, EyeOff } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { FaFacebook, FaGoogle, FaInstagramSquare } from "react-icons/fa"
-import { BsTwitterX } from "react-icons/bs"
 import { useAuthStore } from "@/store/auth"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
+import SocialAuthButtons from "@/components/auth/SocialAuthButtons"
 
 export const SignupForm = ({ type }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -179,25 +178,7 @@ export const SignupForm = ({ type }) => {
       </div>
 
       {/* Social Login */}
-      <div className="flex items-center justify-center gap-6">
-        <button className="hover:scale-110 transition text-blue-600 p-2 bg-blue-100 hover:cursor-pointer rounded-sm">
-          <FaGoogle className="w-6 h-6" />
-
-          {/* <img src="/google.svg" alt="Google" className="h-7 w-7" /> */}
-        </button>
-        <button className="hover:scale-110 transition text-blue-600 p-2 bg-blue-100 hover:cursor-pointer rounded-sm">
-          <FaFacebook className="w-6 h-6" />
-          {/* <img src="/facebook.svg" alt="Facebook" className="h-7 w-7" /> */}
-        </button>
-        <button className="hover:scale-110 transition text-blue-600 p-2 bg-blue-100 hover:cursor-pointer rounded-sm">
-          <FaInstagramSquare className="w-6 h-6" />
-          {/* <img src="/instagram.svg" alt="Instagram" className="h-7 w-7" /> */}
-        </button>
-        <button className="hover:scale-110 transition text-blue-600 p-2 bg-blue-100 hover:cursor-pointer rounded-sm">
-          <BsTwitterX className="w-6 h-6" />
-          {/* <img src="/x.svg" alt="X" className="h-7 w-7" /> */}
-        </button>
-      </div>
+      <SocialAuthButtons />
     </div>
   )
 }
