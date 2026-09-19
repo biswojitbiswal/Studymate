@@ -160,7 +160,7 @@ export const API = {
 
     ORDER: {
       GET_ALL: `/order`,
-      GET_BY_ID: `/order`
+      GET_BY_ID: `/order/admin`
     },
 
     DASHBOARD: {
@@ -193,7 +193,8 @@ export const API = {
 
     ORDERS: {
       GET_MY_ORDERS: `/order/my`,
-      GET_BY_ID: `order`
+      GET_BY_ID: `/order`,
+      INVOICE: `/invoice/order`
     },
 
     DASHBOARD: {

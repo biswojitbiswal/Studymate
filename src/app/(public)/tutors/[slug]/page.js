@@ -10,7 +10,6 @@ import {
   BriefcaseBusiness,
   ExternalLink,
   Link2,
-  LoaderCircle,
   Star,
   Users,
   Share2,
@@ -24,6 +23,7 @@ import { toast } from "sonner";
 import ReviewsSection from "@/components/public/ReviewsSection";
 import RelatedClassesSection from "@/components/public/RelatedClassesSection";
 import RelatedTutorsSection from "@/components/public/RelatedTutorsSection";
+import TutorDetailsSkeleton from "@/components/skeleton/TutorDetailsSkeleton";
 
 const STATIC_HOURLY_RATE = 800;
 
@@ -156,15 +156,7 @@ const handleNativeShare = async () => {
 
 
 if (isLoading) {
-  return (
-    <PageState>
-      <LoaderCircle className="mx-auto h-8 w-8 animate-spin text-blue-600" />
-
-      <p className="mt-3 text-slate-600">
-        Loading tutor profile…
-      </p>
-    </PageState>
-  );
+  return <TutorDetailsSkeleton />;
 }
 
 

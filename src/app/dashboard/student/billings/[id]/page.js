@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { useStudentOrder } from "@/hooks/student/useOrder";
 import { ArrowLeft } from "lucide-react";
 import OrderDetailsSkeleton from "@/components/skeleton/student/OrderDetailsSkeleton";
+import InvoiceButton from "@/components/student/billing/InvoiceButton";
 
 export default function OrderDetailsPage() {
     const router = useRouter()
@@ -45,14 +46,17 @@ export default function OrderDetailsPage() {
             </button>
 
             {/* Page Header */}
-            <div>
-                <h1 className="text-2xl font-bold text-gray-900">
-                    Order #{order?.orderNo}
-                </h1>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                        Order #{order?.orderNo}
+                    </h1>
 
-                <p className="text-gray-500">
-                    View complete details of your order
-                </p>
+                    <p className="text-gray-500">
+                        View complete details of your order
+                    </p>
+                </div>
+                <InvoiceButton order={order} />
             </div>
 
             {/* Order Summary */}

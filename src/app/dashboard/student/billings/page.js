@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Eye } from "lucide-react";
 import { TableSkeleton } from "@/components/common/TableSkeleton";
 import { useRouter } from "next/navigation";
+import InvoiceButton from "@/components/student/billing/InvoiceButton";
 
 export default function OrdersPage() {
   const [page, setPage] = useState(1);
@@ -122,7 +123,8 @@ export default function OrdersPage() {
                     </TableCell>
 
                     <TableCell>
-                      <div className="flex justify-center">
+                      <div className="flex justify-center gap-2">
+                        <InvoiceButton order={order} compact />
                         <Button
                           size="icon"
                           variant="outline"
@@ -198,6 +200,8 @@ export default function OrdersPage() {
             >
               View Order
             </Button>
+
+            <InvoiceButton order={order} />
           </div>
         ))}
       </div>
