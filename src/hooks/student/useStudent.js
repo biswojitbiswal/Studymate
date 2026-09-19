@@ -8,13 +8,14 @@ import {
 /* =========================
    GET CURRENT STUDENT (ME)
 ========================= */
-export function useMyStudent() {
+export function useMyStudent(options = {}) {
   return useQuery({
     queryKey: ["student", "me"],
     queryFn: async () => {
       const res = await studentService.getForMe();
       return res.data;
     },
+    enabled: options.enabled ?? true,
   });
 }
 

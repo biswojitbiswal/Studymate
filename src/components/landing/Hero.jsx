@@ -15,9 +15,12 @@ export default function Hero() {
     if (user.role === "TUTOR") {
       href = "/dashboard/tutor";
       label = "Dashboard";
-    } else if (user.role === "STUDENT") {
+    } else if (user.role === "STUDENT" && user.signupIntent === "TUTOR") {
       href = "/tutor-apply";
-      label = "Become a Tutor";
+      label = "Application Status";
+    } else if (user.role === "STUDENT") {
+      href = "/dashboard/student";
+      label = "Student Dashboard";
     } else if (user.role === "ADMIN") {
       href = "/dashboard/admin";
       label = "Dashboard";

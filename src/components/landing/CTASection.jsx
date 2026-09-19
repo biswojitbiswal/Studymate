@@ -10,6 +10,8 @@ export default function CTASection() {
   const dashboardUrl =
     user?.role === "TUTOR"
       ? "/dashboard/tutor"
+      : user?.role === "STUDENT" && user?.signupIntent === "TUTOR"
+      ? "/tutor-apply"
       : user?.role === "STUDENT"
       ? "/dashboard/student"
       : user?.role === "ADMIN"

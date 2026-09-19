@@ -5,6 +5,13 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
 import LoadingScreen from "../common/LoadingScreen";
 
+function homeForUser(user) {
+  if (user?.role === "TUTOR") return "/dashboard/tutor";
+  if (user?.role === "ADMIN") return "/dashboard/admin";
+  if (user?.signupIntent === "TUTOR") return "/tutor-apply";
+  return "/dashboard/student";
+}
+
 /**
  * RequireAuth:
  * - role: optional string or array of allowed roles ("tutor" | "student" | "admin")
@@ -27,10 +34,18 @@ export default function RequireAuth({ children, role = null }) {
     async function check() {
       // If user exists, just verify role
       if (user) {
+        const isTutorApplicant =
+          user.role === "STUDENT" && user.signupIntent === "TUTOR";
+
+        if (isTutorApplicant) {
+          router.replace("/tutor-apply");
+          return;
+        }
+
         if (role) {
           const allowed = Array.isArray(role) ? role : [role];
           if (!allowed.includes(user.role)) {
-            router.replace("/signin");
+            router.replace(homeForUser(user));
             return;
           }
         }
@@ -41,11 +56,20 @@ export default function RequireAuth({ children, role = null }) {
       // Try refresh once
       const result = await tryRefresh();
       if (result && result.user) {
+        const isTutorApplicant =
+          result.user.role === "STUDENT" &&
+          result.user.signupIntent === "TUTOR";
+
+        if (isTutorApplicant) {
+          router.replace("/tutor-apply");
+          return;
+        }
+
         // role check
         if (role) {
           const allowed = Array.isArray(role) ? role : [role];
           if (!allowed.includes(result.user.role)) {
-            router.replace("/signin");
+            router.replace(homeForUser(result.user));
             return;
           }
         }

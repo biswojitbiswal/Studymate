@@ -154,7 +154,21 @@ export default function ClassDetailsPage() {
     // WISHLIST
     // ==========================================
 
+    const restrictTutorAccount = () => {
+        if (user?.signupIntent === "TUTOR") {
+            toast.error(
+                "Tutor accounts cannot purchase classes or use student features."
+            );
+            router.push(user.role === "TUTOR" ? "/dashboard/tutor" : "/tutor-apply");
+            return true;
+        }
+
+        return false;
+    };
+
     const toggleWishlist = (classId) => {
+        if (restrictTutorAccount()) return;
+
         mutate(classId, {
             onSuccess: (res) => {
                 toast.success(res?.data?.data?.message);
@@ -970,6 +984,8 @@ export default function ClassDetailsPage() {
                                         data?.data?.capacity
                                     }
                                     onClick={() => {
+                                        if (restrictTutorAccount()) return;
+
                                         if (
                                             data?.data
                                                 ?.isPurchased
@@ -1057,11 +1073,10 @@ export default function ClassDetailsPage() {
                     {/* Enroll Button */}
 
                     <button
-                        onClick={() =>
-                            router.push(
-                                `/checkout/class/${data?.data?.id}`
-                            )
-                        }
+                        onClick={() => {
+                            if (restrictTutorAccount()) return;
+                            router.push(`/checkout/class/${data?.data?.id}`);
+                        }}
                         className="flex-1 py-3 bg-gradient-to-r hover:cursor-pointer from-blue-600 to-indigo-600 active:from-blue-700 active:to-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/30 transition-all"
                     >
                         Enroll Now

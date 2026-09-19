@@ -16,9 +16,13 @@ import { usePublicLanguages } from "@/hooks/admin/useLanguage";
 import { usePublicSubjects } from "@/hooks/admin/useSubject";
 import { useMyStudent, useUpdateStudentProfile } from "@/hooks/student/useStudent";
 import LoadingScreen from "@/components/common/LoadingScreen";
+import { useAuthStore } from "@/store/auth";
 
 export default function CompleteStudentProfilePage() {
   const router = useRouter();
+  const user = useAuthStore((state) => state.user);
+  const isStudentAccount =
+    user?.role === "STUDENT" && user?.signupIntent === "STUDENT";
   const fileRef = useRef(null);
 
   /* ------------------ State ------------------ */
@@ -46,7 +50,18 @@ export default function CompleteStudentProfilePage() {
 
   /* ------------------ Mutation ------------------ */
   const { mutate: updateProfile, isPending } = useUpdateStudentProfile();
-  const { data: me, isLoading } = useMyStudent();
+  const { data: me, isLoading } = useMyStudent({
+    enabled: Boolean(isStudentAccount),
+  });
+
+  /* eslint-disable react-hooks/set-state-in-effect -- API profile data initializes this editable form. */
+  useEffect(() => {
+    if (!user) {
+      router.replace("/signin");
+    } else if (!isStudentAccount) {
+      router.replace(user.role === "TUTOR" ? "/dashboard/tutor" : "/tutor-apply");
+    }
+  }, [user, isStudentAccount, router]);
 
 
   /* ------------------ Helpers ------------------ */
@@ -121,16 +136,17 @@ export default function CompleteStudentProfilePage() {
       );
     }
   }, [me]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
 
   useEffect(() => {
     if (!isLoading && me?.data?.user?.profileCompleted) {
       router.replace("/dashboard/student");
     }
-  }, [isLoading, me]);
+  }, [isLoading, me, router]);
 
 
-  if (isLoading) {
+  if (!isStudentAccount || isLoading) {
   return (
     <LoadingScreen />
   );

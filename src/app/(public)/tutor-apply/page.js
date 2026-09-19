@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { toast } from "sonner";
+import { useAuthStore } from "@/store/auth";
 
 import {
     Card,
@@ -24,12 +26,13 @@ import { TutorStatusCard } from "@/components/tutor/TutorStatus";
 import LoadingScreen from "@/components/common/LoadingScreen";
 
 /* ---------------- STATUS UI ---------------- */
-function CenteredMessage({ title, description }) {
+function CenteredMessage({ title, description, children }) {
     return (
         <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
             <Card className="max-w-md text-center p-6">
                 <h2 className="text-xl font-semibold">{title}</h2>
                 <p className="mt-2 text-sm text-slate-600">{description}</p>
+                {children}
             </Card>
         </div>
     );
@@ -37,15 +40,50 @@ function CenteredMessage({ title, description }) {
 
 export default function TutorApplyPage() {
     const router = useRouter();
-    const { data: tutor, isLoading } = useMyTutor();
+    const user = useAuthStore((state) => state.user);
+    const tryRefresh = useAuthStore((state) => state.tryRefresh);
+    const isTutorAccount = user?.signupIntent === "TUTOR";
+    const { data: tutor, isLoading } = useMyTutor({
+        enabled: Boolean(user && isTutorAccount),
+        refetchInterval: user?.role === "STUDENT" ? 15000 : false,
+    });
     const { data: subjects = [] } = usePublicSubjects();
     const { data: levels = [] } = usePublicLevels();
 
     useEffect(() => {
-        if (tutor?.data?.tutorStatus === "APPROVED") {
+        if (user?.role === "TUTOR") {
             router.replace("/dashboard/tutor");
+            return;
         }
-    }, [tutor, router]);
+
+        if (tutor?.data?.tutorStatus === "APPROVED") {
+            tryRefresh().then(() => router.replace("/dashboard/tutor"));
+        }
+    }, [user, tutor, router, tryRefresh]);
+
+    if (!user) {
+        return (
+            <CenteredMessage
+                title="Sign in with a tutor account"
+                description="Tutor applications are available only to accounts registered with the Tutor account type."
+            >
+                <Link href="/signin" className="mt-4 inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white">
+                    Sign in
+                </Link>
+            </CenteredMessage>
+        );
+    }
+
+    if (!isTutorAccount) {
+        return (
+            <CenteredMessage
+                title="A separate tutor account is required"
+                description="This is a student account and cannot submit a tutor application. Sign out and register a separate account as a tutor."
+            />
+        );
+    }
+
+    if (user.role === "TUTOR") return <LoadingScreen />;
 
     if (isLoading) return <LoadingScreen />;
 

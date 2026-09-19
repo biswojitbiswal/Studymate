@@ -152,6 +152,12 @@ export const SignupForm = ({ type }) => {
         </div>
       </div>
 
+      <div className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs leading-5 text-blue-900">
+        {type === "Tutor"
+          ? "Tutor accounts are only for teaching and cannot purchase or enroll in classes. Create a separate student account if you also want to learn."
+          : "Student accounts are only for learning and cannot apply as tutors. Create a separate tutor account if you also want to teach."}
+      </div>
+
       <button onClick={handleSubmit} disabled={loading} className="w-full flex items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-white font-semibold hover:bg-blue-700 transition hover:cursor-pointer">
         {loading && loading ? 'Signing Up....' : `Sign Up as ${type === "Student" ? "Student" : "Tutor"}`}
         <ChevronRight className="h-4 w-4" />

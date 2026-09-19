@@ -12,10 +12,20 @@ export default function ProtectedLayout({ children }) {
     
 
     useEffect(() => {
-        if (!user) router.replace("/signin");
-    }, [user]);
+        if (!user) {
+            router.replace("/signin");
+        } else if (
+            user.role === "STUDENT" &&
+            user.signupIntent === "TUTOR"
+        ) {
+            router.replace("/tutor-apply");
+        }
+    }, [user, router]);
 
-    if (!user) return null;
+    if (
+        !user ||
+        (user.role === "STUDENT" && user.signupIntent === "TUTOR")
+    ) return null;
 
     return (
         <>

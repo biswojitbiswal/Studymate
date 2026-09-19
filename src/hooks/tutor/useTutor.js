@@ -8,14 +8,15 @@ import {
 /* =========================
    GET CURRENT TUTOR (ME)
 ========================= */
-export function useMyTutor() {
+export function useMyTutor(options = {}) {
   return useQuery({
     queryKey: ["tutor", "me"],
     queryFn: async () => {
       const res = await tutorService.getForMe();
       return res.data;
     },
-    // only enabled if tutor exists on backend
+    enabled: options.enabled ?? true,
+    refetchInterval: options.refetchInterval,
     retry: false,
   });
 }

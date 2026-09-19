@@ -24,11 +24,15 @@ export default function NavAuthActions() {
   // const { data: count } = useUnreadNotificationCount();
 
   const [open, setOpen] = useState(false);
+  const isTutorApplicant =
+    user?.role === "STUDENT" && user?.signupIntent === "TUTOR";
 
   // Compute dashboard URL using role
   const dashboardUrl =
     user?.role === "TUTOR"
       ? "/dashboard/tutor"
+      : isTutorApplicant
+        ? "/tutor-apply"
       : user?.role === "STUDENT"
         ? "/dashboard/student"
         : user?.role === "ADMIN"
@@ -85,28 +89,35 @@ export default function NavAuthActions() {
               className="z-9999 w-48 rounded-md">
 
 
-              <DropdownMenuItem asChild>
-                <Link href="/profile" className="flex items-center gap-2 hover:cursor-pointer">
-                  <User size={20} className="text-blue-600" />
-                  Profile
-                </Link>
-              </DropdownMenuItem>
+              {!isTutorApplicant && (
+                <>
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile" className="flex items-center gap-2 hover:cursor-pointer">
+                      <User size={20} className="text-blue-600" />
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
 
-              <DropdownMenuSeparator />
+                  <DropdownMenuSeparator />
 
-              <DropdownMenuItem asChild>
-                <Link href="/wishlist" className="flex items-center gap-2 hover:cursor-pointer">
-                  <Heart size={20} className="text-blue-600" />
-                  Wishlist
-                </Link>
-              </DropdownMenuItem>
-
-              <DropdownMenuSeparator />
+                  {user.role === "STUDENT" && (
+                    <>
+                      <DropdownMenuItem asChild>
+                        <Link href="/wishlist" className="flex items-center gap-2 hover:cursor-pointer">
+                          <Heart size={20} className="text-blue-600" />
+                          Wishlist
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
+                </>
+              )}
 
               <DropdownMenuItem asChild>
                 <Link href={dashboardUrl} className="flex items-center gap-2 hover:cursor-pointer">
                   <LayoutDashboard size={20} className="text-blue-600" />
-                  Dashboard
+                  {isTutorApplicant ? "Tutor application" : "Dashboard"}
                 </Link>
               </DropdownMenuItem>
 

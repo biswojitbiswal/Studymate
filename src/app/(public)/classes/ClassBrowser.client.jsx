@@ -15,6 +15,7 @@ import { PreviewSkeleton } from "../../../components/skeleton/PreviewSkeleton";
 import { ClassCardSkeleton } from "../../../components/skeleton/ClassCardSkeleton";
 import { useToggleWishlist } from "@/hooks/public/useWishlist";
 import { toast } from "sonner";
+import { useAuthStore } from "@/store/auth";
 
 
 const SORT_LABEL_MAP = {
@@ -38,6 +39,7 @@ const formatSlug = (slug) =>
 
 
 const ClassBrowser = ({ initialData, tutorSlug, tutorName }) => {
+    const user = useAuthStore((state) => state.user);
     const [hoveredClass, setHoveredClass] = useState(null);
     const [wishlist, setWishlist] = useState([]);
     const [showFilters, setShowFilters] = useState(false);
@@ -137,6 +139,12 @@ const ClassBrowser = ({ initialData, tutorSlug, tutorName }) => {
 
 
     const toggleWishlist = (classId) => {
+        if (user?.signupIntent === "TUTOR") {
+            toast.error("Tutor accounts cannot use student wishlists.");
+            router.push(user.role === "TUTOR" ? "/dashboard/tutor" : "/tutor-apply");
+            return;
+        }
+
         mutate(classId, {
             onSuccess: (res) => {
                 toast.success(res?.data?.data?.message);
